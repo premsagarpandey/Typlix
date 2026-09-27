@@ -206,3 +206,32 @@ html.light body {
 .dark .volume-slider::-moz-range-track {
   background: linear-gradient(to right, #525252, #d4d4d4);
 }
+
+/* ═══════════════════ Accessibility Enhancements (WCAG 2.1) ═══════════════════ */
+
+/* High-contrast focus indicators for keyboard navigation (WCAG 2.4.7) */
+:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* Reduced Motion preferences (WCAG 2.3.3) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-target-char,
+  .animate-fade-in,
+  .animate-shake,
+  .typing-caret {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+

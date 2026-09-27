@@ -17,13 +17,13 @@ export default function ThemeToggle({ variant = 'button', className = '' }: Them
         type="button"
         role="switch"
         aria-checked={isDark}
-        aria-label="Toggle dark/light mode"
+        aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
         onClick={toggleTheme}
-        className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors cursor-pointer focus:outline-none ${
+        className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white ${
           isDark ? 'bg-neutral-600' : 'bg-neutral-300'
         } ${className}`}
       >
-        <span className="sr-only">Toggle theme</span>
+        <span className="sr-only">{isDark ? 'Switch to light mode' : 'Switch to dark mode'}</span>
         <motion.span
           layout
           transition={{ type: 'spring', stiffness: 500, damping: 30 }}
@@ -39,9 +39,9 @@ export default function ThemeToggle({ variant = 'button', className = '' }: Them
     <button
       type="button"
       onClick={toggleTheme}
-      title={isDark ? 'Light mode' : 'Dark mode'}
-      aria-label={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-      className={`p-1.5 rounded-md text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 transition-colors cursor-pointer ${className}`}
+      title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+      aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+      className={`p-1.5 rounded-md text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white ${className}`}
     >
       <motion.div
         key={theme}
@@ -50,9 +50,9 @@ export default function ThemeToggle({ variant = 'button', className = '' }: Them
         transition={{ duration: 0.15 }}
       >
         {isDark ? (
-          <Sun className="w-4 h-4" strokeWidth={1.5} />
+          <Sun className="w-4 h-4" strokeWidth={1.5} aria-hidden="true" />
         ) : (
-          <Moon className="w-4 h-4" strokeWidth={1.5} />
+          <Moon className="w-4 h-4" strokeWidth={1.5} aria-hidden="true" />
         )}
       </motion.div>
     </button>

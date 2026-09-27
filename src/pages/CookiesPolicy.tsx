@@ -5,6 +5,7 @@ import {
   openCookieConsentModal,
   resetCookieConsent,
   getCookieConsent,
+  isGlobalPrivacyControlActive,
   type CookieConsentPreferences,
 } from '../utils/cookieConsent';
 
@@ -38,7 +39,7 @@ export default function CookiesPolicy() {
         <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-neutral-900 dark:text-neutral-100">
           Cookies & Storage Policy
         </h1>
-        <p className="text-sm text-neutral-500 dark:text-neutral-400">
+        <p className="text-sm text-neutral-600 dark:text-neutral-400">
           Last updated: {lastUpdated} · Effective Date: January 1, 2025
         </p>
       </div>
@@ -46,16 +47,21 @@ export default function CookiesPolicy() {
       {/* Interactive Current Status Banner */}
       <div className="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/70 dark:bg-neutral-900/40 flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
         <div className="space-y-1">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <span className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
               Your Current Consent Status:
             </span>
             <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
-              <CheckCircle2 className="w-3 h-3" />
+              <CheckCircle2 className="w-3 h-3" aria-hidden="true" />
               {currentConsent ? 'Preferences Saved' : 'Default / Not Set'}
             </span>
+            {isGlobalPrivacyControlActive() && (
+              <span className="px-2 py-0.5 rounded-full text-[11px] font-medium bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
+                GPC Signal Enforced
+              </span>
+            )}
           </div>
-          <p className="text-xs text-neutral-500 dark:text-neutral-400">
+          <p className="text-xs text-neutral-600 dark:text-neutral-400">
             Functional cookies:{' '}
             <span className="font-semibold text-neutral-800 dark:text-neutral-200">
               {currentConsent?.functional ? 'Enabled' : 'Disabled'}
@@ -63,24 +69,32 @@ export default function CookiesPolicy() {
             · Analytics & Metrics:{' '}
             <span className="font-semibold text-neutral-800 dark:text-neutral-200">
               {currentConsent?.analytics ? 'Enabled' : 'Disabled'}
+            </span>{' '}
+            · 3rd-Party Tracking Cookies:{' '}
+            <span className="font-semibold text-emerald-600 dark:text-emerald-400">
+              0 (None)
             </span>
           </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5">
           <button
+            type="button"
             onClick={openCookieConsentModal}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors cursor-pointer shadow-xs"
+            aria-label="Open cookie preferences management dialog"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors cursor-pointer shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
           >
-            <Sliders className="w-3.5 h-3.5" />
+            <Sliders className="w-3.5 h-3.5" aria-hidden="true" />
             Manage Preferences
           </button>
           <button
+            type="button"
             onClick={handleReset}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 transition-colors cursor-pointer"
+            aria-label="Reset cookie consent preferences and show banner again"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
             title="Reset and show cookie banner again"
           >
-            <RotateCcw className="w-3.5 h-3.5" />
+            <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
             Reset Banner
           </button>
         </div>
@@ -234,15 +248,25 @@ export default function CookiesPolicy() {
             <li><strong>Microsoft Edge:</strong> Settings &rarr; Cookies and site permissions &rarr; Manage and delete cookies.</li>
           </ul>
         </section>
+
+        {/* Section 5: DPDP Act & Statutory Consent */}
+        <section className="space-y-3 p-4 rounded-xl border border-blue-500/20 bg-blue-500/5 dark:bg-blue-500/10 text-xs">
+          <h3 className="font-semibold text-sm text-neutral-900 dark:text-neutral-100">
+            5. DPDP Act, 2023 (India) & Global Consent Standard
+          </h3>
+          <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed">
+            In compliance with Section 6 of India's <strong>Digital Personal Data Protection Act, 2023</strong> and GDPR Article 7, all non-essential storage on Typlix is strictly opt-in and withdrawable at any time. Clicking "Reset Banner" or modifying your preferences allows instant withdrawal of consent with zero penalty or feature lockout.
+          </p>
+        </section>
       </div>
 
       {/* Footer navigation */}
-      <div className="pt-6 border-t border-neutral-200 dark:border-neutral-800 flex flex-wrap gap-4 text-xs text-neutral-500">
+      <div className="pt-6 border-t border-neutral-200 dark:border-neutral-800 flex flex-wrap gap-4 text-xs text-neutral-600 dark:text-neutral-400">
         <Link to="/privacy" className="hover:underline">Privacy Policy</Link>
-        <span>•</span>
+        <span aria-hidden="true">•</span>
         <Link to="/terms" className="hover:underline">Terms & Conditions</Link>
-        <span>•</span>
-        <Link to="/refund" className="hover:underline">Refund Policy</Link>
+        <span aria-hidden="true">•</span>
+        <Link to="/refund" className="hover:underline">No-Charge Policy</Link>
       </div>
     </div>
   );

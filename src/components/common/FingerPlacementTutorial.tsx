@@ -1,3 +1,4 @@
+import { HeartPulse } from 'lucide-react';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { getKeyboardLayout, type KeyboardLayoutId } from '../../data/keyboardLayouts';
 
@@ -14,7 +15,7 @@ export default function FingerPlacementTutorial() {
         <h2 className="text-xl sm:text-2xl font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
           Home Row Placement
         </h2>
-        <p className="text-neutral-500 dark:text-neutral-500 text-sm max-w-lg mx-auto">
+        <p className="text-neutral-600 dark:text-neutral-400 text-sm max-w-lg mx-auto">
           Rest your fingertips lightly on the home row keys. {layout.shortDesc}
         </p>
       </div>
@@ -23,7 +24,7 @@ export default function FingerPlacementTutorial() {
       <div className="relative w-full overflow-hidden rounded-md border border-neutral-200 dark:border-neutral-800">
         <img
           src="/tutorial-image.jpg"
-          alt="Touch typing home row finger placement guide"
+          alt={`Hands positioned on keyboard in touch-typing home row posture. Left hand fingers rest on keys ${layout.homeRowLeft.join(', ')} and right hand fingers on keys ${layout.homeRowRight.join(', ')} for the ${layout.name} layout.`}
           className="w-full h-auto object-cover"
           loading="eager"
         />
@@ -32,10 +33,10 @@ export default function FingerPlacementTutorial() {
       {/* Key Reference */}
       <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm">
         <div className="flex items-center justify-between p-3 border border-neutral-200 dark:border-neutral-800 rounded-md bg-neutral-50 dark:bg-neutral-900">
-          <span className="text-neutral-500 dark:text-neutral-500">Left Hand</span>
-          <div className="flex items-center gap-2 font-mono font-medium text-neutral-700 dark:text-neutral-300">
+          <span className="text-neutral-600 dark:text-neutral-400 font-medium">Left Hand</span>
+          <div className="flex items-center gap-2 font-mono font-medium text-neutral-800 dark:text-neutral-200">
             {layout.homeRowLeft.map((k) => (
-              <span key={k} className="px-2 py-0.5 rounded bg-neutral-200/60 dark:bg-neutral-800">
+              <span key={k} className="px-2 py-0.5 rounded bg-neutral-200/80 dark:bg-neutral-800">
                 {k}
               </span>
             ))}
@@ -43,14 +44,22 @@ export default function FingerPlacementTutorial() {
         </div>
 
         <div className="flex items-center justify-between p-3 border border-neutral-200 dark:border-neutral-800 rounded-md bg-neutral-50 dark:bg-neutral-900">
-          <span className="text-neutral-500 dark:text-neutral-500">Right Hand</span>
-          <div className="flex items-center gap-2 font-mono font-medium text-neutral-700 dark:text-neutral-300">
+          <span className="text-neutral-600 dark:text-neutral-400 font-medium">Right Hand</span>
+          <div className="flex items-center gap-2 font-mono font-medium text-neutral-800 dark:text-neutral-200">
             {layout.homeRowRight.map((k) => (
-              <span key={k} className="px-2 py-0.5 rounded bg-neutral-200/60 dark:bg-neutral-800">
+              <span key={k} className="px-2 py-0.5 rounded bg-neutral-200/80 dark:bg-neutral-800">
                 {k}
               </span>
             ))}
           </div>
+        </div>
+      </div>
+
+      {/* Ergonomic & Health Advisory (RSI Risk Mitigation) */}
+      <div className="mt-4 p-3.5 border border-amber-500/25 bg-amber-500/5 dark:bg-amber-500/10 rounded-md flex items-start gap-2.5 text-xs text-neutral-700 dark:text-neutral-300">
+        <HeartPulse className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" aria-hidden="true" />
+        <div className="leading-relaxed">
+          <span className="font-semibold text-neutral-900 dark:text-neutral-100">Ergonomic Safety Tip:</span> Keep your wrists straight and elevated slightly above the desk. Take a short 2-3 minute stretch break every 20 minutes to prevent repetitive strain injury (RSI).
         </div>
       </div>
     </div>

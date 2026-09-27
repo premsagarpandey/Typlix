@@ -1,8 +1,8 @@
-import { FileText, AlertTriangle, Mail } from 'lucide-react';
+import { FileText, AlertTriangle, Mail, ShieldAlert, HeartPulse, Building2, Image as ImageIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function TermsOfService() {
-  const lastUpdated = 'September 26, 2026';
+  const lastUpdated = 'September 27, 2026';
 
   return (
     <div className="max-w-4xl mx-auto py-10 px-4 sm:px-6 space-y-10 animate-fade-in text-neutral-800 dark:text-neutral-200">
@@ -15,14 +15,14 @@ export default function TermsOfService() {
         <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-neutral-900 dark:text-neutral-100">
           Terms & Conditions
         </h1>
-        <p className="text-sm text-neutral-500 dark:text-neutral-400">
-          Last updated: {lastUpdated} · Effective Date: January 1, 2025
+        <p className="text-sm text-neutral-600 dark:text-neutral-400">
+          Last updated: {lastUpdated} · Effective Date: January 1, 2025 · Business Identity, Image Copyright & Risk Disclosures
         </p>
       </div>
 
       {/* Intro Note */}
       <div className="p-5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
-        Please read these Terms & Conditions ("Terms", "Agreement") carefully before using the <strong>Typlix</strong> touch-typing training web platform. By accessing or using Typlix, you agree to be legally bound by these Terms and our <Link to="/privacy" className="underline text-neutral-900 dark:text-white font-medium">Privacy Policy</Link>.
+        Please read these Terms & Conditions ("Terms", "Agreement") carefully before using the <strong>Typlix</strong> touch-typing training web platform operated by <strong>Typlix Interactive</strong> (lead maintainer Prem Sagar Pandey, India). By accessing or using Typlix, you agree to be legally bound by these Terms and our <Link to="/privacy" className="underline text-neutral-900 dark:text-white font-medium">Privacy Policy</Link>.
       </div>
 
       {/* Terms Sections */}
@@ -33,7 +33,7 @@ export default function TermsOfService() {
             <span>1.</span> Acceptance and Eligibility
           </h2>
           <p className="text-neutral-600 dark:text-neutral-400">
-            By creating an account or by using any portion of Typlix, you affirm that you are at least 13 years of age (or the minimum legal age in your jurisdiction) and possess the legal authority to enter into this binding agreement. If you are using Typlix on behalf of an educational institution or organization, you represent that you have authority to bind that entity.
+            By creating an account or by using any portion of Typlix, you affirm that you are at least 13 years of age (or the minimum legal age required in your jurisdiction) and possess the legal authority to enter into this binding agreement. If you are using Typlix on behalf of an educational institution or organization, you represent that you have authority to bind that entity.
           </p>
         </section>
 
@@ -81,93 +81,181 @@ export default function TermsOfService() {
           </p>
         </section>
 
-        {/* Section 4 */}
+        {/* Section 4: Image Copyright & Intellectual Property */}
         <section className="space-y-3">
-          <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
-            <span>4.</span> Intellectual Property Rights
-          </h2>
+          <div className="flex items-center gap-2">
+            <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
+              <ImageIcon className="w-5 h-5 text-neutral-700 dark:text-neutral-300" aria-hidden="true" />
+              <span>4.</span> Image Copyright, Intellectual Property & Fair Use
+            </h2>
+          </div>
           <p className="text-neutral-600 dark:text-neutral-400">
-            All code, UI designs, sound synthesizers, lesson curricula, graphics, trademarks, and logos on Typlix are the exclusive property of Typlix or its licensors. You are granted a limited, personal, non-exclusive, non-transferable license to access and practice touch typing for personal or classroom learning.
+            We respect intellectual property rights and maintain strict provenance for all media and software assets:
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+            <div className="p-3.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/40 space-y-1">
+              <div className="font-semibold text-neutral-900 dark:text-neutral-100">Tutorial Graphics & Brand Assets</div>
+              <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                The visual hand placement guide graphic (<code>tutorial-image.jpg</code>) and the Typlix brand mark (<code>logo.png</code>) are proprietary original designs © {new Date().getFullYear()} Typlix. All rights reserved. Reproduction or redistribution without written consent is prohibited.
+              </p>
+            </div>
+            <div className="p-3.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/40 space-y-1">
+              <div className="font-semibold text-neutral-900 dark:text-neutral-100">Third-Party Open Source Components</div>
+              <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                UI icons are provided by the Lucide project under the MIT License. Typography is licensed under the SIL Open Font License (Inter) and Apache License 2.0 (JetBrains Mono). Sound effects are procedurally generated via Web Audio API oscillators.
+              </p>
+            </div>
+          </div>
+          <p className="text-xs text-neutral-600 dark:text-neutral-400">
+            <strong>Quotes Practice Mode (Fair Use):</strong> Literary, historical, and philosophical quotes featured in the quotes practice mode are presented under the doctrine of <em>Fair Use</em> (17 U.S. Code § 107 / Section 52 of the Indian Copyright Act, 1957) purely for educational, non-commercial typing practice and literacy advancement.
           </p>
         </section>
 
-        {/* Section 5 */}
-        <section className="space-y-3">
-          <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
-            <span>5.</span> Service Availability & Updates
-          </h2>
-          <p className="text-neutral-600 dark:text-neutral-400">
-            We strive to provide uninterrupted service with 99.9% uptime. However, Typlix may occasionally undergo maintenance, feature enhancements, or unexpected downtime. We reserve the right to update, modify, or deprecate features with or without prior notice.
+        {/* Section 5: DMCA & Copyright Infringement Notice */}
+        <section className="space-y-3 p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/70 dark:bg-neutral-900/40 text-xs">
+          <h3 className="font-semibold text-sm text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
+            <ShieldAlert className="w-4 h-4 text-amber-500" />
+            5. DMCA & Copyright Infringement Notice Procedure
+          </h3>
+          <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed">
+            If you are a copyright owner or authorized agent and believe that any visual asset, quotation, or content accessible on Typlix infringes upon your copyright, you may submit a formal notification to our designated copyright team at <a href="mailto:copyright@typlix.app" className="underline font-medium text-neutral-900 dark:text-white">copyright@typlix.app</a> or <a href="mailto:legal@typlix.app" className="underline font-medium text-neutral-900 dark:text-white">legal@typlix.app</a> with:
           </p>
+          <ul className="list-disc list-inside space-y-1 text-neutral-600 dark:text-neutral-400 pl-1">
+            <li>Identification of the copyrighted work claimed to have been infringed;</li>
+            <li>Exact location (URL or mode) of the infringing material on Typlix;</li>
+            <li>Your contact information (name, address, telephone number, and email);</li>
+            <li>A statement that you hold a good faith belief that the disputed use is not authorized by the copyright owner;</li>
+            <li>A statement under penalty of perjury that the notification is accurate and that you are authorized to act.</li>
+          </ul>
         </section>
 
-        {/* Section 6 */}
-        <section className="space-y-3">
-          <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
-            <span>6.</span> Disclaimer of Warranties
-          </h2>
-          <p className="text-neutral-600 dark:text-neutral-400">
-            Typlix is provided on an <strong>"AS IS"</strong> and <strong>"AS AVAILABLE"</strong> basis without warranties of any kind, whether express or implied, including but not limited to implied warranties of merchantability, fitness for a particular purpose, or non-infringement. We do not warrant that typing metrics will guarantee specific professional employment or typing exam outcomes.
+        {/* Section 6: Ergonomic Safety, RSI & Health Risk Warning */}
+        <section className="space-y-3 p-4 rounded-xl border border-amber-500/30 bg-amber-500/5 dark:bg-amber-500/10">
+          <div className="flex items-center gap-2 text-amber-800 dark:text-amber-300 font-semibold text-sm">
+            <HeartPulse className="w-4 h-4" />
+            <span>6. Ergonomic Safety, Repetitive Strain Injury (RSI) & Medical Disclaimer</span>
+          </div>
+          <p className="text-xs text-neutral-700 dark:text-neutral-300 leading-relaxed">
+            Touch-typing involves repetitive finger, wrist, and hand movements. Practicing for prolonged intervals without rest may lead to physical discomfort or Repetitive Strain Injuries (RSI), such as carpal tunnel syndrome or tendonitis.
           </p>
+          <ul className="list-disc list-inside text-xs text-neutral-700 dark:text-neutral-300 space-y-1">
+            <li><strong>Rest Intervals:</strong> We strongly advise taking a 5-minute break every 20 to 30 minutes of continuous typing.</li>
+            <li><strong>Neutral Posture:</strong> Keep your wrists straight, elevated off hard edges, and shoulders relaxed.</li>
+            <li><strong>Stop on Pain:</strong> If you feel persistent numbness, tingling, burning, or aching, stop typing immediately and consult a qualified medical professional.</li>
+            <li><strong>Disclaimer:</strong> Typlix is an educational software tool, not a medical or ergonomic therapy device. Typlix disclaims any liability for personal injuries arising from improper typing posture or overuse.</li>
+          </ul>
         </section>
 
-        {/* Section 7 */}
+        {/* Section 7: User-Generated Content & Custom Mode */}
         <section className="space-y-3">
           <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
-            <span>7.</span> Limitation of Liability
+            <span>7.</span> User-Generated Content & Custom Practice Mode
           </h2>
           <p className="text-neutral-600 dark:text-neutral-400">
-            To the maximum extent permitted by applicable law, in no event shall Typlix, its creators, or contributors be liable for any indirect, punitive, incidental, special, or consequential damages resulting from your use of or inability to use the platform.
+            Typlix provides a Custom Text practice mode allowing users to paste or type custom text.
           </p>
+          <ul className="list-disc list-inside space-y-1 text-neutral-600 dark:text-neutral-400">
+            <li><strong>Strictly Client-Side:</strong> Custom practice text is stored exclusively in your local browser memory (<code>localStorage</code>) and is never transmitted to, monitored by, or retained on Typlix servers.</li>
+            <li><strong>Content Responsibility:</strong> You are solely responsible for any text you paste into the custom mode. You agree not to input classified information, proprietary trade secrets, malicious payloads, or defamatory material.</li>
+          </ul>
         </section>
 
         {/* Section 8 */}
         <section className="space-y-3">
           <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
-            <span>8.</span> Termination
+            <span>8.</span> Service Availability & Updates
           </h2>
           <p className="text-neutral-600 dark:text-neutral-400">
-            We reserve the right to terminate or suspend your account and access to Typlix immediately, without prior notice or liability, for any reason, including without limitation if you breach these Terms. You may stop using the service at any time and purge your data from the Settings page.
+            We strive to provide a reliable, uninterrupted touch-typing practice experience. However, Typlix may occasionally undergo maintenance, feature enhancements, or unexpected downtime. We reserve the right to update, modify, or deprecate features with or without prior notice.
           </p>
         </section>
 
         {/* Section 9 */}
         <section className="space-y-3">
           <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
-            <span>9.</span> Changes to Terms
+            <span>9.</span> Disclaimer of Warranties
+          </h2>
+          <p className="text-neutral-600 dark:text-neutral-400">
+            Typlix is provided on an <strong>"AS IS"</strong> and <strong>"AS AVAILABLE"</strong> basis without warranties of any kind, whether express or implied, including but not limited to implied warranties of merchantability, fitness for a particular purpose, or non-infringement. We do not warrant that typing metrics will guarantee specific professional employment or typing exam outcomes.
+          </p>
+        </section>
+
+        {/* Section 10 */}
+        <section className="space-y-3">
+          <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
+            <span>10.</span> Limitation of Liability
+          </h2>
+          <p className="text-neutral-600 dark:text-neutral-400">
+            To the maximum extent permitted by applicable law, in no event shall Typlix, its operators, or contributors be liable for any indirect, punitive, incidental, special, or consequential damages resulting from your use of or inability to use the platform.
+          </p>
+        </section>
+
+        {/* Section 11 */}
+        <section className="space-y-3">
+          <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
+            <span>11.</span> Termination
+          </h2>
+          <p className="text-neutral-600 dark:text-neutral-400">
+            We reserve the right to terminate or suspend your account and access to Typlix immediately, without prior notice or liability, for any reason, including without limitation if you breach these Terms. You may stop using the service at any time and purge your data from the Settings page.
+          </p>
+        </section>
+
+        {/* Section 12: Business Details, Governing Law & Jurisdiction */}
+        <section className="space-y-3">
+          <div className="flex items-center gap-2">
+            <Building2 className="w-5 h-5 text-neutral-700 dark:text-neutral-300" aria-hidden="true" />
+            <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-100">
+              12. Business Identity, Governing Law & Jurisdiction
+            </h2>
+          </div>
+          <p className="text-neutral-600 dark:text-neutral-400">
+            These Terms shall be governed by and construed in accordance with the laws of <strong>India</strong> (including the Information Technology Act, 2000 and the Digital Personal Data Protection Act, 2023), without regard to its conflict of law provisions. Any legal action or proceeding arising out of or related to these Terms shall be instituted exclusively in the competent courts in India.
+          </p>
+        </section>
+
+        {/* Section 13 */}
+        <section className="space-y-3">
+          <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
+            <span>13.</span> Changes to Terms
           </h2>
           <p className="text-neutral-600 dark:text-neutral-400">
             We may revise these Terms occasionally. When changes occur, we will update the "Last Updated" date at the top of this document. Continued usage after modifications implies your acceptance of the updated terms.
           </p>
         </section>
 
-        {/* Section 10 */}
+        {/* Section 14 */}
         <section className="space-y-3 pt-4 border-t border-neutral-200 dark:border-neutral-800">
           <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
-            <span>10.</span> Inquiries and Legal Contact
+            <span>14.</span> Inquiries and Legal Contact
           </h2>
           <p className="text-neutral-600 dark:text-neutral-400">
-            For questions or notices regarding these Terms, contact our legal team:
+            For questions, copyright inquiries, or legal notices regarding these Terms, contact our legal operations team:
           </p>
           <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/40 flex items-center gap-3">
             <Mail className="w-5 h-5 text-neutral-500" />
             <div>
-              <div className="font-semibold text-neutral-900 dark:text-neutral-100">Legal Affairs & Terms Operations</div>
-              <a href="mailto:legal@typlix.app" className="text-xs text-neutral-500 hover:text-neutral-900 dark:hover:text-white underline">
-                legal@typlix.app
-              </a>
+              <div className="font-semibold text-neutral-900 dark:text-neutral-100">Legal Affairs & Copyright Desk</div>
+              <div className="flex flex-wrap gap-x-4 text-xs text-neutral-500 mt-0.5">
+                <a href="mailto:legal@typlix.app" className="hover:text-neutral-900 dark:hover:text-white underline">
+                  legal@typlix.app
+                </a>
+                <span>·</span>
+                <a href="mailto:copyright@typlix.app" className="hover:text-neutral-900 dark:hover:text-white underline">
+                  copyright@typlix.app
+                </a>
+              </div>
             </div>
           </div>
         </section>
       </div>
 
       {/* Footer navigation */}
-      <div className="pt-6 border-t border-neutral-200 dark:border-neutral-800 flex flex-wrap gap-4 text-xs text-neutral-500">
+      <div className="pt-6 border-t border-neutral-200 dark:border-neutral-800 flex flex-wrap gap-4 text-xs text-neutral-600 dark:text-neutral-400">
         <Link to="/privacy" className="hover:underline">Privacy Policy</Link>
-        <span>•</span>
+        <span aria-hidden="true">•</span>
         <Link to="/cookies" className="hover:underline">Cookie Policy</Link>
-        <span>•</span>
-        <Link to="/refund" className="hover:underline">Refund Policy</Link>
+        <span aria-hidden="true">•</span>
+        <Link to="/refund" className="hover:underline">No-Charge Policy</Link>
       </div>
     </div>
   );

@@ -20,6 +20,8 @@ function VirtualKeyboardComponent({ nextChar }: VirtualKeyboardProps) {
 
   return (
     <div
+      role="region"
+      aria-label="Visual Keyboard and Finger Placement Guide"
       className="w-full flex flex-col items-center gap-2.5 select-none pt-3 sm:pt-4 pb-2 sm:pb-3"
       onMouseDown={(e) => {
         const tag = (e.target as HTMLElement)?.tagName;
@@ -28,8 +30,12 @@ function VirtualKeyboardComponent({ nextChar }: VirtualKeyboardProps) {
     >
       {/* Top Header: Finger hint + Current Layout Indicator (configured in Settings) */}
       <div className="w-full flex items-center justify-between px-1.5 max-w-2xl md:max-w-3xl">
-        {/* Finger hint */}
-        <div className="text-xs sm:text-sm text-neutral-400 dark:text-neutral-500 font-mono">
+        {/* Finger hint with aria-live */}
+        <div
+          role="status"
+          aria-live="polite"
+          className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 font-mono"
+        >
           {targetChar ? (
             <span className="animate-fade-in inline-flex items-center gap-2.5">
               <span className="px-2.5 py-1 rounded-md bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 font-bold font-mono text-xs sm:text-sm shadow-2xs">
@@ -40,23 +46,27 @@ function VirtualKeyboardComponent({ nextChar }: VirtualKeyboardProps) {
               </span>
             </span>
           ) : (
-            <span className="text-neutral-400 dark:text-neutral-600 font-medium">Ready to type</span>
+            <span className="text-neutral-600 dark:text-neutral-400 font-medium">Ready to type</span>
           )}
         </div>
 
         {/* Read-only Layout badge (configured in Settings) */}
         <div className="flex items-center gap-1.5 font-mono text-xs">
           <span
-            className="text-[11px] sm:text-xs font-semibold px-2.5 py-0.5 rounded-md bg-neutral-100 dark:bg-neutral-850 border border-neutral-200/80 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400"
+            className="text-[11px] sm:text-xs font-semibold px-2.5 py-0.5 rounded-md bg-neutral-100 dark:bg-neutral-850 border border-neutral-200/80 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300"
             title="Keyboard layout can be changed in Settings"
+            aria-label={`Active layout: ${layout.name}`}
           >
             {layout.name}
           </span>
         </div>
       </div>
 
-      {/* Keyboard Matrix (enlarged & comfortable touch/visual target) */}
-      <div className="flex flex-col gap-1.5 sm:gap-2 items-center justify-center p-3 sm:p-4 md:p-5 border border-neutral-200 dark:border-neutral-800 rounded-2xl bg-neutral-50/80 dark:bg-neutral-900/60 backdrop-blur-xs shadow-xs">
+      {/* Keyboard Matrix (enlarged visual cue, hidden from screen readers to prevent noise) */}
+      <div
+        aria-hidden="true"
+        className="flex flex-col gap-1.5 sm:gap-2 items-center justify-center p-3 sm:p-4 md:p-5 border border-neutral-200 dark:border-neutral-800 rounded-2xl bg-neutral-50/80 dark:bg-neutral-900/60 backdrop-blur-xs shadow-xs"
+      >
         {layout.rows.map((row, rowIndex) => (
           <div key={rowIndex} className="flex gap-1.5 sm:gap-2 justify-center">
             {row.map((item) => {
@@ -75,7 +85,7 @@ function VirtualKeyboardComponent({ nextChar }: VirtualKeyboardProps) {
                   }`}
                 >
                   {item.shift && (
-                    <span className="font-mono text-[9px] sm:text-[10px] md:text-[11px] text-neutral-400 dark:text-neutral-500 -mb-0.5 leading-none">
+                    <span className="font-mono text-[9px] sm:text-[10px] md:text-[11px] text-neutral-600 dark:text-neutral-400 -mb-0.5 leading-none">
                       {item.shift}
                     </span>
                   )}
@@ -83,7 +93,7 @@ function VirtualKeyboardComponent({ nextChar }: VirtualKeyboardProps) {
                     {item.key}
                   </span>
                   {isHomeBump && (
-                    <span className="absolute bottom-1 w-3 h-[2px] bg-neutral-400 dark:bg-neutral-500 rounded-full" />
+                    <span className="absolute bottom-1 w-3 h-[2px] bg-neutral-500 dark:bg-neutral-400 rounded-full" />
                   )}
                 </div>
               );
@@ -97,7 +107,7 @@ function VirtualKeyboardComponent({ nextChar }: VirtualKeyboardProps) {
             className={`h-10 sm:h-11 md:h-12 w-64 sm:w-80 md:w-96 flex items-center justify-center text-xs sm:text-sm font-semibold font-mono rounded-xl transition-all duration-100 ${
               targetChar === ' '
                 ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 scale-[1.02] shadow-md ring-2 ring-neutral-400 dark:ring-neutral-400'
-                : 'bg-white dark:bg-neutral-800/90 text-neutral-400 dark:text-neutral-500 border border-neutral-200/90 dark:border-neutral-700/60 shadow-2xs'
+                : 'bg-white dark:bg-neutral-800/90 text-neutral-600 dark:text-neutral-400 border border-neutral-200/90 dark:border-neutral-700/60 shadow-2xs'
             }`}
           >
             space

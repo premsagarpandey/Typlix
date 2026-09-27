@@ -101,6 +101,7 @@ function TypingAreaComponent({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [autoFixCapsLock, setAutoFixCapsLock] = useLocalStorage<boolean>('typlix_capslock_autofix', true);
   const [isShaking, setIsShaking] = useState(false);
+  const [isFocusReleased, setIsFocusReleased] = useState(false);
 
   // Stable refs for event listeners
   const typedTextRef = useRef(typedText);
@@ -109,6 +110,7 @@ function TypingAreaComponent({
   const capsLockOnRef = useRef(capsLockOn);
   const autoFixCapsLockRef = useRef(autoFixCapsLock);
   const onInputRef = useRef(onInput);
+  const isFocusReleasedRef = useRef(isFocusReleased);
 
   useEffect(() => {
     typedTextRef.current = typedText;
@@ -117,7 +119,8 @@ function TypingAreaComponent({
     capsLockOnRef.current = capsLockOn;
     autoFixCapsLockRef.current = autoFixCapsLock;
     onInputRef.current = onInput;
-  }, [typedText, targetText, status, capsLockOn, autoFixCapsLock, onInput]);
+    isFocusReleasedRef.current = isFocusReleased;
+  }, [typedText, targetText, status, capsLockOn, autoFixCapsLock, onInput, isFocusReleased]);
 
   // Container width for line computation
   const [containerWidth, setContainerWidth] = useState(0);
@@ -181,12 +184,19 @@ function TypingAreaComponent({
     if (status !== 'idle' && status !== 'playing') return;
 
     const focusInput = () => {
+      if (isFocusReleasedRef.current) return;
       const el = inputRef.current;
       if (!el) return;
-      // Don't steal focus from open text inputs or modals (dialogs, overlays)
-      const activeTag = document.activeElement?.tagName;
-      if (activeTag === 'TEXTAREA' || activeTag === 'SELECT') return;
-      if (document.activeElement?.closest('[role="dialog"]')) return;
+      // Don't steal focus from open text inputs, modals, navigation, or buttons
+      const active = document.activeElement;
+      if (active) {
+        const activeTag = active.tagName;
+        if (activeTag === 'TEXTAREA' || activeTag === 'SELECT') return;
+        if (active.closest('[role="dialog"]')) return;
+        if (active.closest('nav') || active.closest('aside') || active.closest('footer')) return;
+        if (activeTag === 'BUTTON' || activeTag === 'A') return;
+        if (activeTag === 'INPUT' && active !== el) return;
+      }
       if (document.activeElement !== el) {
         el.focus({ preventScroll: true });
       }
@@ -195,7 +205,7 @@ function TypingAreaComponent({
     // Initial focus
     const timer = setTimeout(focusInput, 20);
 
-    // Global keydown: captures EVERY typing key directly using stable refs
+    // Global keydown: captures typing keys while respecting keyboard accessibility (WCAG 2.1.2)
     const handleWindowKeyDown = (e: KeyboardEvent) => {
       updateCapsLockState(e);
 
@@ -203,10 +213,41 @@ function TypingAreaComponent({
       if (currentStatus !== 'idle' && currentStatus !== 'playing') return;
 
       // Don't intercept if focus is in a dialog/modal or textarea/select or another input
-      const activeTag = document.activeElement?.tagName;
-      if (activeTag === 'TEXTAREA' || activeTag === 'SELECT') return;
-      if (document.activeElement?.closest('[role="dialog"]')) return;
-      if (document.activeElement?.tagName === 'INPUT' && document.activeElement !== inputRef.current) return;
+      const active = document.activeElement;
+      if (active) {
+        const activeTag = active.tagName;
+        if (activeTag === 'TEXTAREA' || activeTag === 'SELECT') return;
+        if (active.closest('[role="dialog"]')) return;
+        if (activeTag === 'INPUT' && active !== inputRef.current) return;
+      }
+
+      // Escape key explicitly releases typing focus for accessible keyboard navigation
+      if (e.key === 'Escape') {
+        isFocusReleasedRef.current = true;
+        setIsFocusReleased(true);
+        inputRef.current?.blur();
+        return;
+      }
+
+      // If focus is currently released, allow Tab or arrow keys to navigate controls freely
+      if (isFocusReleasedRef.current) {
+        if (e.key === 'Tab' || e.key.startsWith('Arrow')) {
+          return;
+        }
+        // If user presses any typing key or Enter, re-engage typing focus
+        if (e.key.length === 1 || e.key === 'Enter') {
+          isFocusReleasedRef.current = false;
+          setIsFocusReleased(false);
+          focusInput();
+        }
+      }
+
+      // Allow Tab key to naturally navigate out to the next interactive element (No Keyboard Trap)
+      if (e.key === 'Tab') {
+        isFocusReleasedRef.current = true;
+        setIsFocusReleased(true);
+        return;
+      }
 
       // System shortcuts (Ctrl, Alt, Meta)
       if (e.ctrlKey || e.metaKey || e.altKey) {
@@ -238,15 +279,11 @@ function TypingAreaComponent({
         return;
       }
 
-      // Prevent Tab from blurring focus out
-      if (e.key === 'Tab') {
-        e.preventDefault();
-        return;
-      }
-
       // Printable single character keystroke (letters, numbers, space, punctuation)
       if (e.key.length === 1) {
         e.preventDefault(); // Prevents Space from scrolling the page
+        isFocusReleasedRef.current = false;
+        setIsFocusReleased(false);
         focusInput();
 
         let charToType = e.key;
@@ -277,11 +314,37 @@ function TypingAreaComponent({
       updateCapsLockState(e);
     };
 
-    // Re-focus when the hidden input loses focus or window regains focus
-    const handleBlur = () => setTimeout(focusInput, 15);
-    const handleWindowFocus = () => setTimeout(focusInput, 30);
+    // Re-focus helper that respects keyboard navigation
+    const handleBlur = () => {
+      setTimeout(() => {
+        const active = document.activeElement;
+        if (
+          isFocusReleasedRef.current ||
+          !active ||
+          active.tagName === 'BUTTON' ||
+          active.tagName === 'A' ||
+          active.tagName === 'SELECT' ||
+          active.tagName === 'TEXTAREA' ||
+          active.closest('nav') ||
+          active.closest('aside') ||
+          active.closest('[role="dialog"]')
+        ) {
+          return;
+        }
+        focusInput();
+      }, 30);
+    };
+
+    const handleWindowFocus = () => {
+      if (!isFocusReleasedRef.current) {
+        setTimeout(focusInput, 30);
+      }
+    };
+
     const handleVisibility = () => {
-      if (document.visibilityState === 'visible') setTimeout(focusInput, 50);
+      if (document.visibilityState === 'visible' && !isFocusReleasedRef.current) {
+        setTimeout(focusInput, 50);
+      }
     };
 
     const el = inputRef.current;
@@ -377,6 +440,8 @@ function TypingAreaComponent({
 
   // Focus handler
   const handleContainerClick = useCallback(() => {
+    isFocusReleasedRef.current = false;
+    setIsFocusReleased(false);
     inputRef.current?.focus();
     if (inputRef.current) {
       const len = inputRef.current.value.length;
@@ -386,6 +451,11 @@ function TypingAreaComponent({
 
   return (
     <div className="relative w-full">
+      {/* Hidden screen-reader instructions for touch typing */}
+      <div id="typing-instructions" className="sr-only">
+        Touch typing exercise. Type the characters shown on screen. Green indicates correct, red indicates an error. Press Escape to release keyboard focus and navigate other page controls.
+      </div>
+
       {/* ─── Caps Lock Warning Preferences Modal (only on explicit user request) ─── */}
       <CapsLockWarningModal
         isOpen={isModalOpen}
@@ -393,6 +463,29 @@ function TypingAreaComponent({
         autoFixEnabled={autoFixCapsLock}
         onToggleAutoFix={setAutoFixCapsLock}
       />
+
+      {/* ─── Focus Released Accessibility Notice ─── */}
+      {isFocusReleased && (status === 'idle' || status === 'playing') && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="mb-3 px-3.5 sm:px-4 py-2 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/60 rounded-xl text-blue-900 dark:text-blue-200 text-xs flex items-center justify-between shadow-xs animate-fade-in"
+        >
+          <span className="flex items-center gap-2">
+            <span className="font-semibold">Keyboard focus released.</span>
+            <span className="text-neutral-600 dark:text-neutral-400">
+              Press Tab to navigate controls, or click the text area to resume typing.
+            </span>
+          </span>
+          <button
+            type="button"
+            onClick={handleContainerClick}
+            className="px-2 py-0.5 font-semibold rounded bg-blue-600 text-white hover:bg-blue-700 text-[11px] cursor-pointer"
+          >
+            Resume Typing
+          </button>
+        </div>
+      )}
 
       {/* ─── Non-intrusive Caps Lock Warning Banner ─── */}
       {capsLockOn && (status === 'idle' || status === 'playing') && (
@@ -419,6 +512,8 @@ function TypingAreaComponent({
 
       <div
         ref={containerRef}
+        role="region"
+        aria-label="Touch typing practice area"
         className={`typing-area-container relative p-5 sm:p-7 rounded-2xl border-2 border-neutral-200 dark:border-neutral-800 font-mono select-none transition-all duration-200 bg-white dark:bg-neutral-900/70 shadow-xs backdrop-blur-xs cursor-text ${
           isShaking ? 'animate-shake' : ''
         }`}
@@ -430,6 +525,8 @@ function TypingAreaComponent({
         onMouseDown={(e) => {
           if (e.target !== inputRef.current) {
             e.preventDefault();
+            isFocusReleasedRef.current = false;
+            setIsFocusReleased(false);
             inputRef.current?.focus();
             if (inputRef.current) {
               const len = inputRef.current.value.length;
@@ -465,6 +562,7 @@ function TypingAreaComponent({
           autoCapitalize="off"
           spellCheck="false"
           aria-label="Typing input field"
+          aria-describedby="typing-instructions"
           className="absolute inset-0 w-full h-full opacity-0 cursor-text z-10 p-0 m-0 select-none"
         />
 
@@ -534,8 +632,8 @@ function TypingAreaComponent({
                                       ? 'animate-target-char border-b-2 border-neutral-900 dark:border-neutral-100 bg-neutral-900/10 dark:bg-neutral-100/15 rounded-xs text-neutral-800 dark:text-neutral-200 font-bold'
                                       : 'animate-target-char text-neutral-950 dark:text-white font-extrabold bg-neutral-900/10 dark:bg-neutral-100/20 ring-1.5 ring-neutral-900/35 dark:ring-neutral-100/40 rounded-xs'
                                     : isCurrentWord
-                                    ? 'text-neutral-700 dark:text-neutral-300 font-medium'
-                                    : 'text-neutral-400 dark:text-neutral-500'
+                                    ? 'text-neutral-800 dark:text-neutral-200 font-medium'
+                                    : 'text-neutral-500 dark:text-neutral-400'
                                 }`}
                               >
                                 {isCurrent && isSpace ? '␣' : char}

@@ -2,10 +2,11 @@ import { doc, getDoc, setDoc, getDocs, collection, query, orderBy, limit } from 
 import type { User } from 'firebase/auth';
 import { db, auth } from '../lib/firebase';
 import { secureStorage, type TypingSessionRecord } from '../utils/secureStorage';
+import { canCollectAnalytics } from '../utils/cookieConsent';
 
 export interface UserCloudData {
   uid: string;
-  email: string | null;
+  email?: string | null; // Omitted in public Firestore profile under Data Minimization
   displayName: string | null;
   photoURL: string | null;
   typingGameLevel: number;
@@ -85,14 +86,28 @@ export function getLocalProgress() {
  */
 export async function saveTypingSession(record: TypingSessionRecord): Promise<void> {
   try {
-    // 1. Update local storage
-    const currentStats = secureStorage.getItem<TypingSessionRecord[]>('typlix_stats', []);
-    // Prevent duplicate entries by ID
-    const filtered = currentStats.filter((s) => s.id !== record.id);
-    const updatedStats = [...filtered, record].slice(-100);
-    secureStorage.setItem('typlix_stats', updatedStats);
+    // Check if user has consented to analytics/performance data recording
+    const isAnalyticsAllowed = canCollectAnalytics();
 
-    const summary = calculateStatsSummary(updatedStats);
+    let updatedStats: TypingSessionRecord[] = [];
+    let summary = { bestWpm: 0, avgAccuracy: 0, totalTests: 0, total: 0 };
+
+    if (isAnalyticsAllowed) {
+      // 1. Update local storage with minimal session record
+      const currentStats = secureStorage.getItem<TypingSessionRecord[]>('typlix_stats', []);
+      const filtered = currentStats.filter((s) => s.id !== record.id);
+      updatedStats = [...filtered, record].slice(-100);
+      secureStorage.setItem('typlix_stats', updatedStats);
+      summary = calculateStatsSummary(updatedStats);
+    } else {
+      // If user declined analytics, compute transient summary for current session without persistent tracking
+      summary = {
+        bestWpm: record.wpm || 0,
+        avgAccuracy: record.accuracy || 100,
+        totalTests: 1,
+        total: 1,
+      };
+    }
 
     // 2. Notify local React components
     notifyProgressUpdated({
@@ -102,18 +117,18 @@ export async function saveTypingSession(record: TypingSessionRecord): Promise<vo
       summary,
     });
 
-    // 3. Save to cloud Firestore if user is authenticated
+    // 3. Save to cloud Firestore if user is authenticated and analytics is enabled
     const currentUser = auth.currentUser;
-    if (currentUser) {
+    if (currentUser && isAnalyticsAllowed) {
       const userRef = doc(db, 'users', currentUser.uid);
       const currentLevel = secureStorage.getItem<number>('typingGameLevel', 1);
 
+      // Data Minimization: We NEVER store email in the public /users Firestore collection
       await setDoc(
         userRef,
         {
           uid: currentUser.uid,
-          email: currentUser.email || null,
-          displayName: currentUser.displayName || currentUser.email?.split('@')[0] || 'Typist',
+          displayName: currentUser.displayName || 'Typist',
           photoURL: currentUser.photoURL || null,
           typlix_stats: updatedStats,
           bestWpm: summary.bestWpm,
@@ -231,13 +246,12 @@ export async function syncUserProgressWithCloud(currentUser: User): Promise<{
 
     const summary = calculateStatsSummary(finalStats);
 
-    // Save consolidated progress back to Firestore
+    // Save consolidated progress back to Firestore (omitting email for data minimization)
     await setDoc(
       userRef,
       {
         uid: currentUser.uid,
-        email: currentUser.email || null,
-        displayName: currentUser.displayName || currentUser.email?.split('@')[0] || 'Typist',
+        displayName: currentUser.displayName || 'Typist',
         photoURL: currentUser.photoURL || null,
         typingGameLevel: finalLevel,
         bestWpm: summary.bestWpm,
@@ -359,7 +373,7 @@ export async function fetchTopPlayersFromFirestore(limitCount: number = 10): Pro
       if (typeof data.bestWpm === 'number' && data.bestWpm > 0) {
         players.push({
           rank,
-          name: data.displayName || data.email?.split('@')[0] || `Typist #${rank}`,
+          name: data.displayName || `Typist #${rank}`,
           wpm: data.bestWpm,
           accuracy: data.avgAccuracy || 95,
           level: data.typingGameLevel || 1,

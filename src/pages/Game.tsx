@@ -310,10 +310,11 @@ export default function Game() {
             <button
               type="button"
               onClick={() => setIsSidebarOpen(true)}
-              className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-2xs hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer transition-all animate-fade-in"
+              aria-label={`Show ${mode === 'lesson' ? 'lesson' : 'controls'} sidebar`}
+              className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-2xs hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer transition-all animate-fade-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
               title="Show lesson / practice sidebar"
             >
-              <span className="text-blue-500">▶</span>
+              <span className="text-blue-500" aria-hidden="true">▶</span>
               <span>Show {mode === 'lesson' ? 'Lesson' : 'Controls'}</span>
             </button>
           )}
@@ -354,10 +355,10 @@ export default function Game() {
           {/* Quote attribution */}
           {mode === 'quotes' && currentQuoteInfo.author && (
             <div className="w-full text-center mt-1.5 animate-fade-in">
-              <p className="text-xs text-neutral-500 dark:text-neutral-400 italic">
+              <p className="text-xs text-neutral-600 dark:text-neutral-400 italic">
                 — {currentQuoteInfo.author}
                 {currentQuoteInfo.source && (
-                  <span className="text-neutral-400 dark:text-neutral-600">
+                  <span className="text-neutral-600 dark:text-neutral-400">
                     , {currentQuoteInfo.source}
                   </span>
                 )}
@@ -371,7 +372,7 @@ export default function Game() {
               <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/50">
                 {currentSnippetInfo.language}
               </span>
-              <span className="text-xs text-neutral-400 dark:text-neutral-500">
+              <span className="text-xs text-neutral-600 dark:text-neutral-400 font-medium">
                 {currentSnippetInfo.title}
               </span>
             </div>
@@ -388,10 +389,11 @@ export default function Game() {
             <button
               type="button"
               onClick={() => setShowVirtualKeyboard(true)}
-              className="text-xs text-neutral-400 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-200 flex items-center gap-1.5 px-3 py-1 rounded-full border border-dashed border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 transition-colors cursor-pointer"
-              title="Show virtual keyboard"
+              aria-label="Show on-screen virtual keyboard"
+              className="text-xs text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 flex items-center gap-1.5 px-3 py-1 rounded-full border border-dashed border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
             >
-              <span>⌨ Show Virtual Keyboard</span>
+              <span aria-hidden="true">⌨</span>
+              <span>Show Virtual Keyboard</span>
             </button>
           </div>
         )}

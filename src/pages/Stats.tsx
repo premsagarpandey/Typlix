@@ -39,8 +39,8 @@ export default function Stats() {
     <div className="max-w-2xl mx-auto py-8 space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">Statistics</h2>
-          <p className="text-xs text-neutral-500 dark:text-neutral-500">Track your typing velocity and accuracy trends</p>
+          <h1 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">Statistics</h1>
+          <p className="text-xs text-neutral-600 dark:text-neutral-400">Track your typing velocity and accuracy trends</p>
         </div>
 
         <div className="flex items-center gap-2">
@@ -48,14 +48,16 @@ export default function Stats() {
             <div className="flex items-center gap-1.5">
               <button
                 onClick={handleExportCSV}
-                className="px-2.5 py-1.5 text-xs font-medium rounded-md border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
+                aria-label="Export recorded typing sessions as CSV spreadsheet"
+                className="px-2.5 py-1.5 text-xs font-medium rounded-md border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
                 title="Export session data as CSV"
               >
                 CSV Export
               </button>
               <button
                 onClick={handleExportJSON}
-                className="px-2.5 py-1.5 text-xs font-medium rounded-md border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
+                aria-label="Export complete typing progress backup as JSON file"
+                className="px-2.5 py-1.5 text-xs font-medium rounded-md border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
                 title="Export full JSON backup"
               >
                 JSON Backup
@@ -64,7 +66,8 @@ export default function Stats() {
           )}
           <Link
             to="/game"
-            className="px-3 py-1.5 text-xs font-medium rounded-md bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:opacity-90 transition-opacity"
+            aria-label="Go to typing practice arena"
+            className="px-3 py-1.5 text-xs font-medium rounded-md bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:opacity-90 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
           >
             Practice
           </Link>
@@ -74,35 +77,41 @@ export default function Stats() {
       {feedback && (
         <div className="p-2.5 text-xs rounded-md bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-medium animate-fade-in flex items-center justify-between">
           <span>{feedback}</span>
-          <button onClick={() => setFeedback(null)} className="cursor-pointer opacity-70 hover:opacity-100">✕</button>
+          <button
+            onClick={() => setFeedback(null)}
+            aria-label="Dismiss feedback message"
+            className="cursor-pointer opacity-70 hover:opacity-100 p-1 rounded focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white dark:focus-visible:ring-neutral-900"
+          >
+            <span aria-hidden="true">✕</span>
+          </button>
         </div>
       )}
 
       {/* Summary Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-neutral-200 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-800 rounded-lg overflow-hidden">
         <div className="p-4 bg-neutral-50 dark:bg-neutral-950">
-          <div className="text-xs text-neutral-500 dark:text-neutral-500 font-medium">Best Speed</div>
+          <div className="text-xs text-neutral-600 dark:text-neutral-400 font-medium">Best Speed</div>
           <div className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mt-1 font-mono">
-            {summary.bestWpm} <span className="text-xs font-normal text-neutral-400">wpm</span>
+            {summary.bestWpm} <span className="text-xs font-normal text-neutral-600 dark:text-neutral-400">wpm</span>
           </div>
         </div>
 
         <div className="p-4 bg-neutral-50 dark:bg-neutral-950">
-          <div className="text-xs text-neutral-500 dark:text-neutral-500 font-medium">Avg Accuracy</div>
+          <div className="text-xs text-neutral-600 dark:text-neutral-400 font-medium">Avg Accuracy</div>
           <div className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mt-1 font-mono">
-            {summary.avgAccuracy}<span className="text-xs font-normal text-neutral-400">%</span>
+            {summary.avgAccuracy}<span className="text-xs font-normal text-neutral-600 dark:text-neutral-400">%</span>
           </div>
         </div>
 
         <div className="p-4 bg-neutral-50 dark:bg-neutral-950">
-          <div className="text-xs text-neutral-500 dark:text-neutral-500 font-medium">Tests Done</div>
+          <div className="text-xs text-neutral-600 dark:text-neutral-400 font-medium">Tests Done</div>
           <div className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mt-1 font-mono">
             {summary.total}
           </div>
         </div>
 
         <div className="p-4 bg-neutral-50 dark:bg-neutral-950">
-          <div className="text-xs text-neutral-500 dark:text-neutral-500 font-medium">Level</div>
+          <div className="text-xs text-neutral-600 dark:text-neutral-400 font-medium">Level</div>
           <div className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mt-1 font-mono">
             {currentLevel}
           </div>
@@ -116,20 +125,20 @@ export default function Stats() {
       <div className="overflow-hidden rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950">
         <div className="p-4 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
           <h3 className="font-medium text-neutral-900 dark:text-neutral-100 text-sm">Recent Sessions</h3>
-          <span className="text-xs text-neutral-400 dark:text-neutral-600">{recentSessions.length} recorded</span>
+          <span className="text-xs text-neutral-600 dark:text-neutral-400 font-mono">{recentSessions.length} recorded</span>
         </div>
 
         {recentSessions.length === 0 ? (
-          <div className="py-12 text-center text-neutral-500 dark:text-neutral-500 text-sm space-y-1">
+          <div className="py-12 text-center text-neutral-600 dark:text-neutral-400 text-sm space-y-1">
             <p className="font-medium">No sessions yet.</p>
-            <p className="text-xs text-neutral-400 dark:text-neutral-600">
+            <p className="text-xs text-neutral-600 dark:text-neutral-400">
               Complete a lesson to start tracking progress.
             </p>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-neutral-100/80 dark:bg-neutral-900/80 text-xs uppercase font-medium text-neutral-500 dark:text-neutral-500 border-b border-neutral-200 dark:border-neutral-800">
+            <table aria-label="Recent typing sessions history" className="w-full text-left text-sm">
+              <thead className="bg-neutral-100/80 dark:bg-neutral-900/80 text-xs uppercase font-medium text-neutral-600 dark:text-neutral-400 border-b border-neutral-200 dark:border-neutral-800">
                 <tr>
                   <th className="py-3 px-4">Mode</th>
                   <th className="py-3 px-4">Speed</th>
@@ -154,7 +163,7 @@ export default function Stats() {
                     <td className="py-3 px-4 font-mono text-neutral-700 dark:text-neutral-300 text-xs">
                       {session.maxCombo}x
                     </td>
-                    <td className="py-3 px-4 text-xs text-neutral-400 dark:text-neutral-500">
+                    <td className="py-3 px-4 text-xs text-neutral-600 dark:text-neutral-400">
                       {session.date}
                     </td>
                     <td className="py-3 px-4 text-right">
@@ -162,7 +171,7 @@ export default function Stats() {
                         className={`inline-block px-2 py-0.5 rounded text-[11px] font-medium ${
                           session.passed
                             ? 'bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300'
-                            : 'bg-neutral-100 dark:bg-neutral-800/50 text-neutral-500 dark:text-neutral-500'
+                            : 'bg-neutral-100 dark:bg-neutral-800/50 text-neutral-600 dark:text-neutral-400'
                         }`}
                       >
                         {session.passed ? 'Passed' : 'Practice'}

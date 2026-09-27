@@ -56,38 +56,42 @@ export default function ResultsModal({
   };
 
   return (
-    <div className="w-full max-w-sm mx-auto p-6 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg text-center animate-fade-in transition-colors">
+    <div
+      role="status"
+      aria-live="polite"
+      className="w-full max-w-sm mx-auto p-6 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg text-center animate-fade-in transition-colors shadow-xl"
+    >
       <h2 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-1">
         {getTitle()}
       </h2>
 
-      <p className="text-xs text-neutral-500 dark:text-neutral-500 mb-5">{getSubtitle()}</p>
+      <p className="text-xs text-neutral-600 dark:text-neutral-400 mb-5">{getSubtitle()}</p>
 
       <div className="space-y-2 mb-5 text-sm">
         <div className="flex justify-between py-2 border-b border-neutral-200 dark:border-neutral-800">
-          <span className="text-neutral-500 dark:text-neutral-500">Speed</span>
+          <span className="text-neutral-600 dark:text-neutral-400">Speed</span>
           <span className="font-mono font-medium text-neutral-900 dark:text-neutral-100">
             {wpm} wpm
             {isLesson && levelConfig && (
-              <span className="text-xs text-neutral-400 dark:text-neutral-500 ml-1">
+              <span className="text-xs text-neutral-600 dark:text-neutral-400 ml-1">
                 / {levelConfig.targetWpm}
               </span>
             )}
           </span>
         </div>
         <div className="flex justify-between py-2 border-b border-neutral-200 dark:border-neutral-800">
-          <span className="text-neutral-500 dark:text-neutral-500">Accuracy</span>
+          <span className="text-neutral-600 dark:text-neutral-400">Accuracy</span>
           <span className="font-mono font-medium text-neutral-900 dark:text-neutral-100">
             {accuracy}%
             {isLesson && levelConfig && (
-              <span className="text-xs text-neutral-400 dark:text-neutral-500 ml-1">
+              <span className="text-xs text-neutral-600 dark:text-neutral-400 ml-1">
                 / {levelConfig.targetAccuracy}%
               </span>
             )}
           </span>
         </div>
         <div className="flex justify-between py-2">
-          <span className="text-neutral-500 dark:text-neutral-500">Best Combo</span>
+          <span className="text-neutral-600 dark:text-neutral-400">Best Combo</span>
           <span className="font-mono font-medium text-neutral-900 dark:text-neutral-100">
             {maxCombo}x
           </span>
@@ -99,14 +103,14 @@ export default function ResultsModal({
         <div className="mb-4">
           {isPassed ? (
             <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 text-xs text-center font-medium">
-              🎉 <span className="font-semibold">Level {levelConfig.level} Cleared!</span>{' '}
+              <span aria-hidden="true">🎉</span> <span className="font-semibold">Level {levelConfig.level} Cleared!</span>{' '}
               {levelConfig.level < 50
                 ? `Level ${levelConfig.level + 1} ab unlock ho chuka hai.`
                 : 'Congratulations! Aapne saare 50 levels pass kar liye!'}
             </div>
           ) : (
             <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-xs text-center font-medium">
-              🔒 <span className="font-semibold">Level Not Cleared.</span> Agla level unlock karne ke liye{' '}
+              <span aria-hidden="true">🔒</span> <span className="font-semibold">Level Not Cleared.</span> Agla level unlock karne ke liye{' '}
               <span className="font-bold">{levelConfig.targetWpm} WPM</span> aur{' '}
               <span className="font-bold">{levelConfig.targetAccuracy}% Accuracy</span> chahiye.
             </div>
@@ -116,28 +120,36 @@ export default function ResultsModal({
 
       <div className="flex gap-2">
         <button
+          type="button"
           onClick={onRetry}
+          aria-label={isLesson && !isPassed ? 'Try this level again (Shortcut: R)' : 'Retry typing session (Shortcut: R)'}
           className={`${
             isLesson && !isPassed ? 'w-full' : 'flex-1'
           } py-2.5 px-4 ${
             isLesson && !isPassed
               ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:opacity-90'
               : 'border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300'
-          } font-medium rounded-md text-sm cursor-pointer flex items-center justify-center gap-2 transition-all shadow-xs`}
+          } font-medium rounded-md text-sm cursor-pointer flex items-center justify-center gap-2 transition-all shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white`}
         >
           {isLesson && !isPassed ? 'Try Again' : 'Retry'}
-          <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-neutral-200 dark:bg-neutral-800 text-neutral-500 rounded">
+          <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 rounded" aria-hidden="true">
             R
           </kbd>
         </button>
 
         {isLesson && isPassed && onNextLevel && (
           <button
+            type="button"
             onClick={onNextLevel}
-            className="flex-1 py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-md text-sm cursor-pointer flex items-center justify-center gap-2 transition-colors shadow-xs"
+            aria-label={levelConfig && levelConfig.level >= 50 ? 'All 50 levels completed' : `Proceed to next level ${levelConfig ? levelConfig.level + 1 : ''} (Shortcut: Enter)`}
+            className="flex-1 py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-md text-sm cursor-pointer flex items-center justify-center gap-2 transition-colors shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
           >
-            {levelConfig && levelConfig.level >= 50 ? 'All Done 🎉' : 'Next Level ➔'}
-            <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-white/20 rounded">
+            {levelConfig && levelConfig.level >= 50 ? (
+              <span>All Done <span aria-hidden="true">🎉</span></span>
+            ) : (
+              <span>Next Level <span aria-hidden="true">➔</span></span>
+            )}
+            <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-white/20 rounded" aria-hidden="true">
               ↵
             </kbd>
           </button>
@@ -145,8 +157,10 @@ export default function ResultsModal({
 
         {!isLesson && mode === 'custom' && onOpenCustomModal && (
           <button
+            type="button"
             onClick={onOpenCustomModal}
-            className="flex-1 py-2.5 px-4 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-medium rounded-md text-sm cursor-pointer hover:opacity-90 transition-opacity"
+            aria-label="Open custom text editor"
+            className="flex-1 py-2.5 px-4 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-medium rounded-md text-sm cursor-pointer hover:opacity-90 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
           >
             Edit Text
           </button>
@@ -154,22 +168,30 @@ export default function ResultsModal({
 
         {!isLesson && mode !== 'custom' && (
           <button
+            type="button"
             onClick={onRetry}
-            className="flex-1 py-2.5 px-4 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-medium rounded-md text-sm cursor-pointer flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
+            aria-label={
+              mode === 'quotes'
+                ? 'Proceed to next quote (Shortcut: Enter)'
+                : mode === 'code'
+                ? 'Proceed to next code snippet (Shortcut: Enter)'
+                : 'Proceed to next test (Shortcut: Enter)'
+            }
+            className="flex-1 py-2.5 px-4 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-medium rounded-md text-sm cursor-pointer flex items-center justify-center gap-2 hover:opacity-90 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
           >
             {mode === 'quotes' ? 'Next Quote' : mode === 'code' ? 'Next Snippet' : 'Next'}
-            <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-white/20 dark:bg-neutral-900/20 rounded">
+            <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-white/20 dark:bg-neutral-900/20 rounded" aria-hidden="true">
               ↵
             </kbd>
           </button>
         )}
       </div>
 
-      <div className="mt-3 pt-3 border-t border-neutral-200 dark:border-neutral-800 text-[11px] text-neutral-400 dark:text-neutral-600">
+      <div className="mt-3 pt-3 border-t border-neutral-200 dark:border-neutral-800 text-[11px] text-neutral-600 dark:text-neutral-400">
         {isLesson && !isPassed ? (
-          <span>Press <kbd className="px-1 py-0.5 font-mono bg-neutral-200 dark:bg-neutral-800 rounded text-[10px]">Enter</kbd> or <kbd className="px-1 py-0.5 font-mono bg-neutral-200 dark:bg-neutral-800 rounded text-[10px]">R</kbd> to retry</span>
+          <span>Press <kbd className="px-1 py-0.5 font-mono bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 rounded text-[10px]">Enter</kbd> or <kbd className="px-1 py-0.5 font-mono bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 rounded text-[10px]">R</kbd> to retry</span>
         ) : (
-          <span>Press <kbd className="px-1 py-0.5 font-mono bg-neutral-200 dark:bg-neutral-800 rounded text-[10px]">Enter</kbd> or <kbd className="px-1 py-0.5 font-mono bg-neutral-200 dark:bg-neutral-800 rounded text-[10px]">R</kbd> to continue</span>
+          <span>Press <kbd className="px-1 py-0.5 font-mono bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 rounded text-[10px]">Enter</kbd> or <kbd className="px-1 py-0.5 font-mono bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 rounded text-[10px]">R</kbd> to continue</span>
         )}
       </div>
     </div>

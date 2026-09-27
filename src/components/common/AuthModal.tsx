@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Mail, Lock, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -21,6 +21,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const [agreeDataConsent, setAgreeDataConsent] = useState(false);
   const [emailLoading, setEmailLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   const handleClose = useCallback(() => {
     setEmail('');
@@ -40,14 +41,43 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     }
   }, [user, isOpen, onClose, navigate]);
 
-  // Close modal on escape key
+  // Close modal on escape key & trap focus inside dialog (WCAG 2.4.3)
   useEffect(() => {
     if (!isOpen) return;
+
+    // Auto-focus email input on open
+    const focusTimer = setTimeout(() => {
+      const emailInput = document.getElementById('auth-email');
+      emailInput?.focus();
+    }, 50);
+
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') handleClose();
+      if (e.key === 'Escape') {
+        handleClose();
+        return;
+      }
+      if (e.key === 'Tab' && modalRef.current) {
+        const focusables = modalRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusables.length === 0) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     };
+
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    return () => {
+      clearTimeout(focusTimer);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, [isOpen, handleClose]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -171,6 +201,10 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
           />
 
           <motion.div
+            ref={modalRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="auth-modal-title"
             initial={{ opacity: 0, scale: 0.95, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
@@ -178,22 +212,24 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
           >
             <div className="absolute top-4 right-4">
               <button
+                type="button"
                 onClick={handleClose}
-                className="p-1 text-neutral-500 hover:text-neutral-900 dark:hover:text-white bg-neutral-100 dark:bg-neutral-800 rounded-full transition-colors cursor-pointer"
+                aria-label="Close authentication dialog"
+                className="p-1 text-neutral-500 hover:text-neutral-900 dark:hover:text-white bg-neutral-100 dark:bg-neutral-800 rounded-full transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
               >
-                <X className="w-5 h-5" />
+                <X className="w-5 h-5" aria-hidden="true" />
               </button>
             </div>
 
             <div className="p-8">
               <div className="mb-8 text-center">
-                <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-extrabold text-xl flex items-center justify-center font-mono shadow-lg">
+                <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-extrabold text-xl flex items-center justify-center font-mono shadow-lg" aria-hidden="true">
                   T
                 </div>
-                <h2 className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white mb-2">
+                <h2 id="auth-modal-title" className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white mb-2">
                   {isLoginMode ? 'Welcome back' : 'Create an account'}
                 </h2>
-                <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                <p className="text-sm text-neutral-600 dark:text-neutral-400">
                   {isLoginMode 
                     ? 'Enter your details to access your progress'
                     : 'Sign up to sync your typing stats everywhere'}
@@ -202,18 +238,20 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1.5">
+                  <label htmlFor="auth-email" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1.5 cursor-pointer">
                     Email Address
                   </label>
                   <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none" aria-hidden="true">
                       <Mail className="h-5 w-5 text-neutral-400" />
                     </div>
                     <input
+                      id="auth-email"
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
+                      autoComplete="email"
                       className="block w-full pl-10 pr-3 py-2.5 border border-neutral-300 dark:border-neutral-700 rounded-xl bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900 dark:focus:ring-white focus:border-transparent transition-all sm:text-sm"
                       placeholder="you@example.com"
                     />
@@ -221,19 +259,21 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1.5">
+                  <label htmlFor="auth-password" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1.5 cursor-pointer">
                     Password
                   </label>
                   <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none" aria-hidden="true">
                       <Lock className="h-5 w-5 text-neutral-400" />
                     </div>
                     <input
+                      id="auth-password"
                       type="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
                       minLength={6}
+                      autoComplete={isLoginMode ? 'current-password' : 'new-password'}
                       className="block w-full pl-10 pr-3 py-2.5 border border-neutral-300 dark:border-neutral-700 rounded-xl bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900 dark:focus:ring-white focus:border-transparent transition-all sm:text-sm"
                       placeholder="••••••••"
                     />
@@ -286,7 +326,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                     </label>
                   </div>
                 ) : (
-                  <p className="text-[11px] text-neutral-500 dark:text-neutral-400 text-center leading-normal pt-0.5">
+                  <p className="text-[11px] text-neutral-600 dark:text-neutral-400 text-center leading-normal pt-0.5">
                     By signing in, you agree to our{' '}
                     <a
                       href="/terms"
@@ -310,6 +350,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
                 <button
                   type="submit"
+                  aria-label={isLoginMode ? 'Sign in with email and password' : 'Create new Typlix account'}
                   disabled={emailLoading || googleLoading || (!isLoginMode && (!agreeTerms || !agreeDataConsent))}
                   className="w-full flex items-center justify-center gap-2 py-2.5 px-4 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
@@ -318,7 +359,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                   ) : (
                     <>
                       {isLoginMode ? 'Sign In' : 'Create Account'}
-                      <ArrowRight className="w-4 h-4" />
+                      <ArrowRight className="w-4 h-4" aria-hidden="true" />
                     </>
                   )}
                 </button>
@@ -329,7 +370,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                   <div className="w-full border-t border-neutral-200 dark:border-neutral-800" />
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white dark:bg-neutral-900 text-neutral-500">
+                  <span className="px-2 bg-white dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400">
                     Or continue with
                   </span>
                 </div>
@@ -339,13 +380,14 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 <button
                   type="button"
                   onClick={handleGoogleAuth}
+                  aria-label={googleLoading ? 'Connecting to Google authentication...' : 'Sign in with Google'}
                   disabled={googleLoading || emailLoading}
                   className="w-full flex items-center justify-center gap-3 py-2.5 px-4 border border-neutral-300 dark:border-neutral-700 rounded-xl shadow-sm text-sm font-semibold text-neutral-700 dark:text-neutral-200 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-900 transition-colors disabled:opacity-50 cursor-pointer"
                 >
                   {googleLoading ? (
                     <div className="w-5 h-5 border-2 border-neutral-400 border-t-neutral-900 dark:border-t-white rounded-full animate-spin" />
                   ) : (
-                    <svg className="w-5 h-5" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" aria-hidden="true">
                       <path
                         d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
                         fill="#4285F4"
@@ -372,7 +414,8 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                   <button
                     type="button"
                     onClick={handleGoogleRedirect}
-                    className="text-xs text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200 underline transition-colors cursor-pointer"
+                    aria-label="Sign in using Google redirect instead of popup"
+                    className="text-xs text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-200 underline transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white rounded-xs"
                   >
                     Trouble with popup? Try signing in with redirect &rarr;
                   </button>
@@ -384,12 +427,14 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
               <p className="text-sm text-neutral-600 dark:text-neutral-400">
                 {isLoginMode ? "Don't have an account? " : "Already have an account? "}
                 <button
+                  type="button"
                   onClick={() => {
                     setIsLoginMode(!isLoginMode);
                     setAgreeTerms(false);
                     setAgreeDataConsent(false);
                   }}
-                  className="font-semibold text-neutral-900 dark:text-white hover:underline transition-all cursor-pointer"
+                  aria-label={isLoginMode ? 'Switch to sign up form' : 'Switch to sign in form'}
+                  className="font-semibold text-neutral-900 dark:text-white hover:underline transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white rounded-xs"
                 >
                   {isLoginMode ? 'Sign up' : 'Sign in'}
                 </button>

@@ -251,10 +251,10 @@ export default function WpmProgressChart({ sessions }: WpmProgressChartProps) {
           </h3>
         </div>
         <div className="py-16 text-center space-y-1.5">
-          <p className="text-neutral-500 dark:text-neutral-500 text-sm font-medium">
+          <p className="text-neutral-700 dark:text-neutral-300 text-sm font-medium">
             No data to visualize yet.
           </p>
-          <p className="text-xs text-neutral-400 dark:text-neutral-600">
+          <p className="text-xs text-neutral-600 dark:text-neutral-400">
             Complete a few sessions to see your progress chart.
           </p>
         </div>
@@ -532,26 +532,34 @@ export default function WpmProgressChart({ sessions }: WpmProgressChartProps) {
         <div className="flex items-center gap-2">
           {/* Accuracy toggle */}
           <button
+            type="button"
+            role="switch"
+            aria-checked={showAccuracy}
+            aria-label={showAccuracy ? 'Hide accuracy line on chart' : 'Show accuracy line on chart'}
             onClick={() => setShowAccuracy(!showAccuracy)}
-            className={`px-2 py-1 text-[10px] font-medium rounded-md border transition-colors cursor-pointer ${
+            className={`px-2 py-1 text-[10px] font-medium rounded-md border transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white ${
               showAccuracy
                 ? 'border-purple-300 dark:border-purple-700 bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-400'
-                : 'border-neutral-200 dark:border-neutral-700 text-neutral-400 dark:text-neutral-600 hover:text-neutral-600 dark:hover:text-neutral-400'
+                : 'border-neutral-300 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100'
             }`}
           >
             Accuracy
           </button>
 
           {/* Filter tabs */}
-          <div className="flex items-center border border-neutral-200 dark:border-neutral-700 rounded-md overflow-hidden">
+          <div role="tablist" aria-label="Chart time range filters" className="flex items-center border border-neutral-200 dark:border-neutral-700 rounded-md overflow-hidden">
             {(Object.keys(FILTER_LABELS) as ChartFilter[]).map((key) => (
               <button
                 key={key}
+                type="button"
+                role="tab"
+                aria-selected={filter === key}
+                aria-label={`Show ${FILTER_LABELS[key]} progress chart`}
                 onClick={() => setFilter(key)}
-                className={`px-2.5 py-1 text-[10px] font-medium transition-colors cursor-pointer ${
+                className={`px-2.5 py-1 text-[10px] font-medium transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white ${
                   filter === key
                     ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900'
-                    : 'text-neutral-400 dark:text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'
+                    : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100'
                 }`}
               >
                 {FILTER_LABELS[key]}
@@ -565,18 +573,18 @@ export default function WpmProgressChart({ sessions }: WpmProgressChartProps) {
       <div className="relative p-4 pt-2">
         {/* Axis labels */}
         <div className="flex items-center justify-between px-1 mb-1">
-          <span className="text-[9px] font-mono uppercase tracking-widest text-neutral-400 dark:text-neutral-600">
+          <span className="text-[9px] font-mono uppercase tracking-widest text-neutral-600 dark:text-neutral-400">
             wpm
           </span>
           {showAccuracy && (
-            <span className="text-[9px] font-mono uppercase tracking-widest text-purple-400 dark:text-purple-600">
+            <span className="text-[9px] font-mono uppercase tracking-widest text-purple-700 dark:text-purple-400">
               accuracy %
             </span>
           )}
         </div>
 
         {filteredSessions.length === 0 ? (
-          <div className="py-12 text-center text-neutral-400 dark:text-neutral-600 text-xs">
+          <div className="py-12 text-center text-neutral-600 dark:text-neutral-400 text-xs">
             No sessions for this filter.
           </div>
         ) : (
@@ -652,7 +660,7 @@ export default function WpmProgressChart({ sessions }: WpmProgressChartProps) {
               className="inline-block w-3 h-[2px] rounded-full"
               style={{ background: colors.wpmStroke }}
             />
-            <span className="text-[10px] text-neutral-500 dark:text-neutral-500">
+            <span className="text-[10px] text-neutral-600 dark:text-neutral-400">
               WPM
             </span>
           </div>
@@ -662,7 +670,7 @@ export default function WpmProgressChart({ sessions }: WpmProgressChartProps) {
                 className="inline-block w-3 h-[2px] rounded-full"
                 style={{ background: colors.accStroke }}
               />
-              <span className="text-[10px] text-neutral-500 dark:text-neutral-500">
+              <span className="text-[10px] text-neutral-600 dark:text-neutral-400">
                 Accuracy
               </span>
             </div>
@@ -675,7 +683,7 @@ export default function WpmProgressChart({ sessions }: WpmProgressChartProps) {
                 borderTop: `1px dashed ${colors.avgLine}`,
               }}
             />
-            <span className="text-[10px] text-neutral-500 dark:text-neutral-500">
+            <span className="text-[10px] text-neutral-600 dark:text-neutral-400">
               Average
             </span>
           </div>

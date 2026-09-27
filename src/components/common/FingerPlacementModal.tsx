@@ -93,15 +93,15 @@ export default function FingerPlacementModal({
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-lg text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer text-sm"
-          aria-label="Close modal"
+          className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-lg text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer text-sm"
+          aria-label="Close finger placement tutorial"
         >
-          ✕
+          <span aria-hidden="true">✕</span>
         </button>
 
         {/* Minimal Monochromatic Header */}
         <div className="mb-4 text-center">
-          <span className="text-[11px] font-mono tracking-widest text-neutral-400 dark:text-neutral-500 uppercase">
+          <span className="text-[11px] font-mono tracking-widest text-neutral-500 dark:text-neutral-400 uppercase">
             Home Row Guide · {layout.name}
           </span>
           <h2
@@ -110,7 +110,7 @@ export default function FingerPlacementModal({
           >
             Position Your Fingers
           </h2>
-          <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1 max-w-md mx-auto">
+          <p className="text-xs text-neutral-600 dark:text-neutral-400 mt-1 max-w-md mx-auto">
             Rest your fingertips on the home row keys. Feel the raised bumps on{' '}
             <strong className="text-neutral-900 dark:text-neutral-100 font-semibold font-mono">F</strong>{' '}
             and{' '}
@@ -122,7 +122,7 @@ export default function FingerPlacementModal({
         <div className="w-full rounded-xl overflow-hidden border border-neutral-200 dark:border-neutral-800 mb-4 bg-neutral-950">
           <img
             src="/tutorial-image.jpg"
-            alt="Touch typing home row finger placement guide"
+            alt={`Hands positioned on a computer keyboard demonstrating touch typing posture on the ${layout.name} layout. Left fingers on keys ${layout.homeRowLeft.join(', ')} and right fingers on keys ${layout.homeRowRight.join(', ')}, index fingers resting on tactile bump guide keys.`}
             className="w-full h-auto max-h-[250px] object-cover"
             loading="eager"
           />
@@ -132,9 +132,9 @@ export default function FingerPlacementModal({
         <div className="grid grid-cols-2 gap-3 mb-4 text-xs text-left">
           {/* Left Hand */}
           <div className="p-3 rounded-xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-800">
-            <div className="flex items-center justify-between text-[11px] font-semibold text-neutral-500 dark:text-neutral-400 mb-2">
+            <div className="flex items-center justify-between text-[11px] font-semibold text-neutral-600 dark:text-neutral-400 mb-2">
               <span>Left Hand</span>
-              <span className="font-mono text-[10px] text-neutral-400 dark:text-neutral-500">Pinky → Index</span>
+              <span className="font-mono text-[10px] text-neutral-500 dark:text-neutral-400">Pinky → Index</span>
             </div>
             <div className="grid grid-cols-4 gap-1.5 text-center">
               {layout.homeRowLeft.map((k, idx) => {
@@ -154,7 +154,7 @@ export default function FingerPlacementModal({
                         <span className="absolute bottom-0.5 w-1 h-0.5 bg-neutral-400 dark:bg-neutral-500 rounded-full" />
                       )}
                     </span>
-                    <span className="text-[9px] text-neutral-400 dark:text-neutral-500 mt-1">
+                    <span className="text-[9px] text-neutral-500 dark:text-neutral-400 mt-1 font-medium">
                       {fingerNames[idx]}
                     </span>
                   </div>
@@ -165,9 +165,9 @@ export default function FingerPlacementModal({
 
           {/* Right Hand */}
           <div className="p-3 rounded-xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-800">
-            <div className="flex items-center justify-between text-[11px] font-semibold text-neutral-500 dark:text-neutral-400 mb-2">
+            <div className="flex items-center justify-between text-[11px] font-semibold text-neutral-600 dark:text-neutral-400 mb-2">
               <span>Right Hand</span>
-              <span className="font-mono text-[10px] text-neutral-400 dark:text-neutral-500">Index → Pinky</span>
+              <span className="font-mono text-[10px] text-neutral-500 dark:text-neutral-400">Index → Pinky</span>
             </div>
             <div className="grid grid-cols-4 gap-1.5 text-center">
               {layout.homeRowRight.map((k, idx) => {
@@ -187,7 +187,7 @@ export default function FingerPlacementModal({
                         <span className="absolute bottom-0.5 w-1 h-0.5 bg-neutral-400 dark:bg-neutral-500 rounded-full" />
                       )}
                     </span>
-                    <span className="text-[9px] text-neutral-400 dark:text-neutral-500 mt-1">
+                    <span className="text-[9px] text-neutral-500 dark:text-neutral-400 mt-1 font-medium">
                       {fingerNames[idx]}
                     </span>
                   </div>
@@ -199,9 +199,9 @@ export default function FingerPlacementModal({
 
         {/* Minimal Countdown Bar */}
         <div className="w-full mb-4">
-          <div className="flex items-center justify-between text-xs text-neutral-400 dark:text-neutral-500 mb-1.5">
+          <div className="flex items-center justify-between text-xs text-neutral-600 dark:text-neutral-400 mb-1.5">
             <span>Starting lesson automatically...</span>
-            <span className="font-mono font-semibold text-neutral-700 dark:text-neutral-300">
+            <span className="font-mono font-semibold text-neutral-800 dark:text-neutral-200">
               {Math.ceil(timeLeft)}s
             </span>
           </div>
@@ -218,24 +218,28 @@ export default function FingerPlacementModal({
           <button
             type="button"
             onClick={onClose}
-            className="py-2.5 px-4 rounded-xl border border-neutral-300 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-semibold transition-colors cursor-pointer"
+            aria-label="Cancel and return to home page"
+            className="py-2.5 px-4 rounded-xl border border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-semibold transition-colors cursor-pointer"
           >
             Cancel
           </button>
           <button
             type="button"
             onClick={handleStartNow}
-            className="flex-1 py-2.5 px-5 rounded-xl bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 text-xs font-semibold hover:opacity-90 active:scale-[0.99] transition-all cursor-pointer flex items-center justify-center gap-2 shadow-xs"
+            aria-label="Start lesson immediately without waiting for countdown"
+            className="flex-1 py-2.5 px-5 rounded-xl bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 text-xs font-semibold hover:opacity-90 active:scale-[0.99] transition-all cursor-pointer flex items-center justify-center gap-2 shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
           >
             <span>Start Lesson Now</span>
-            <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-white/20 dark:bg-neutral-900/20 rounded">↵</kbd>
+            <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-white/20 dark:bg-neutral-900/20 rounded" aria-hidden="true">↵</kbd>
           </button>
         </div>
 
         {/* Minimal Checkbox */}
-        <label className="mt-3.5 flex items-center justify-center gap-2 text-xs text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 cursor-pointer select-none transition-colors">
+        <label htmlFor="skip-placement-guide" className="mt-3.5 flex items-center justify-center gap-2 text-xs text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-200 cursor-pointer select-none transition-colors">
           <input
+            id="skip-placement-guide"
             type="checkbox"
+            aria-label="Don't show this placement tip again"
             checked={dontShowAgain}
             onChange={(e) => {
               setDontShowAgain(e.target.checked);

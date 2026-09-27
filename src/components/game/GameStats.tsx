@@ -53,10 +53,11 @@ function GameStatsComponent({
                 type="button"
                 onClick={onPrevLevel}
                 disabled={!hasPrevLevel}
-                className="px-2 py-0.5 text-xs font-semibold rounded-md border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-25 disabled:pointer-events-none cursor-pointer text-neutral-600 dark:text-neutral-400 transition-colors"
+                aria-label={`Go to previous lesson (Level ${level - 1})`}
+                className="px-2 py-0.5 text-xs font-semibold rounded-md border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-25 disabled:pointer-events-none cursor-pointer text-neutral-700 dark:text-neutral-300 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
                 title="Previous Level"
               >
-                ◀
+                <span aria-hidden="true">◀</span>
               </button>
             )}
 
@@ -66,7 +67,7 @@ function GameStatsComponent({
               </span>
               {levelTitle && (
                 <>
-                  <span className="text-neutral-300 dark:text-neutral-700">·</span>
+                  <span className="text-neutral-300 dark:text-neutral-700" aria-hidden="true">·</span>
                   <span className="text-xs font-medium text-neutral-700 dark:text-neutral-300 truncate max-w-[140px] sm:max-w-[220px] md:max-w-[320px]">
                     {levelTitle}
                   </span>
@@ -79,17 +80,18 @@ function GameStatsComponent({
                 type="button"
                 onClick={onNextLevel}
                 disabled={!hasNextLevel}
-                className="px-2 py-0.5 text-xs font-semibold rounded-md border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-25 disabled:pointer-events-none cursor-pointer text-neutral-600 dark:text-neutral-400 transition-colors"
+                aria-label={`Go to next lesson (Level ${level + 1})`}
+                className="px-2 py-0.5 text-xs font-semibold rounded-md border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-25 disabled:pointer-events-none cursor-pointer text-neutral-700 dark:text-neutral-300 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
                 title="Next Level"
               >
-                ▶
+                <span aria-hidden="true">▶</span>
               </button>
             )}
           </div>
         ) : mode === 'timed' ? (
           <div className="flex items-center gap-2">
-            <span className="text-xs text-neutral-400 dark:text-neutral-500 uppercase tracking-wider font-semibold flex items-center gap-1">
-              <span>⏱</span>
+            <span className="text-xs text-neutral-600 dark:text-neutral-400 uppercase tracking-wider font-semibold flex items-center gap-1">
+              <span aria-hidden="true">⏱</span>
               <span>Time:</span>
             </span>
             <div className="inline-flex items-center border border-neutral-200 dark:border-neutral-700 rounded-lg overflow-hidden bg-neutral-100/60 dark:bg-neutral-800/60 p-0.5">
@@ -100,10 +102,11 @@ function GameStatsComponent({
                     key={dur}
                     type="button"
                     onClick={() => onSelectDuration?.(dur)}
-                    className={`px-2.5 py-0.5 text-xs font-mono font-medium rounded-md transition-all cursor-pointer ${
+                    aria-label={`${dur} seconds speed test duration`}
+                    className={`px-2.5 py-0.5 text-xs font-mono font-medium rounded-md transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white ${
                       isSelected
                         ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 shadow-2xs font-semibold'
-                        : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-200/60 dark:hover:bg-neutral-700/50'
+                        : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-200/60 dark:hover:bg-neutral-700/50'
                     }`}
                     title={`${dur}s speed test`}
                   >
@@ -115,25 +118,26 @@ function GameStatsComponent({
           </div>
         ) : mode === 'custom' ? (
           <div className="flex items-center gap-2">
-            <span className="text-xs text-neutral-400 dark:text-neutral-500 uppercase tracking-wider font-semibold flex items-center gap-1">
-              <span>✏</span>
+            <span className="text-xs text-neutral-600 dark:text-neutral-400 uppercase tracking-wider font-semibold flex items-center gap-1">
+              <span aria-hidden="true">✏</span>
               <span>Custom</span>
             </span>
             {onOpenCustomModal && (
               <button
                 type="button"
                 onClick={onOpenCustomModal}
-                className="px-2.5 py-0.5 text-xs font-semibold rounded-md border border-neutral-300 dark:border-neutral-700 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-800 dark:text-neutral-200 hover:text-neutral-950 dark:hover:text-white transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs active:scale-95"
+                aria-label="Enter or edit custom practice text"
+                className="px-2.5 py-0.5 text-xs font-semibold rounded-md border border-neutral-300 dark:border-neutral-700 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-800 dark:text-neutral-200 hover:text-neutral-950 dark:hover:white transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs active:scale-95 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
                 title="Enter or edit custom practice text"
               >
-                <span className="text-neutral-500 dark:text-neutral-400">✎</span>
+                <span className="text-neutral-600 dark:text-neutral-400" aria-hidden="true">✎</span>
                 <span>Enter Custom Text</span>
               </button>
             )}
           </div>
         ) : (
           <div className="flex items-center gap-1.5">
-            <span className="text-xs text-neutral-400 dark:text-neutral-500 uppercase tracking-wider font-semibold">
+            <span className="text-xs text-neutral-600 dark:text-neutral-400 uppercase tracking-wider font-semibold">
               {mode === 'quotes'
                 ? '💬 Quotes'
                 : '⌨ Code'}
@@ -146,7 +150,7 @@ function GameStatsComponent({
       <div className="flex items-center gap-4 sm:gap-6 shrink-0">
         {/* Time */}
         <div className="flex items-center gap-1.5">
-          <span className="text-xs text-neutral-400 dark:text-neutral-500 uppercase tracking-wider font-medium">
+          <span className="text-xs text-neutral-600 dark:text-neutral-400 uppercase tracking-wider font-medium">
             Time
           </span>
           <span
@@ -162,13 +166,13 @@ function GameStatsComponent({
 
         {/* WPM */}
         <div className="flex items-center gap-1.5">
-          <span className="text-xs text-neutral-400 dark:text-neutral-500 uppercase tracking-wider font-medium">
+          <span className="text-xs text-neutral-600 dark:text-neutral-400 uppercase tracking-wider font-medium">
             WPM
           </span>
           <span className="font-mono font-semibold text-neutral-900 dark:text-neutral-100">
             {wpm}
             {isLesson && targetWpm ? (
-              <span className="text-xs font-normal text-neutral-400 dark:text-neutral-500">
+              <span className="text-xs font-normal text-neutral-600 dark:text-neutral-400">
                 /{targetWpm}
               </span>
             ) : null}
@@ -177,13 +181,13 @@ function GameStatsComponent({
 
         {/* Accuracy */}
         <div className="flex items-center gap-1.5">
-          <span className="text-xs text-neutral-400 dark:text-neutral-500 uppercase tracking-wider font-medium">
+          <span className="text-xs text-neutral-600 dark:text-neutral-400 uppercase tracking-wider font-medium">
             Acc
           </span>
           <span className="font-mono font-semibold text-neutral-900 dark:text-neutral-100">
             {accuracy}%
             {isLesson && targetAccuracy ? (
-              <span className="text-xs font-normal text-neutral-400 dark:text-neutral-500">
+              <span className="text-xs font-normal text-neutral-600 dark:text-neutral-400">
                 /{targetAccuracy}%
               </span>
             ) : null}
@@ -192,7 +196,7 @@ function GameStatsComponent({
 
         {/* Combo */}
         <div className="flex items-center gap-1.5">
-          <span className="text-xs text-neutral-400 dark:text-neutral-500 uppercase tracking-wider font-medium">
+          <span className="text-xs text-neutral-600 dark:text-neutral-400 uppercase tracking-wider font-medium">
             Combo
           </span>
           <span className="font-mono font-semibold text-neutral-900 dark:text-neutral-100">

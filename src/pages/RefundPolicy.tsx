@@ -1,154 +1,128 @@
-import { DollarSign, CheckCircle, RefreshCw, Mail } from 'lucide-react';
+import { ShieldCheck, CheckCircle, HeartHandshake } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function RefundPolicy() {
-  const lastUpdated = 'September 26, 2026';
+  const lastUpdated = 'September 27, 2026';
 
   return (
     <div className="max-w-4xl mx-auto py-10 px-4 sm:px-6 space-y-10 animate-fade-in text-neutral-800 dark:text-neutral-200">
       {/* Header */}
       <div className="border-b border-neutral-200 dark:border-neutral-800 pb-8 space-y-3">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-          <DollarSign className="w-3.5 h-3.5" />
-          <span>Billing & Refund Transparency</span>
+          <ShieldCheck className="w-3.5 h-3.5" aria-hidden="true" />
+          <span>100% Free & Transparent</span>
         </div>
         <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-neutral-900 dark:text-neutral-100">
-          Refund & Cancellation Policy
+          No-Charge & Cancellation Policy
         </h1>
-        <p className="text-sm text-neutral-500 dark:text-neutral-400">
-          Last updated: {lastUpdated} · Effective Date: January 1, 2025
+        <p className="text-sm text-neutral-600 dark:text-neutral-400">
+          Last updated: {lastUpdated} · Honest Access Disclosure
         </p>
       </div>
 
       {/* Free Tier Notice Card */}
       <div className="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/70 dark:bg-neutral-900/40 space-y-2">
         <div className="flex items-center gap-2 text-neutral-900 dark:text-white font-bold text-base">
-          <CheckCircle className="w-5 h-5 text-emerald-500" />
-          <span>100% Free Core Access</span>
+          <CheckCircle className="w-5 h-5 text-emerald-500" aria-hidden="true" />
+          <span>100% Free Platform — Zero Financial Charges</span>
         </div>
         <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
-          <strong>Typlix is completely free to use.</strong> All 50 touch-typing lessons, real-time metrics, speed tests (quotes, code, custom), finger placement tutorials, and local statistics tracking are provided without requiring payment, trial periods, or credit card submission.
+          <strong>Typlix is completely free to use.</strong> All 50 touch-typing lessons, mechanical sound profiles, speed sprint tests (quotes, code snippets, custom texts), finger placement tutorials, and local/cloud analytics are provided with zero charges, no subscriptions, and no credit card requirements.
         </p>
       </div>
 
-      {/* Refund Sections */}
+      {/* Policy Sections */}
       <div className="space-y-8 text-sm leading-relaxed">
         {/* Section 1 */}
         <section className="space-y-3">
           <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
-            <span>1.</span> Scope of This Refund Policy
+            <span>1.</span> No Monetary Transactions
           </h2>
           <p className="text-neutral-600 dark:text-neutral-400">
-            This Refund & Cancellation Policy applies to any optional voluntary purchases, creator support contributions, or premium features (such as custom themes, cloud data backups, or school classroom tiers) that may be offered through Typlix or its official payment partners.
+            Because Typlix is a 100% free web application, no financial transactions occur on this platform. We do not collect credit or debit card details, process payment transactions, or integrate commercial payment gateways.
           </p>
         </section>
 
         {/* Section 2 */}
         <section className="space-y-3">
-          <div className="flex items-center gap-2">
-            <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-100">
-              2. 14-Day Money-Back Guarantee
-            </h2>
-            <span className="text-[10px] font-semibold uppercase px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-              Full Guarantee
-            </span>
-          </div>
+          <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
+            <span>2.</span> Inapplicability of Refunds or Money-Back Guarantees
+          </h2>
           <p className="text-neutral-600 dark:text-neutral-400">
-            We want you to be 100% delighted with Typlix. If you make any optional purchase or subscription payment and are not completely satisfied, you are entitled to a <strong>full refund within 14 calendar days</strong> of the transaction date.
+            Because no money is ever requested, collected, or held by Typlix:
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
-            <div className="p-3.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/20">
-              <div className="font-semibold text-neutral-900 dark:text-neutral-100 mb-1">Eligible Scenarios</div>
-              <ul className="list-disc list-inside text-xs text-neutral-600 dark:text-neutral-400 space-y-1">
-                <li>Accidental duplicate purchases or incorrect tier selection</li>
-                <li>Unsatisfactory performance or technical incompatibility</li>
-                <li>Billing errors or unauthorized charge detection</li>
-                <li>General dissatisfaction within the 14-day window</li>
-              </ul>
-            </div>
-            <div className="p-3.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/20">
-              <div className="font-semibold text-neutral-900 dark:text-neutral-100 mb-1">Non-Refundable Situations</div>
-              <ul className="list-disc list-inside text-xs text-neutral-600 dark:text-neutral-400 space-y-1">
-                <li>Requests submitted after 14 calendar days from transaction</li>
-                <li>Accounts terminated due to cheating or Terms of Service violations</li>
-                <li>Third-party platform fees outside our direct billing system</li>
-              </ul>
-            </div>
-          </div>
+          <ul className="list-disc list-inside space-y-1 text-neutral-600 dark:text-neutral-400">
+            <li>Monetary refunds, chargebacks, and commercial money-back guarantees are entirely inapplicable.</li>
+            <li>You will never be billed, charged recurring renewal fees, or placed on trial periods that convert into paid subscriptions.</li>
+            <li>No false claims of paid tier upgrades or commercial guarantees are made on this platform.</li>
+          </ul>
         </section>
 
         {/* Section 3 */}
         <section className="space-y-3">
           <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
-            <span>3.</span> Cancellation of Recurring Subscriptions
+            <span>3.</span> Complete Feature Access Without Paywalls
           </h2>
           <p className="text-neutral-600 dark:text-neutral-400">
-            You may cancel any active recurring subscription at any moment without penalty or cancellation fees:
+            Every feature on Typlix is unlocked and fully accessible:
           </p>
-          <ul className="list-disc list-inside space-y-1 text-neutral-600 dark:text-neutral-400">
-            <li>You can cancel via your Profile & Billing settings or by contacting our team.</li>
-            <li>Upon cancellation, your subscription will not renew at the next billing period.</li>
-            <li>You will retain uninterrupted access to any premium benefits until the conclusion of your current paid billing cycle.</li>
-          </ul>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+            <div className="p-3.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/20">
+              <div className="font-semibold text-neutral-900 dark:text-neutral-100 mb-1">Curriculum & Practice</div>
+              <p className="text-xs text-neutral-600 dark:text-neutral-400">
+                50 structured progressive lessons, quotes library, programming snippets, and custom text engine are 100% free.
+              </p>
+            </div>
+            <div className="p-3.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/20">
+              <div className="font-semibold text-neutral-900 dark:text-neutral-100 mb-1">Audio & Customization</div>
+              <p className="text-xs text-neutral-600 dark:text-neutral-400">
+                All mechanical switch profiles, sound volume controls, and alternative keyboard layouts (QWERTY, Dvorak, Colemak, AZERTY) are completely unrestricted.
+              </p>
+            </div>
+          </div>
         </section>
 
         {/* Section 4 */}
         <section className="space-y-3">
           <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
-            <span>4.</span> Processing Time & Payment Method
+            <span>4.</span> Effortless Cancellation & Data Removal
           </h2>
           <p className="text-neutral-600 dark:text-neutral-400">
-            Approved refunds are credited directly back to the original payment method used during checkout (Credit/Debit Card, Stripe, or Google Pay).
+            Because there are no recurring subscriptions or financial contracts:
           </p>
-          <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/30 flex items-center gap-3">
-            <RefreshCw className="w-5 h-5 text-emerald-500 shrink-0" />
-            <div className="text-xs text-neutral-600 dark:text-neutral-400">
-              <span className="font-semibold text-neutral-900 dark:text-neutral-100">Timeline:</span> Most refunds are processed within <strong>24 to 48 hours</strong> by our team. Depending on your bank or credit card issuer, funds typically reflect in your account within <strong>5 to 10 business days</strong>.
-            </div>
-          </div>
+          <ul className="list-disc list-inside space-y-1 text-neutral-600 dark:text-neutral-400">
+            <li>You may stop using Typlix at any time without fees, penalties, or formal cancellation procedures.</li>
+            <li>You can export all your session data anytime as JSON or CSV from <Link to="/settings" className="underline text-neutral-900 dark:text-neutral-100 font-medium">Settings</Link>.</li>
+            <li>You can permanently erase your local statistics or wipe your account data with one click using the Danger Zone in Settings.</li>
+          </ul>
         </section>
 
-        {/* Section 5 */}
-        <section className="space-y-3">
-          <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
-            <span>5.</span> How to Request a Refund
-          </h2>
-          <p className="text-neutral-600 dark:text-neutral-400">
-            To submit a refund request, simply email our billing department with the following details:
-          </p>
-          <ol className="list-decimal list-inside space-y-1.5 text-xs text-neutral-600 dark:text-neutral-400 pl-2">
-            <li>Your account email address registered with Typlix.</li>
-            <li>Transaction / Order ID or payment receipt from the checkout provider.</li>
-            <li>A brief description of why you are requesting the refund (to help us improve).</li>
-          </ol>
-        </section>
-
-        {/* Section 6: Contact */}
+        {/* Section 5: Support & Business Details */}
         <section className="space-y-3 pt-4 border-t border-neutral-200 dark:border-neutral-800">
           <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
-            <span>6.</span> Billing Support Contact
+            <span>5.</span> Operating Entity & Contact
           </h2>
           <p className="text-neutral-600 dark:text-neutral-400">
-            For all billing inquiries, refund requests, or invoice questions, please reach out to:
+            If you have questions about Typlix or need assistance with your data or typing practice, please reach out to our team:
           </p>
           <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/40 flex items-center gap-3">
-            <Mail className="w-5 h-5 text-neutral-500" />
+            <HeartHandshake className="w-5 h-5 text-emerald-500 shrink-0" aria-hidden="true" />
             <div>
-              <div className="font-semibold text-neutral-900 dark:text-neutral-100">Billing & Payment Operations</div>
-              <a href="mailto:billing@typlix.app" className="text-xs text-neutral-500 hover:text-neutral-900 dark:hover:text-white underline">
-                billing@typlix.app
-              </a>
+              <div className="font-semibold text-neutral-900 dark:text-neutral-100">Typlix Interactive · Open Educational Project</div>
+              <p className="text-xs text-neutral-600 dark:text-neutral-400">
+                Lead Maintainer: Prem Sagar Pandey · Contact: <a href="mailto:support@typlix.app" className="underline hover:text-neutral-900 dark:hover:text-white">support@typlix.app</a>
+              </p>
             </div>
           </div>
         </section>
       </div>
 
       {/* Footer navigation */}
-      <div className="pt-6 border-t border-neutral-200 dark:border-neutral-800 flex flex-wrap gap-4 text-xs text-neutral-500">
+      <div className="pt-6 border-t border-neutral-200 dark:border-neutral-800 flex flex-wrap gap-4 text-xs text-neutral-600 dark:text-neutral-400">
         <Link to="/privacy" className="hover:underline">Privacy Policy</Link>
-        <span>•</span>
+        <span aria-hidden="true">•</span>
         <Link to="/terms" className="hover:underline">Terms & Conditions</Link>
-        <span>•</span>
+        <span aria-hidden="true">•</span>
         <Link to="/cookies" className="hover:underline">Cookie Policy</Link>
       </div>
     </div>

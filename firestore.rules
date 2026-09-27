@@ -2,13 +2,16 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // User progress and stats
+    // User progress and public stats
     match /users/{userId} {
-      // Allow reading user stats for leaderboard and profile
+      // Allow reading user stats for leaderboard and profile displays
       allow read: if true;
 
       // Only authenticated users can write/update their own document
-      allow write: if request.auth != null && request.auth.uid == userId;
+      // Data Minimization Policy: Disallow storing personal email addresses in public user documents
+      allow write: if request.auth != null 
+                   && request.auth.uid == userId
+                   && (!('email' in request.resource.data) || request.resource.data.email == null);
     }
   }
 }

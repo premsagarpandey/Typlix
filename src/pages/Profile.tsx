@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useUserProgress } from '../hooks/useUserProgress';
 import { LogOut, User, Mail, Calendar, Shield, Activity, TrendingUp, Trophy, RefreshCw, CheckCircle2 } from 'lucide-react';
+import UserAvatar from '../components/common/UserAvatar';
 
 export default function Profile() {
   const { user, logout } = useAuth();
@@ -63,49 +64,59 @@ export default function Profile() {
   return (
     <div className="max-w-2xl mx-auto py-8 space-y-6">
       <div>
-        <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">User Profile</h2>
+        <h1 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">User Profile</h1>
         <p className="text-xs text-neutral-500 mt-1">Manage your cloud account and view lifetime statistics</p>
       </div>
 
       {syncFeedback && (
         <div className="p-3 text-xs rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 font-medium flex items-center justify-between animate-fade-in">
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+            <CheckCircle2 className="w-4 h-4 text-emerald-500" aria-hidden="true" />
             <span>{syncFeedback}</span>
           </div>
-          <button onClick={() => setSyncFeedback(null)} className="cursor-pointer opacity-70 hover:opacity-100">✕</button>
+          <button
+            onClick={() => setSyncFeedback(null)}
+            aria-label="Dismiss feedback message"
+            className="cursor-pointer opacity-70 hover:opacity-100 p-1 rounded focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-emerald-600"
+          >
+            <span aria-hidden="true">✕</span>
+          </button>
         </div>
       )}
 
       {/* Profile Header */}
       <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 p-6 border border-neutral-200 dark:border-neutral-800 rounded-lg bg-neutral-50/50 dark:bg-neutral-900/20">
-        <img
-          src={user.photoURL || `https://ui-avatars.com/api/?name=${user.displayName || user.email || 'User'}&background=random`}
-          alt="Avatar"
-          className="w-24 h-24 rounded-full border border-neutral-300 dark:border-neutral-700 shadow-sm"
+        <UserAvatar
+          photoURL={user.photoURL}
+          name={user.displayName}
+          email={user.email}
+          size="xl"
+          className="shadow-sm"
+          alt="Your profile avatar"
         />
         <div className="flex-1 space-y-4 text-center sm:text-left">
           <div>
             <h3 className="text-xl font-bold text-neutral-900 dark:text-neutral-100">
               {user.displayName || user.email?.split('@')[0] || 'Typist'}
             </h3>
-            <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-4 mt-1 text-sm text-neutral-500">
-              <span className="flex items-center justify-center sm:justify-start gap-1.5"><Mail className="w-4 h-4" /> {user.email}</span>
-              <span className="hidden sm:inline text-neutral-300 dark:text-neutral-700">•</span>
-              <span className="flex items-center justify-center sm:justify-start gap-1.5"><Calendar className="w-4 h-4" /> Joined {getCreationDate()}</span>
+            <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-4 mt-1 text-sm text-neutral-600 dark:text-neutral-400">
+              <span className="flex items-center justify-center sm:justify-start gap-1.5"><Mail className="w-4 h-4" aria-hidden="true" /> {user.email}</span>
+              <span className="hidden sm:inline text-neutral-300 dark:text-neutral-700" aria-hidden="true">•</span>
+              <span className="flex items-center justify-center sm:justify-start gap-1.5"><Calendar className="w-4 h-4" aria-hidden="true" /> Joined {getCreationDate()}</span>
             </div>
           </div>
           <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
             <span className="px-2.5 py-1 text-[11px] font-medium rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-300 flex items-center gap-1.5">
-              <Shield className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> Firestore Cloud Synced
+              <Shield className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" aria-hidden="true" /> Firestore Cloud Synced
             </span>
             <button
               onClick={handleManualSync}
               disabled={isSyncing}
-              className="px-2.5 py-1 text-[11px] font-medium rounded-md border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 flex items-center gap-1.5 transition-colors cursor-pointer disabled:opacity-50"
+              aria-label="Sync latest local typing progress with Firestore cloud"
+              className="px-2.5 py-1 text-[11px] font-medium rounded-md border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 flex items-center gap-1.5 transition-colors cursor-pointer disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
               title="Sync latest local progress with Firestore"
             >
-              <RefreshCw className={`w-3 h-3 ${isSyncing ? 'animate-spin text-blue-500' : ''}`} />
+              <RefreshCw className={`w-3 h-3 ${isSyncing ? 'animate-spin text-blue-500' : ''}`} aria-hidden="true" />
               <span>{isSyncing ? 'Syncing...' : lastSyncedAt ? 'Synced' : 'Sync Now'}</span>
             </button>
           </div>
@@ -117,32 +128,32 @@ export default function Profile() {
         <h3 className="font-medium text-neutral-900 dark:text-neutral-100 text-sm mb-3">Lifetime Statistics</h3>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-neutral-200 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-800 rounded-lg overflow-hidden">
           <div className="p-4 bg-neutral-50 dark:bg-neutral-950 flex flex-col items-center justify-center text-center">
-            <TrendingUp className="w-5 h-5 text-neutral-400 dark:text-neutral-600 mb-2" />
-            <div className="text-xs text-neutral-500 font-medium">Best WPM</div>
+            <TrendingUp className="w-5 h-5 text-neutral-500 dark:text-neutral-400 mb-2" aria-hidden="true" />
+            <div className="text-xs text-neutral-600 dark:text-neutral-400 font-medium">Best WPM</div>
             <div className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mt-0.5 font-mono">
               {summary.bestWpm}
             </div>
           </div>
 
           <div className="p-4 bg-neutral-50 dark:bg-neutral-950 flex flex-col items-center justify-center text-center">
-            <Activity className="w-5 h-5 text-neutral-400 dark:text-neutral-600 mb-2" />
-            <div className="text-xs text-neutral-500 font-medium">Avg Accuracy</div>
+            <Activity className="w-5 h-5 text-neutral-500 dark:text-neutral-400 mb-2" aria-hidden="true" />
+            <div className="text-xs text-neutral-600 dark:text-neutral-400 font-medium">Avg Accuracy</div>
             <div className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mt-0.5 font-mono">
-              {summary.avgAccuracy}<span className="text-sm font-normal text-neutral-400">%</span>
+              {summary.avgAccuracy}<span className="text-sm font-normal text-neutral-600 dark:text-neutral-400">%</span>
             </div>
           </div>
 
           <div className="p-4 bg-neutral-50 dark:bg-neutral-950 flex flex-col items-center justify-center text-center">
-            <User className="w-5 h-5 text-neutral-400 dark:text-neutral-600 mb-2" />
-            <div className="text-xs text-neutral-500 font-medium">Total Tests</div>
+            <User className="w-5 h-5 text-neutral-500 dark:text-neutral-400 mb-2" aria-hidden="true" />
+            <div className="text-xs text-neutral-600 dark:text-neutral-400 font-medium">Total Tests</div>
             <div className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mt-0.5 font-mono">
               {summary.totalTests}
             </div>
           </div>
 
           <div className="p-4 bg-neutral-50 dark:bg-neutral-950 flex flex-col items-center justify-center text-center">
-            <Trophy className="w-5 h-5 text-neutral-400 dark:text-neutral-600 mb-2" />
-            <div className="text-xs text-neutral-500 font-medium">Current Level</div>
+            <Trophy className="w-5 h-5 text-neutral-500 dark:text-neutral-400 mb-2" aria-hidden="true" />
+            <div className="text-xs text-neutral-600 dark:text-neutral-400 font-medium">Current Level</div>
             <div className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mt-0.5 font-mono">
               {level}
             </div>
@@ -156,14 +167,15 @@ export default function Profile() {
         <div className="p-4 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/20 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="text-center sm:text-left">
             <div className="text-sm font-medium text-neutral-900 dark:text-neutral-100">Sign Out</div>
-            <div className="text-xs text-neutral-500 mt-0.5">End your current session on this device.</div>
+            <div className="text-xs text-neutral-600 dark:text-neutral-400 mt-0.5">End your current session on this device.</div>
           </div>
           <button
             onClick={handleLogout}
             disabled={isLoggingOut}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-md text-sm font-medium border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 dark:hover:bg-rose-950/30 dark:hover:text-rose-400 dark:hover:border-rose-900/50 transition-colors cursor-pointer disabled:opacity-50"
+            aria-label="Sign out of your account on this device"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-md text-sm font-medium border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 dark:hover:bg-rose-950/30 dark:hover:text-rose-400 dark:hover:border-rose-900/50 transition-colors cursor-pointer disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
           >
-            <LogOut className="w-4 h-4" />
+            <LogOut className="w-4 h-4" aria-hidden="true" />
             <span>{isLoggingOut ? 'Signing out...' : 'Sign Out'}</span>
           </button>
         </div>

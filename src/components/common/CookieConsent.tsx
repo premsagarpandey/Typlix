@@ -1,28 +1,23 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Cookie, ShieldCheck, Check, Settings2, X, ExternalLink } from 'lucide-react';
+import { Cookie, ShieldCheck, Check, Settings2, X, ExternalLink, ShieldAlert } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import {
   getCookieConsent,
   saveCookieConsent,
+  getDefaultConsent,
+  isGlobalPrivacyControlActive,
   type CookieConsentPreferences,
 } from '../../utils/cookieConsent';
 
 export default function CookieConsent() {
   const [showBanner, setShowBanner] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [isGpcActive] = useState(() => isGlobalPrivacyControlActive());
 
   // Preference switches inside the modal
   const [preferences, setPreferences] = useState<CookieConsentPreferences>(() => {
-    return (
-      getCookieConsent() || {
-        necessary: true,
-        functional: true,
-        analytics: true,
-        timestamp: '',
-        version: '1.0',
-      }
-    );
+    return getCookieConsent() || getDefaultConsent();
   });
 
   useEffect(() => {
@@ -41,6 +36,8 @@ export default function CookieConsent() {
       const existing = getCookieConsent();
       if (existing) {
         setPreferences(existing);
+      } else {
+        setPreferences(getDefaultConsent());
       }
       setShowModal(true);
     };
@@ -58,6 +55,18 @@ export default function CookieConsent() {
       window.removeEventListener('typlix-cookie-consent-reset', handleReset);
     };
   }, []);
+
+  // Keyboard navigation & Escape key handler for modal
+  useEffect(() => {
+    if (!showModal) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setShowModal(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showModal]);
 
   const handleAcceptAll = useCallback(() => {
     saveCookieConsent({
@@ -91,6 +100,8 @@ export default function CookieConsent() {
       <AnimatePresence>
         {showBanner && !showModal && (
           <motion.div
+            role="region"
+            aria-label="Cookie and Privacy Consent Banner"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 40 }}
@@ -99,24 +110,34 @@ export default function CookieConsent() {
           >
             <div className="flex items-start gap-3">
               <div className="p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 shrink-0">
-                <Cookie className="w-5 h-5" />
+                <Cookie className="w-5 h-5" aria-hidden="true" />
               </div>
               <div className="space-y-1">
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-1.5 flex-wrap">
                   <h4 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                     Cookie & Data Preferences
                   </h4>
                   <span className="text-[10px] font-medium uppercase tracking-wider px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
                     Data Minimization
                   </span>
+                  {isGpcActive && (
+                    <span className="text-[10px] font-medium uppercase tracking-wider px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 flex items-center gap-1">
+                      <ShieldAlert className="w-3 h-3" /> GPC Signal Detected
+                    </span>
+                  )}
                 </div>
                 <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                  Typlix collects <span className="font-semibold text-neutral-900 dark:text-neutral-200">only necessary data</span> required to save your typing progress, speed tests, and audio preferences. No third-party ad tracking or selling of data.
+                  Typlix complies with the DPDP Act 2023 (India), GDPR, and CCPA. We collect <span className="font-semibold text-neutral-900 dark:text-neutral-200">only necessary data</span> required to save your typing progress, speed tests, and audio preferences. No third-party ad tracking or selling of data.
                 </p>
+                {isGpcActive && (
+                  <p className="text-[11px] text-blue-600 dark:text-blue-400 font-medium pt-0.5">
+                    Your browser has Global Privacy Control enabled. Non-essential tracking has been defaulted to off.
+                  </p>
+                )}
               </div>
             </div>
 
-            <div className="mt-3 flex items-center gap-2 text-[11px] text-neutral-500 dark:text-neutral-400">
+            <div className="mt-3 flex items-center gap-2 text-[11px] text-neutral-600 dark:text-neutral-400">
               <Link to="/cookies" className="hover:text-neutral-900 dark:hover:text-white underline underline-offset-2">
                 Cookie Policy
               </Link>
@@ -129,24 +150,29 @@ export default function CookieConsent() {
             {/* Buttons */}
             <div className="mt-4 flex flex-wrap items-center gap-2">
               <button
+                type="button"
                 onClick={handleAcceptAll}
-                className="flex-1 min-w-[100px] px-3.5 py-2 rounded-xl text-xs font-semibold bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors shadow-xs cursor-pointer text-center"
+                aria-label="Accept all cookies and storage preferences"
+                className="flex-1 min-w-[100px] px-3.5 py-2 rounded-xl text-xs font-semibold bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors shadow-xs cursor-pointer text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
               >
                 Accept All
               </button>
               <button
+                type="button"
                 onClick={handleAcceptNecessaryOnly}
-                className="flex-1 min-w-[100px] px-3.5 py-2 rounded-xl text-xs font-medium border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/80 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors cursor-pointer text-center"
+                aria-label="Accept strictly necessary cookies only"
+                className="flex-1 min-w-[100px] px-3.5 py-2 rounded-xl text-xs font-medium border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/80 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors cursor-pointer text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
               >
                 Only Necessary
               </button>
               <button
+                type="button"
                 onClick={() => setShowModal(true)}
-                className="p-2 rounded-xl text-xs font-medium border border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
+                className="p-2 rounded-xl text-xs font-medium border border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
                 title="Customize Preferences"
-                aria-label="Customize cookie preferences"
+                aria-label="Customize cookie and data preferences"
               >
-                <Settings2 className="w-4 h-4" />
+                <Settings2 className="w-4 h-4" aria-hidden="true" />
               </button>
             </div>
           </motion.div>
@@ -156,13 +182,19 @@ export default function CookieConsent() {
       {/* Detailed Customization Modal */}
       <AnimatePresence>
         {showModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="cookie-modal-title"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          >
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setShowModal(false)}
               className="absolute inset-0 bg-neutral-950/60 backdrop-blur-sm"
+              aria-hidden="true"
             />
 
             <motion.div
@@ -175,30 +207,39 @@ export default function CookieConsent() {
               <div className="p-6 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100">
-                    <ShieldCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+                    <ShieldCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
                   </div>
                   <div>
-                    <h3 className="text-base font-bold text-neutral-900 dark:text-neutral-100">
+                    <h3 id="cookie-modal-title" className="text-base font-bold text-neutral-900 dark:text-neutral-100">
                       Cookie & Storage Preferences
                     </h3>
-                    <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                    <p className="text-xs text-neutral-600 dark:text-neutral-400">
                       Control how Typlix uses cookies and browser storage
                     </p>
                   </div>
                 </div>
                 <button
+                  type="button"
                   onClick={() => setShowModal(false)}
-                  className="p-1.5 text-neutral-500 hover:text-neutral-900 dark:hover:text-white rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
+                  aria-label="Close cookie preferences modal"
+                  className="p-1.5 text-neutral-500 hover:text-neutral-900 dark:hover:text-white rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-4 h-4" aria-hidden="true" />
                 </button>
               </div>
 
               {/* Body */}
               <div className="p-6 space-y-5 overflow-y-auto">
                 <div className="p-3.5 rounded-xl bg-neutral-50 dark:bg-neutral-800/40 border border-neutral-200 dark:border-neutral-800 text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                  <span className="font-semibold text-neutral-900 dark:text-neutral-200">Our Data Minimization Pledge:</span> We only collect the minimal data essential to provide you a seamless typing practice experience. We do not use third-party analytics trackers, sell your data, or display third-party advertisements.
+                  <span className="font-semibold text-neutral-900 dark:text-neutral-200">Our Statutory Pledge (DPDP Act & GDPR):</span> We strictly adhere to Data Minimization. We only store the minimal data essential to deliver lessons, track metrics, and persist preferences. We do not sell your personal data or track you across sites.
                 </div>
+
+                {isGpcActive && (
+                  <div className="p-3 rounded-xl bg-blue-500/10 border border-blue-500/25 text-xs text-blue-700 dark:text-blue-300 flex items-center gap-2">
+                    <ShieldAlert className="w-4 h-4 shrink-0" aria-hidden="true" />
+                    <span>Global Privacy Control (GPC) active in your browser. Non-essential tracking has been defaulted to disabled.</span>
+                  </div>
+                )}
 
                 {/* 1. Necessary */}
                 <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 space-y-2">
@@ -211,11 +252,14 @@ export default function CookieConsent() {
                         Always Active
                       </span>
                     </div>
-                    <div className="w-9 h-5 bg-neutral-900 dark:bg-neutral-100 rounded-full flex items-center justify-end px-1 opacity-70 cursor-not-allowed">
+                    <div
+                      className="w-9 h-5 bg-neutral-900 dark:bg-neutral-100 rounded-full flex items-center justify-end px-1 opacity-70 cursor-not-allowed"
+                      aria-hidden="true"
+                    >
                       <div className="w-3.5 h-3.5 rounded-full bg-white dark:bg-neutral-900" />
                     </div>
                   </div>
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">
+                  <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
                     Required for core security, maintaining authentication sessions, and remembering your cookie consent selection. These cannot be disabled.
                   </p>
                 </div>
@@ -224,16 +268,18 @@ export default function CookieConsent() {
                 <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 space-y-2">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+                      <label htmlFor="functional-toggle" className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 cursor-pointer">
                         Preferences & Functional
-                      </span>
+                      </label>
                     </div>
                     <button
+                      id="functional-toggle"
                       type="button"
                       role="switch"
                       aria-checked={preferences.functional}
+                      aria-label="Toggle Preferences and Functional storage"
                       onClick={() => setPreferences(prev => ({ ...prev, functional: !prev.functional }))}
-                      className={`w-10 h-6 rounded-full transition-colors flex items-center px-1 cursor-pointer ${
+                      className={`w-10 h-6 rounded-full transition-colors flex items-center px-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white ${
                         preferences.functional ? 'bg-neutral-900 dark:bg-neutral-100' : 'bg-neutral-300 dark:bg-neutral-700'
                       }`}
                     >
@@ -244,7 +290,7 @@ export default function CookieConsent() {
                       />
                     </button>
                   </div>
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">
+                  <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
                     Stores your mechanical keyboard sound profile, volume, theme mode (dark/light), and custom keyboard layouts locally in your browser.
                   </p>
                 </div>
@@ -253,16 +299,18 @@ export default function CookieConsent() {
                 <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 space-y-2">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+                      <label htmlFor="analytics-toggle" className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 cursor-pointer">
                         Performance & Typing Progress
-                      </span>
+                      </label>
                     </div>
                     <button
+                      id="analytics-toggle"
                       type="button"
                       role="switch"
                       aria-checked={preferences.analytics}
+                      aria-label="Toggle Performance and Typing Progress analytics"
                       onClick={() => setPreferences(prev => ({ ...prev, analytics: !prev.analytics }))}
-                      className={`w-10 h-6 rounded-full transition-colors flex items-center px-1 cursor-pointer ${
+                      className={`w-10 h-6 rounded-full transition-colors flex items-center px-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white ${
                         preferences.analytics ? 'bg-neutral-900 dark:bg-neutral-100' : 'bg-neutral-300 dark:bg-neutral-700'
                       }`}
                     >
@@ -273,18 +321,18 @@ export default function CookieConsent() {
                       />
                     </button>
                   </div>
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">
+                  <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
                     Saves your lesson progression, WPM and accuracy metrics, and speed test history. If turned off, stats will not be recorded in session history.
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between text-xs text-neutral-500 dark:text-neutral-400 pt-1">
+                <div className="flex items-center justify-between text-xs text-neutral-600 dark:text-neutral-400 pt-1">
                   <Link
                     to="/cookies"
                     onClick={() => setShowModal(false)}
                     className="flex items-center gap-1 hover:text-neutral-900 dark:hover:text-white underline underline-offset-2"
                   >
-                    Read full Cookie Policy <ExternalLink className="w-3 h-3" />
+                    Read full Cookie Policy <ExternalLink className="w-3 h-3" aria-hidden="true" />
                   </Link>
                 </div>
               </div>
@@ -292,23 +340,29 @@ export default function CookieConsent() {
               {/* Footer */}
               <div className="p-5 border-t border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/50 flex flex-wrap items-center justify-between gap-3">
                 <button
+                  type="button"
                   onClick={handleAcceptNecessaryOnly}
-                  className="px-3.5 py-2 text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors cursor-pointer"
+                  aria-label="Decline non-essential cookies and save strictly necessary only"
+                  className="px-3.5 py-2 text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white rounded-lg"
                 >
                   Decline Non-Essential
                 </button>
                 <div className="flex items-center gap-2">
                   <button
+                    type="button"
                     onClick={handleAcceptAll}
-                    className="px-4 py-2 text-xs font-semibold rounded-xl border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-800 dark:text-neutral-200 transition-colors cursor-pointer"
+                    aria-label="Accept all cookies and storage options"
+                    className="px-4 py-2 text-xs font-semibold rounded-xl border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-800 dark:text-neutral-200 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
                   >
                     Accept All
                   </button>
                   <button
+                    type="button"
                     onClick={handleSaveCustom}
-                    className="flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-xl bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors shadow-xs cursor-pointer"
+                    aria-label="Save customized cookie choices"
+                    className="flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-xl bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors shadow-xs cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
                   >
-                    <Check className="w-3.5 h-3.5" />
+                    <Check className="w-3.5 h-3.5" aria-hidden="true" />
                     Save Choices
                   </button>
                 </div>

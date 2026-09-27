@@ -51,10 +51,10 @@ export default function CapsLockWarningModal({
             <button
               type="button"
               onClick={onClose}
-              className="absolute top-4 right-4 w-7 h-7 flex items-center justify-center rounded-lg text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer text-xs"
-              aria-label="Close dialog"
+              className="absolute top-4 right-4 w-7 h-7 flex items-center justify-center rounded-lg text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+              aria-label="Dismiss Caps Lock warning dialog"
             >
-              ✕
+              <span aria-hidden="true">✕</span>
             </button>
 
             {/* Minimalist Monochromatic Icon Badge */}
@@ -68,6 +68,7 @@ export default function CapsLockWarningModal({
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 className="w-6 h-6"
+                aria-hidden="true"
               >
                 <path d="M10 20h4" />
                 <path d="M12 4v12" />
@@ -91,7 +92,7 @@ export default function CapsLockWarningModal({
 
             {/* Key Indicator */}
             <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-850 border border-neutral-200 dark:border-neutral-800 mb-5">
-              <span className="text-xs text-neutral-500 dark:text-neutral-400 font-medium">
+              <span className="text-xs text-neutral-600 dark:text-neutral-400 font-medium">
                 Toggle to disable:
               </span>
               <kbd className="px-2.5 py-1 rounded-md bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100 font-mono font-semibold text-xs shadow-2xs">
@@ -103,16 +104,18 @@ export default function CapsLockWarningModal({
             <div className="w-full text-left p-3.5 rounded-xl bg-neutral-50 dark:bg-neutral-850 border border-neutral-200 dark:border-neutral-800 mb-5">
               <div className="flex items-center justify-between gap-3">
                 <div className="min-w-0 flex-1">
-                  <div className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
+                  <label htmlFor="caps-lock-autofix" className="text-xs font-semibold text-neutral-900 dark:text-neutral-100 block cursor-pointer">
                     Auto-Match Letter Case
-                  </div>
-                  <div className="text-[11px] text-neutral-500 dark:text-neutral-400 mt-0.5 leading-snug">
+                  </label>
+                  <div className="text-[11px] text-neutral-600 dark:text-neutral-400 mt-0.5 leading-snug">
                     Automatically matches typed letter case with expected characters to preserve accuracy.
                   </div>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer shrink-0">
                   <input
+                    id="caps-lock-autofix"
                     type="checkbox"
+                    aria-label="Auto-Match Letter Case with expected characters"
                     checked={autoFixEnabled}
                     onChange={(e) => onToggleAutoFix(e.target.checked)}
                     className="sr-only peer"
@@ -126,12 +129,13 @@ export default function CapsLockWarningModal({
             <button
               type="button"
               onClick={onClose}
-              className="w-full py-2.5 px-4 rounded-xl bg-neutral-900 hover:bg-neutral-800 dark:bg-neutral-100 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 font-semibold text-xs sm:text-sm transition-all shadow-xs cursor-pointer"
+              aria-label="Dismiss Caps Lock warning and continue practice"
+              className="w-full py-2.5 px-4 rounded-xl bg-neutral-900 hover:bg-neutral-800 dark:bg-neutral-100 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 font-semibold text-xs sm:text-sm transition-all shadow-xs cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
             >
               Continue Practice
             </button>
 
-            <p className="text-[11px] text-neutral-400 dark:text-neutral-500 mt-3">
+            <p className="text-[11px] text-neutral-600 dark:text-neutral-400 mt-3">
               This notice dismisses automatically once Caps Lock is turned off.
             </p>
           </motion.div>

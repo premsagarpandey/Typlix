@@ -49,7 +49,7 @@ export default function Leaderboard() {
           </p>
         </div>
         {isCloudLoaded && (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-700">
             <Globe className="w-3 h-3" aria-hidden="true" /> Live Cloud
           </span>
         )}
@@ -100,18 +100,18 @@ export default function Leaderboard() {
               role="listitem"
               className={`flex items-center justify-between p-4 transition-colors ${
                 player.isCurrentUser
-                  ? 'bg-blue-50/60 dark:bg-blue-950/20 border-l-2 border-l-blue-500'
+                  ? 'bg-neutral-100 dark:bg-neutral-850 border-l-2 border-l-neutral-900 dark:border-l-white'
                   : 'bg-neutral-50 dark:bg-neutral-950 hover:bg-neutral-100/50 dark:hover:bg-neutral-900/50'
               }`}
             >
               <div className="flex items-center gap-3">
                 <span className={`w-6 h-6 flex items-center justify-center text-xs font-mono font-semibold rounded-full ${
                   player.rank === 1
-                    ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300'
+                    ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-bold'
                     : player.rank === 2
-                    ? 'bg-slate-200 text-slate-800 dark:bg-slate-800 dark:text-slate-300'
+                    ? 'bg-neutral-300 text-neutral-900 dark:bg-neutral-700 dark:text-neutral-100 font-semibold'
                     : player.rank === 3
-                    ? 'bg-amber-900/20 text-amber-900 dark:bg-amber-950 dark:text-amber-400'
+                    ? 'bg-neutral-200 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200 border border-neutral-400 dark:border-neutral-700 font-medium'
                     : 'text-neutral-600 dark:text-neutral-400'
                 }`}>
                   {player.rank}

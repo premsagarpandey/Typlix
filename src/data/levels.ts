@@ -21,63 +21,65 @@ export interface LevelConfig {
   readonly wordBank: readonly string[];
 }
 
+const MONO_FINGER_STYLE = 'text-neutral-800 dark:text-neutral-200 bg-neutral-200/50 dark:bg-neutral-800/50 border-neutral-300 dark:border-neutral-700';
+
 export const FINGER_MAP: Record<string, { hand: 'Left' | 'Right'; finger: 'Pinky' | 'Ring' | 'Middle' | 'Index' | 'Thumb'; color: string }> = {
   // Left Hand
-  q: { hand: 'Left', finger: 'Pinky', color: 'text-rose-500 bg-rose-500/20 border-rose-500/40' },
-  a: { hand: 'Left', finger: 'Pinky', color: 'text-rose-500 bg-rose-500/20 border-rose-500/40' },
-  z: { hand: 'Left', finger: 'Pinky', color: 'text-rose-500 bg-rose-500/20 border-rose-500/40' },
-  '1': { hand: 'Left', finger: 'Pinky', color: 'text-rose-500 bg-rose-500/20 border-rose-500/40' },
+  q: { hand: 'Left', finger: 'Pinky', color: MONO_FINGER_STYLE },
+  a: { hand: 'Left', finger: 'Pinky', color: MONO_FINGER_STYLE },
+  z: { hand: 'Left', finger: 'Pinky', color: MONO_FINGER_STYLE },
+  '1': { hand: 'Left', finger: 'Pinky', color: MONO_FINGER_STYLE },
 
-  w: { hand: 'Left', finger: 'Ring', color: 'text-orange-500 bg-orange-500/20 border-orange-500/40' },
-  s: { hand: 'Left', finger: 'Ring', color: 'text-orange-500 bg-orange-500/20 border-orange-500/40' },
-  x: { hand: 'Left', finger: 'Ring', color: 'text-orange-500 bg-orange-500/20 border-orange-500/40' },
-  '2': { hand: 'Left', finger: 'Ring', color: 'text-orange-500 bg-orange-500/20 border-orange-500/40' },
+  w: { hand: 'Left', finger: 'Ring', color: MONO_FINGER_STYLE },
+  s: { hand: 'Left', finger: 'Ring', color: MONO_FINGER_STYLE },
+  x: { hand: 'Left', finger: 'Ring', color: MONO_FINGER_STYLE },
+  '2': { hand: 'Left', finger: 'Ring', color: MONO_FINGER_STYLE },
 
-  e: { hand: 'Left', finger: 'Middle', color: 'text-amber-500 bg-amber-500/20 border-amber-500/40' },
-  d: { hand: 'Left', finger: 'Middle', color: 'text-amber-500 bg-amber-500/20 border-amber-500/40' },
-  c: { hand: 'Left', finger: 'Middle', color: 'text-amber-500 bg-amber-500/20 border-amber-500/40' },
-  '3': { hand: 'Left', finger: 'Middle', color: 'text-amber-500 bg-amber-500/20 border-amber-500/40' },
+  e: { hand: 'Left', finger: 'Middle', color: MONO_FINGER_STYLE },
+  d: { hand: 'Left', finger: 'Middle', color: MONO_FINGER_STYLE },
+  c: { hand: 'Left', finger: 'Middle', color: MONO_FINGER_STYLE },
+  '3': { hand: 'Left', finger: 'Middle', color: MONO_FINGER_STYLE },
 
-  r: { hand: 'Left', finger: 'Index', color: 'text-emerald-500 bg-emerald-500/20 border-emerald-500/40' },
-  f: { hand: 'Left', finger: 'Index', color: 'text-emerald-500 bg-emerald-500/20 border-emerald-500/40' },
-  v: { hand: 'Left', finger: 'Index', color: 'text-emerald-500 bg-emerald-500/20 border-emerald-500/40' },
-  t: { hand: 'Left', finger: 'Index', color: 'text-emerald-500 bg-emerald-500/20 border-emerald-500/40' },
-  g: { hand: 'Left', finger: 'Index', color: 'text-emerald-500 bg-emerald-500/20 border-emerald-500/40' },
-  b: { hand: 'Left', finger: 'Index', color: 'text-emerald-500 bg-emerald-500/20 border-emerald-500/40' },
-  '4': { hand: 'Left', finger: 'Index', color: 'text-emerald-500 bg-emerald-500/20 border-emerald-500/40' },
-  '5': { hand: 'Left', finger: 'Index', color: 'text-emerald-500 bg-emerald-500/20 border-emerald-500/40' },
+  r: { hand: 'Left', finger: 'Index', color: MONO_FINGER_STYLE },
+  f: { hand: 'Left', finger: 'Index', color: MONO_FINGER_STYLE },
+  v: { hand: 'Left', finger: 'Index', color: MONO_FINGER_STYLE },
+  t: { hand: 'Left', finger: 'Index', color: MONO_FINGER_STYLE },
+  g: { hand: 'Left', finger: 'Index', color: MONO_FINGER_STYLE },
+  b: { hand: 'Left', finger: 'Index', color: MONO_FINGER_STYLE },
+  '4': { hand: 'Left', finger: 'Index', color: MONO_FINGER_STYLE },
+  '5': { hand: 'Left', finger: 'Index', color: MONO_FINGER_STYLE },
 
   // Right Hand
-  y: { hand: 'Right', finger: 'Index', color: 'text-cyan-500 bg-cyan-500/20 border-cyan-500/40' },
-  u: { hand: 'Right', finger: 'Index', color: 'text-cyan-500 bg-cyan-500/20 border-cyan-500/40' },
-  h: { hand: 'Right', finger: 'Index', color: 'text-cyan-500 bg-cyan-500/20 border-cyan-500/40' },
-  j: { hand: 'Right', finger: 'Index', color: 'text-cyan-500 bg-cyan-500/20 border-cyan-500/40' },
-  n: { hand: 'Right', finger: 'Index', color: 'text-cyan-500 bg-cyan-500/20 border-cyan-500/40' },
-  m: { hand: 'Right', finger: 'Index', color: 'text-cyan-500 bg-cyan-500/20 border-cyan-500/40' },
-  '6': { hand: 'Right', finger: 'Index', color: 'text-cyan-500 bg-cyan-500/20 border-cyan-500/40' },
-  '7': { hand: 'Right', finger: 'Index', color: 'text-cyan-500 bg-cyan-500/20 border-cyan-500/40' },
+  y: { hand: 'Right', finger: 'Index', color: MONO_FINGER_STYLE },
+  u: { hand: 'Right', finger: 'Index', color: MONO_FINGER_STYLE },
+  h: { hand: 'Right', finger: 'Index', color: MONO_FINGER_STYLE },
+  j: { hand: 'Right', finger: 'Index', color: MONO_FINGER_STYLE },
+  n: { hand: 'Right', finger: 'Index', color: MONO_FINGER_STYLE },
+  m: { hand: 'Right', finger: 'Index', color: MONO_FINGER_STYLE },
+  '6': { hand: 'Right', finger: 'Index', color: MONO_FINGER_STYLE },
+  '7': { hand: 'Right', finger: 'Index', color: MONO_FINGER_STYLE },
 
-  i: { hand: 'Right', finger: 'Middle', color: 'text-blue-500 bg-blue-500/20 border-blue-500/40' },
-  k: { hand: 'Right', finger: 'Middle', color: 'text-blue-500 bg-blue-500/20 border-blue-500/40' },
-  ',': { hand: 'Right', finger: 'Middle', color: 'text-blue-500 bg-blue-500/20 border-blue-500/40' },
-  '8': { hand: 'Right', finger: 'Middle', color: 'text-blue-500 bg-blue-500/20 border-blue-500/40' },
+  i: { hand: 'Right', finger: 'Middle', color: MONO_FINGER_STYLE },
+  k: { hand: 'Right', finger: 'Middle', color: MONO_FINGER_STYLE },
+  ',': { hand: 'Right', finger: 'Middle', color: MONO_FINGER_STYLE },
+  '8': { hand: 'Right', finger: 'Middle', color: MONO_FINGER_STYLE },
 
-  o: { hand: 'Right', finger: 'Ring', color: 'text-indigo-500 bg-indigo-500/20 border-indigo-500/40' },
-  l: { hand: 'Right', finger: 'Ring', color: 'text-indigo-500 bg-indigo-500/20 border-indigo-500/40' },
-  '.': { hand: 'Right', finger: 'Ring', color: 'text-indigo-500 bg-indigo-500/20 border-indigo-500/40' },
-  '9': { hand: 'Right', finger: 'Ring', color: 'text-indigo-500 bg-indigo-500/20 border-indigo-500/40' },
+  o: { hand: 'Right', finger: 'Ring', color: MONO_FINGER_STYLE },
+  l: { hand: 'Right', finger: 'Ring', color: MONO_FINGER_STYLE },
+  '.': { hand: 'Right', finger: 'Ring', color: MONO_FINGER_STYLE },
+  '9': { hand: 'Right', finger: 'Ring', color: MONO_FINGER_STYLE },
 
-  p: { hand: 'Right', finger: 'Pinky', color: 'text-purple-500 bg-purple-500/20 border-purple-500/40' },
-  ';': { hand: 'Right', finger: 'Pinky', color: 'text-purple-500 bg-purple-500/20 border-purple-500/40' },
-  '/': { hand: 'Right', finger: 'Pinky', color: 'text-purple-500 bg-purple-500/20 border-purple-500/40' },
-  '0': { hand: 'Right', finger: 'Pinky', color: 'text-purple-500 bg-purple-500/20 border-purple-500/40' },
+  p: { hand: 'Right', finger: 'Pinky', color: MONO_FINGER_STYLE },
+  ';': { hand: 'Right', finger: 'Pinky', color: MONO_FINGER_STYLE },
+  '/': { hand: 'Right', finger: 'Pinky', color: MONO_FINGER_STYLE },
+  '0': { hand: 'Right', finger: 'Pinky', color: MONO_FINGER_STYLE },
 
-  ' ': { hand: 'Right', finger: 'Thumb', color: 'text-sky-400 bg-sky-500/20 border-sky-500/40' },
+  ' ': { hand: 'Right', finger: 'Thumb', color: MONO_FINGER_STYLE },
 };
 
 export function getFingerInfo(char: string) {
   const lower = char.toLowerCase();
-  return FINGER_MAP[lower] || { hand: 'Right', finger: 'Thumb', color: 'text-blue-400 bg-blue-500/20 border-blue-500/40' };
+  return FINGER_MAP[lower] || { hand: 'Right', finger: 'Thumb', color: MONO_FINGER_STYLE };
 }
 
 const LEVEL_DEFINITIONS: readonly LevelInfo[] = [

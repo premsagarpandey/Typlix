@@ -311,10 +311,10 @@ export default function Game() {
               type="button"
               onClick={() => setIsSidebarOpen(true)}
               aria-label={`Show ${mode === 'lesson' ? 'lesson' : 'controls'} sidebar`}
-              className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-2xs hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer transition-all animate-fade-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-2xs hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white cursor-pointer transition-all animate-fade-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
               title="Show lesson / practice sidebar"
             >
-              <span className="text-blue-500" aria-hidden="true">▶</span>
+              <span className="text-neutral-700 dark:text-neutral-300" aria-hidden="true">▶</span>
               <span>Show {mode === 'lesson' ? 'Lesson' : 'Controls'}</span>
             </button>
           )}
@@ -369,7 +369,7 @@ export default function Game() {
           {/* Code snippet info */}
           {mode === 'code' && currentSnippetInfo.language && (
             <div className="w-full flex items-center justify-center gap-2 mt-1.5 animate-fade-in">
-              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/50">
+              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-700 font-mono">
                 {currentSnippetInfo.language}
               </span>
               <span className="text-xs text-neutral-600 dark:text-neutral-400 font-medium">

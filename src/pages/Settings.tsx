@@ -112,9 +112,9 @@ export default function Settings() {
         <div
           className={`p-3 border rounded-lg text-xs font-medium flex items-center justify-between animate-fade-in ${
             notice.type === 'success'
-              ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300'
+              ? 'border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100'
               : notice.type === 'error'
-              ? 'border-rose-500/40 bg-rose-500/10 text-rose-700 dark:text-rose-300'
+              ? 'border-neutral-400 dark:border-neutral-600 bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 font-bold'
               : 'border-neutral-300 dark:border-neutral-700 bg-neutral-100/50 dark:bg-neutral-900/50 text-neutral-700 dark:text-neutral-300'
           }`}
         >
@@ -411,7 +411,7 @@ export default function Settings() {
                 <button
                   onClick={handleResetProgress}
                   aria-label="Confirm resetting level progression to Level 1"
-                  className="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white text-xs font-medium rounded-md cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
+                  className="px-2.5 py-1 bg-neutral-900 dark:bg-neutral-100 hover:bg-neutral-800 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 text-xs font-bold rounded-md cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
                 >
                   Confirm Reset
                 </button>
@@ -445,7 +445,7 @@ export default function Settings() {
               <button
                 onClick={handleClearHistory}
                 aria-label="Confirm clearing all recorded typing session history"
-                className="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white text-xs font-medium rounded-md cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
+                className="px-2.5 py-1 bg-neutral-900 dark:bg-neutral-100 hover:bg-neutral-800 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 text-xs font-bold rounded-md cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
               >
                 Confirm Clear
               </button>
@@ -472,7 +472,7 @@ export default function Settings() {
               Strictly collecting only necessary data for touch typing lessons
             </p>
           </div>
-          <span className="text-[10px] font-semibold uppercase px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+          <span className="text-[10px] font-semibold uppercase px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-700">
             Data Minimization
           </span>
         </div>
@@ -485,29 +485,29 @@ export default function Settings() {
         <div className="p-3.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-100/50 dark:bg-neutral-900/60 space-y-2.5">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100 flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
+              <ShieldCheck className="w-4 h-4 text-neutral-900 dark:text-white" aria-hidden="true" />
               Tracking & Third-Party Embeds Audit
             </span>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 font-medium">
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-700 font-medium">
               Audit Passed
             </span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
             <div className="flex items-center gap-2 text-neutral-700 dark:text-neutral-300">
-              <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0" aria-hidden="true" />
+              <Check className="w-3.5 h-3.5 text-neutral-800 dark:text-neutral-200 shrink-0" aria-hidden="true" />
               <span>Third-party tracking scripts: <strong>0 (None)</strong></span>
             </div>
             <div className="flex items-center gap-2 text-neutral-700 dark:text-neutral-300">
-              <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0" aria-hidden="true" />
+              <Check className="w-3.5 h-3.5 text-neutral-800 dark:text-neutral-200 shrink-0" aria-hidden="true" />
               <span>Third-party iframes / embeds: <strong>0 (Sandboxed)</strong></span>
             </div>
             <div className="flex items-center gap-2 text-neutral-700 dark:text-neutral-300">
-              <EyeOff className="w-3.5 h-3.5 text-emerald-500 shrink-0" aria-hidden="true" />
+              <EyeOff className="w-3.5 h-3.5 text-neutral-800 dark:text-neutral-200 shrink-0" aria-hidden="true" />
               <span>Advertising & telemetry beacons: <strong>Blocked</strong></span>
             </div>
             <div className="flex items-center gap-2 text-neutral-700 dark:text-neutral-300">
-              <Lock className="w-3.5 h-3.5 text-emerald-500 shrink-0" aria-hidden="true" />
+              <Lock className="w-3.5 h-3.5 text-neutral-800 dark:text-neutral-200 shrink-0" aria-hidden="true" />
               <span>
                 Global Privacy Control (GPC):{' '}
                 <strong>{isGlobalPrivacyControlActive() ? 'Detected (Enforced)' : 'Supported'}</strong>
@@ -564,7 +564,7 @@ export default function Settings() {
             <button
               onClick={() => setConfirmPurgeAll(true)}
               aria-label="Permanently wipe all local typing storage, settings, and consent"
-              className="px-2.5 py-1 text-xs font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-md border border-rose-200 dark:border-rose-900/40 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
+              className="px-2.5 py-1 text-xs font-medium text-neutral-800 dark:text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-800 rounded-md border border-neutral-300 dark:border-neutral-700 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
             >
               Wipe All
             </button>
@@ -573,7 +573,7 @@ export default function Settings() {
               <button
                 onClick={handlePurgeAllData}
                 aria-label="Confirm permanent wipe of all local data"
-                className="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white text-xs font-medium rounded-md cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
+                className="px-2.5 py-1 bg-neutral-900 dark:bg-neutral-100 hover:bg-neutral-800 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 text-xs font-bold rounded-md cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
               >
                 Confirm Wipe
               </button>

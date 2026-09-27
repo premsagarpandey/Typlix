@@ -85,7 +85,7 @@ function GameSidebarComponent({
                 {/* Header Badges & Hide Button */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800/60">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-700">
                       📖 Lesson
                     </span>
                     <span className="text-[11px] text-neutral-600 dark:text-neutral-400 font-medium uppercase tracking-wider">
@@ -135,8 +135,8 @@ function GameSidebarComponent({
                 </div>
 
                 {/* Lesson Instructions */}
-                <div className="p-3 bg-blue-50/60 dark:bg-blue-950/25 border border-blue-100 dark:border-blue-900/40 rounded-xl text-xs text-neutral-800 dark:text-neutral-200 leading-relaxed">
-                  <span className="font-semibold text-blue-600 dark:text-blue-400 block mb-1">
+                <div className="p-3 bg-neutral-100/70 dark:bg-neutral-800/40 border border-neutral-200 dark:border-neutral-700/60 rounded-xl text-xs text-neutral-800 dark:text-neutral-200 leading-relaxed">
+                  <span className="font-semibold text-neutral-900 dark:text-neutral-100 block mb-1">
                     💡 Instruction
                   </span>
                   {levelConfig.instruction}
@@ -160,7 +160,7 @@ function GameSidebarComponent({
                     aria-label="Select typing lesson level"
                     value={currentLevel}
                     onChange={(e) => handleSelectLevel(Number(e.target.value))}
-                    className="w-full px-2.5 py-1.5 text-xs font-medium rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/90 text-neutral-800 dark:text-neutral-200 cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full px-2.5 py-1.5 text-xs font-medium rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/90 text-neutral-800 dark:text-neutral-200 cursor-pointer focus:outline-none focus:ring-1 focus:ring-neutral-900 dark:focus:ring-neutral-100"
                   >
                     {LEVEL_OPTIONS.map((item) => {
                       const isLocked = item.level > maxUnlockedLevel;
@@ -202,7 +202,7 @@ function GameSidebarComponent({
 
                 {/* Lock notice when on the highest unlocked level */}
                 {currentLevel >= maxUnlockedLevel && currentLevel < 50 && (
-                  <div className="text-[11px] text-amber-700 dark:text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-1 rounded-md text-center font-medium">
+                  <div className="text-[11px] text-neutral-700 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 px-2 py-1 rounded-md text-center font-medium">
                     🔒 Clear Level {currentLevel} to unlock Level {currentLevel + 1}
                   </div>
                 )}
@@ -246,7 +246,7 @@ function GameSidebarComponent({
             <div className="flex flex-col h-full justify-between gap-3">
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-700">
                     ⏱ Timed
                   </span>
                   <button
@@ -331,7 +331,7 @@ function GameSidebarComponent({
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-violet-100 dark:bg-violet-900/40 text-violet-700 dark:text-violet-300 border border-violet-200 dark:border-violet-800/60">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-700">
                       <span aria-hidden="true">💬</span> Quotes
                     </span>
                     {quoteCategory && (
@@ -469,7 +469,7 @@ function GameSidebarComponent({
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-700">
                       <span aria-hidden="true">⌨</span> Code
                     </span>
                     {currentSnippetInfo.language && (
@@ -606,7 +606,7 @@ function GameSidebarComponent({
             <div className="flex flex-col h-full justify-between gap-3">
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800/60">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-700">
                     <span aria-hidden="true">✏</span> Custom
                   </span>
                   <button

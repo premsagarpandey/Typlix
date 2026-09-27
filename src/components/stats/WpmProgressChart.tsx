@@ -80,39 +80,39 @@ const COLORS = {
     wpmStroke: '#171717',
     wpmGradientTop: 'rgba(23,23,23,0.12)',
     wpmGradientBot: 'rgba(23,23,23,0.01)',
-    accStroke: '#a855f7',
-    accGradientTop: 'rgba(168,85,247,0.08)',
-    accGradientBot: 'rgba(168,85,247,0.0)',
+    accStroke: '#737373',
+    accGradientTop: 'rgba(115,115,115,0.08)',
+    accGradientBot: 'rgba(115,115,115,0.0)',
     gridLine: '#e5e5e5',
     axisText: '#a3a3a3',
     dotFill: '#ffffff',
     dotStroke: '#171717',
     accDotFill: '#ffffff',
-    accDotStroke: '#a855f7',
+    accDotStroke: '#737373',
     tooltipBg: '#ffffff',
     tooltipBorder: '#e5e5e5',
     tooltipText: '#171717',
     tooltipSubtext: '#737373',
-    avgLine: '#3b82f6',
+    avgLine: '#a3a3a3',
   },
   dark: {
     wpmStroke: '#e5e5e5',
     wpmGradientTop: 'rgba(229,229,229,0.10)',
     wpmGradientBot: 'rgba(229,229,229,0.0)',
-    accStroke: '#c084fc',
-    accGradientTop: 'rgba(192,132,252,0.08)',
-    accGradientBot: 'rgba(192,132,252,0.0)',
+    accStroke: '#a3a3a3',
+    accGradientTop: 'rgba(163,163,163,0.08)',
+    accGradientBot: 'rgba(163,163,163,0.0)',
     gridLine: '#262626',
     axisText: '#525252',
     dotFill: '#0a0a0a',
     dotStroke: '#e5e5e5',
     accDotFill: '#0a0a0a',
-    accDotStroke: '#c084fc',
+    accDotStroke: '#a3a3a3',
     tooltipBg: '#171717',
     tooltipBorder: '#262626',
     tooltipText: '#f5f5f5',
     tooltipSubtext: '#a3a3a3',
-    avgLine: '#60a5fa',
+    avgLine: '#525252',
   },
 };
 
@@ -517,9 +517,9 @@ export default function WpmProgressChart({ sessions }: WpmProgressChartProps) {
             <span
               className={`inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[10px] font-semibold font-mono ${
                 trendInfo.diff > 0
-                  ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400'
+                  ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900'
                   : trendInfo.diff < 0
-                  ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'
+                  ? 'bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-400 dark:border-neutral-600'
                   : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400'
               }`}
             >
@@ -539,7 +539,7 @@ export default function WpmProgressChart({ sessions }: WpmProgressChartProps) {
             onClick={() => setShowAccuracy(!showAccuracy)}
             className={`px-2 py-1 text-[10px] font-medium rounded-md border transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white ${
               showAccuracy
-                ? 'border-purple-300 dark:border-purple-700 bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-400'
+                ? 'border-neutral-900 dark:border-white bg-neutral-900 dark:bg-white text-white dark:text-neutral-900'
                 : 'border-neutral-300 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100'
             }`}
           >
@@ -577,7 +577,7 @@ export default function WpmProgressChart({ sessions }: WpmProgressChartProps) {
             wpm
           </span>
           {showAccuracy && (
-            <span className="text-[9px] font-mono uppercase tracking-widest text-purple-700 dark:text-purple-400">
+            <span className="text-[9px] font-mono uppercase tracking-widest text-neutral-600 dark:text-neutral-400">
               accuracy %
             </span>
           )}

@@ -156,7 +156,7 @@ function GameStatsComponent({
           <span
             className={`font-mono font-semibold ${
               timeRemaining <= 5 && timeRemaining > 0
-                ? 'text-red-500 dark:text-red-400'
+                ? 'underline underline-offset-2 font-bold text-neutral-900 dark:text-white animate-pulse'
                 : 'text-neutral-900 dark:text-neutral-100'
             }`}
           >

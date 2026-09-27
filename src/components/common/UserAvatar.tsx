@@ -10,12 +10,11 @@ interface UserAvatarProps {
 }
 
 const GRADIENTS = [
-  'from-neutral-800 to-neutral-900 text-white',
-  'from-blue-600 to-indigo-700 text-white',
-  'from-emerald-600 to-teal-700 text-white',
-  'from-amber-600 to-orange-700 text-white',
-  'from-purple-600 to-pink-700 text-white',
-  'from-rose-600 to-red-700 text-white',
+  'from-neutral-900 to-neutral-800 text-white dark:from-neutral-100 dark:to-neutral-300 dark:text-neutral-900',
+  'from-neutral-800 to-neutral-700 text-white dark:from-neutral-200 dark:to-neutral-400 dark:text-neutral-900',
+  'from-neutral-700 to-neutral-900 text-white dark:from-neutral-300 dark:to-neutral-100 dark:text-neutral-900',
+  'from-neutral-800 to-black text-white dark:from-white dark:to-neutral-200 dark:text-neutral-900',
+  'from-neutral-950 to-neutral-800 text-white dark:from-neutral-100 dark:to-neutral-200 dark:text-neutral-900',
 ];
 
 const SIZE_MAP = {

@@ -8,7 +8,7 @@ export default function RefundPolicy() {
     <div className="max-w-4xl mx-auto py-10 px-4 sm:px-6 space-y-10 animate-fade-in text-neutral-800 dark:text-neutral-200">
       {/* Header */}
       <div className="border-b border-neutral-200 dark:border-neutral-800 pb-8 space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-700">
           <ShieldCheck className="w-3.5 h-3.5" aria-hidden="true" />
           <span>100% Free & Transparent</span>
         </div>
@@ -23,7 +23,7 @@ export default function RefundPolicy() {
       {/* Free Tier Notice Card */}
       <div className="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/70 dark:bg-neutral-900/40 space-y-2">
         <div className="flex items-center gap-2 text-neutral-900 dark:text-white font-bold text-base">
-          <CheckCircle className="w-5 h-5 text-emerald-500" aria-hidden="true" />
+          <CheckCircle className="w-5 h-5 text-neutral-900 dark:text-neutral-100" aria-hidden="true" />
           <span>100% Free Platform — Zero Financial Charges</span>
         </div>
         <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
@@ -106,7 +106,7 @@ export default function RefundPolicy() {
             If you have questions about Typlix or need assistance with your data or typing practice, please reach out to our team:
           </p>
           <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/40 flex items-center gap-3">
-            <HeartHandshake className="w-5 h-5 text-emerald-500 shrink-0" aria-hidden="true" />
+            <HeartHandshake className="w-5 h-5 text-neutral-700 dark:text-neutral-300 shrink-0" aria-hidden="true" />
             <div>
               <div className="font-semibold text-neutral-900 dark:text-neutral-100">Typlix Interactive · Open Educational Project</div>
               <p className="text-xs text-neutral-600 dark:text-neutral-400">

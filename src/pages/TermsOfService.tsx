@@ -58,15 +58,15 @@ export default function TermsOfService() {
             <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-100">
               3. Fair Play, Anti-Cheat, and Acceptable Use
             </h2>
-            <span className="text-[10px] font-semibold uppercase px-2 py-0.5 rounded bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
+            <span className="text-[10px] font-semibold uppercase px-2 py-0.5 rounded bg-neutral-200/80 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-700">
               Strict Policy
             </span>
           </div>
           <p className="text-neutral-600 dark:text-neutral-400">
             Typlix is designed to help human typists hone real muscle memory and measurable keyboard skills. To maintain competitive integrity across leaderboards:
           </p>
-          <div className="p-4 rounded-xl border border-rose-500/30 bg-rose-500/5 dark:bg-rose-500/10 space-y-2">
-            <div className="font-semibold text-rose-800 dark:text-rose-300 flex items-center gap-2">
+          <div className="p-4 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-neutral-100/50 dark:bg-neutral-900/40 space-y-2">
+            <div className="font-semibold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
               <AlertTriangle className="w-4 h-4" /> Prohibited Behaviors
             </div>
             <ul className="list-disc list-inside text-xs text-neutral-700 dark:text-neutral-300 space-y-1">
@@ -114,7 +114,7 @@ export default function TermsOfService() {
         {/* Section 5: DMCA & Copyright Infringement Notice */}
         <section className="space-y-3 p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/70 dark:bg-neutral-900/40 text-xs">
           <h3 className="font-semibold text-sm text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
-            <ShieldAlert className="w-4 h-4 text-amber-500" />
+            <ShieldAlert className="w-4 h-4 text-neutral-500" />
             5. DMCA & Copyright Infringement Notice Procedure
           </h3>
           <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed">
@@ -130,8 +130,8 @@ export default function TermsOfService() {
         </section>
 
         {/* Section 6: Ergonomic Safety, RSI & Health Risk Warning */}
-        <section className="space-y-3 p-4 rounded-xl border border-amber-500/30 bg-amber-500/5 dark:bg-amber-500/10">
-          <div className="flex items-center gap-2 text-amber-800 dark:text-amber-300 font-semibold text-sm">
+        <section className="space-y-3 p-4 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-neutral-100/50 dark:bg-neutral-900/40">
+          <div className="flex items-center gap-2 text-neutral-900 dark:text-neutral-100 font-semibold text-sm">
             <HeartPulse className="w-4 h-4" />
             <span>6. Ergonomic Safety, Repetitive Strain Injury (RSI) & Medical Disclaimer</span>
           </div>

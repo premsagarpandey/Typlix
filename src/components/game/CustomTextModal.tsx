@@ -155,7 +155,7 @@ export default function CustomTextModal({
             className="w-full p-3 text-sm font-mono bg-white dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-700 rounded-md text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-500 focus:outline-none focus:border-neutral-500 dark:focus:border-neutral-500 focus:ring-1 focus:ring-neutral-500 resize-none"
           />
           <div className="flex items-center gap-1.5 mt-1 text-[11px] text-neutral-500 dark:text-neutral-400">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" aria-hidden="true" />
+            <ShieldCheck className="w-3.5 h-3.5 text-neutral-800 dark:text-neutral-300 shrink-0" aria-hidden="true" />
             <span>Stored 100% locally in your browser. Custom text is never uploaded to any server.</span>
           </div>
         </div>

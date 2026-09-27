@@ -102,17 +102,17 @@ export default function ResultsModal({
       {isLesson && levelConfig && (
         <div className="mb-4">
           {isPassed ? (
-            <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 text-xs text-center font-medium">
-              <span aria-hidden="true">🎉</span> <span className="font-semibold">Level {levelConfig.level} Cleared!</span>{' '}
+            <div className="p-3 rounded-lg bg-neutral-100 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100 text-xs text-center font-medium">
+              <span aria-hidden="true">✓</span> <span className="font-semibold">Level {levelConfig.level} Cleared!</span>{' '}
               {levelConfig.level < 50
                 ? `Level ${levelConfig.level + 1} ab unlock ho chuka hai.`
                 : 'Congratulations! Aapne saare 50 levels pass kar liye!'}
             </div>
           ) : (
-            <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-xs text-center font-medium">
-              <span aria-hidden="true">🔒</span> <span className="font-semibold">Level Not Cleared.</span> Agla level unlock karne ke liye{' '}
-              <span className="font-bold">{levelConfig.targetWpm} WPM</span> aur{' '}
-              <span className="font-bold">{levelConfig.targetAccuracy}% Accuracy</span> chahiye.
+            <div className="p-3 rounded-lg bg-neutral-100 dark:bg-neutral-850 border border-dashed border-neutral-400 dark:border-neutral-600 text-neutral-700 dark:text-neutral-300 text-xs text-center font-medium">
+              <span aria-hidden="true">✕</span> <span className="font-semibold">Level Not Cleared.</span> Agla level unlock karne ke liye{' '}
+              <span className="font-bold text-neutral-900 dark:text-white">{levelConfig.targetWpm} WPM</span> aur{' '}
+              <span className="font-bold text-neutral-900 dark:text-white">{levelConfig.targetAccuracy}% Accuracy</span> chahiye.
             </div>
           )}
         </div>
@@ -142,14 +142,14 @@ export default function ResultsModal({
             type="button"
             onClick={onNextLevel}
             aria-label={levelConfig && levelConfig.level >= 50 ? 'All 50 levels completed' : `Proceed to next level ${levelConfig ? levelConfig.level + 1 : ''} (Shortcut: Enter)`}
-            className="flex-1 py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-md text-sm cursor-pointer flex items-center justify-center gap-2 transition-colors shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+            className="flex-1 py-2.5 px-4 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 font-medium rounded-md text-sm cursor-pointer flex items-center justify-center gap-2 transition-colors shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
           >
             {levelConfig && levelConfig.level >= 50 ? (
-              <span>All Done <span aria-hidden="true">🎉</span></span>
+              <span>All Done <span aria-hidden="true">✓</span></span>
             ) : (
               <span>Next Level <span aria-hidden="true">➔</span></span>
             )}
-            <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-white/20 rounded" aria-hidden="true">
+            <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-neutral-800 dark:bg-neutral-300 text-white dark:text-neutral-900 rounded" aria-hidden="true">
               ↵
             </kbd>
           </button>

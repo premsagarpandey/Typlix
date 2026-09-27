@@ -8,7 +8,7 @@ export default function PrivacyPolicy() {
     <div className="max-w-4xl mx-auto py-10 px-4 sm:px-6 space-y-10 animate-fade-in text-neutral-800 dark:text-neutral-200">
       {/* Header */}
       <div className="border-b border-neutral-200 dark:border-neutral-800 pb-8 space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-700">
           <Shield className="w-3.5 h-3.5" />
           <span>Privacy & Data Protection</span>
         </div>
@@ -21,9 +21,9 @@ export default function PrivacyPolicy() {
       </div>
 
       {/* Core Principle: Data Minimization Highlight Card */}
-      <div className="p-6 rounded-2xl border border-emerald-500/30 bg-emerald-500/5 dark:bg-emerald-500/10 space-y-3">
+      <div className="p-6 rounded-2xl border border-neutral-300 dark:border-neutral-700 bg-neutral-100/60 dark:bg-neutral-900/40 space-y-3">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-lg bg-emerald-500/20 text-emerald-700 dark:text-emerald-300">
+          <div className="p-2 rounded-lg bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200">
             <Lock className="w-5 h-5" />
           </div>
           <h2 className="text-lg font-bold text-neutral-900 dark:text-white">
@@ -95,7 +95,7 @@ export default function PrivacyPolicy() {
 
             <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/40 space-y-2">
               <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
-                <EyeOff className="w-4 h-4 text-rose-500" />
+                <EyeOff className="w-4 h-4 text-neutral-500" />
                 What We NEVER Collect
               </h3>
               <ul className="list-disc list-inside text-xs text-neutral-600 dark:text-neutral-400 space-y-1">
@@ -203,16 +203,16 @@ export default function PrivacyPolicy() {
         </section>
 
         {/* Section 6: DPDP Act 2023 Compliance */}
-        <section className="space-y-4 p-5 rounded-2xl border border-blue-500/30 bg-blue-500/5 dark:bg-blue-500/10">
+        <section className="space-y-4 p-5 rounded-2xl border border-neutral-300 dark:border-neutral-700 bg-neutral-100/60 dark:bg-neutral-900/60">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-lg bg-blue-500/20 text-blue-700 dark:text-blue-300">
+            <div className="p-2 rounded-lg bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200">
               <Scale className="w-5 h-5" aria-hidden="true" />
             </div>
             <div>
               <h2 className="text-lg font-bold text-neutral-900 dark:text-white">
                 6. Compliance with India's DPDP Act, 2023 (Digital Personal Data Protection Act)
               </h2>
-              <span className="text-xs text-blue-700 dark:text-blue-300 font-medium">
+              <span className="text-xs text-neutral-600 dark:text-neutral-400 font-medium">
                 Statutory Notice for Data Principals in India
               </span>
             </div>

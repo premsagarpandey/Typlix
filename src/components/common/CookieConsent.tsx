@@ -117,11 +117,11 @@ export default function CookieConsent() {
                   <h4 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                     Cookie & Data Preferences
                   </h4>
-                  <span className="text-[10px] font-medium uppercase tracking-wider px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                  <span className="text-[10px] font-medium uppercase tracking-wider px-1.5 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-700">
                     Data Minimization
                   </span>
                   {isGpcActive && (
-                    <span className="text-[10px] font-medium uppercase tracking-wider px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 flex items-center gap-1">
+                    <span className="text-[10px] font-medium uppercase tracking-wider px-1.5 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-700 flex items-center gap-1">
                       <ShieldAlert className="w-3 h-3" /> GPC Signal Detected
                     </span>
                   )}
@@ -130,7 +130,7 @@ export default function CookieConsent() {
                   Typlix complies with the DPDP Act 2023 (India), GDPR, and CCPA. We collect <span className="font-semibold text-neutral-900 dark:text-neutral-200">only necessary data</span> required to save your typing progress, speed tests, and audio preferences. No third-party ad tracking or selling of data.
                 </p>
                 {isGpcActive && (
-                  <p className="text-[11px] text-blue-600 dark:text-blue-400 font-medium pt-0.5">
+                  <p className="text-[11px] text-neutral-700 dark:text-neutral-300 font-medium pt-0.5">
                     Your browser has Global Privacy Control enabled. Non-essential tracking has been defaulted to off.
                   </p>
                 )}
@@ -207,7 +207,7 @@ export default function CookieConsent() {
               <div className="p-6 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100">
-                    <ShieldCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
+                    <ShieldCheck className="w-5 h-5 text-neutral-900 dark:text-white" aria-hidden="true" />
                   </div>
                   <div>
                     <h3 id="cookie-modal-title" className="text-base font-bold text-neutral-900 dark:text-neutral-100">
@@ -235,7 +235,7 @@ export default function CookieConsent() {
                 </div>
 
                 {isGpcActive && (
-                  <div className="p-3 rounded-xl bg-blue-500/10 border border-blue-500/25 text-xs text-blue-700 dark:text-blue-300 flex items-center gap-2">
+                  <div className="p-3 rounded-xl bg-neutral-100 dark:bg-neutral-800/60 border border-neutral-300 dark:border-neutral-700 text-xs text-neutral-800 dark:text-neutral-200 flex items-center gap-2">
                     <ShieldAlert className="w-4 h-4 shrink-0" aria-hidden="true" />
                     <span>Global Privacy Control (GPC) active in your browser. Non-essential tracking has been defaulted to disabled.</span>
                   </div>

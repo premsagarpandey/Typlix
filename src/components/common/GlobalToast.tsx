@@ -52,44 +52,30 @@ export default function GlobalToast() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -15, scale: 0.95 }}
               transition={{ duration: 0.22, ease: 'easeOut' }}
-              className={`pointer-events-auto flex items-start gap-3 w-full p-4 rounded-xl shadow-2xl border backdrop-blur-xl ${
-                isError
-                  ? 'bg-neutral-900/95 dark:bg-neutral-900/95 text-neutral-100 border-rose-500/40 shadow-rose-950/20'
-                  : isSuccess
-                  ? 'bg-neutral-900/95 dark:bg-neutral-900/95 text-neutral-100 border-emerald-500/40 shadow-emerald-950/20'
-                  : 'bg-neutral-900/95 dark:bg-neutral-900/95 text-neutral-100 border-neutral-700 shadow-neutral-950/30'
-              }`}
+              className="pointer-events-auto flex items-start gap-3 w-full p-4 rounded-xl shadow-2xl border backdrop-blur-xl bg-neutral-900/95 text-neutral-100 border-neutral-700 shadow-black/50"
             >
               <div
                 className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-sm border ${
                   isError
-                    ? 'bg-rose-500/15 border-rose-500/30 text-rose-400'
+                    ? 'bg-neutral-800 border-neutral-500 text-white'
                     : isSuccess
-                    ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-400'
-                    : 'bg-sky-500/15 border-sky-500/30 text-sky-400'
+                    ? 'bg-white border-white text-neutral-950'
+                    : 'bg-neutral-800 border-neutral-700 text-neutral-300'
                 }`}
               >
                 {isError ? (
-                  <AlertCircle className="w-4 h-4 text-rose-400" />
+                  <AlertCircle className="w-4 h-4 text-white" />
                 ) : isSuccess ? (
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  <CheckCircle2 className="w-4 h-4 text-neutral-950 stroke-[2.5]" />
                 ) : (
-                  <Info className="w-4 h-4 text-sky-400" />
+                  <Info className="w-4 h-4 text-neutral-300" />
                 )}
               </div>
 
               <div className="flex-1 min-w-0 pr-1">
                 <div className="flex items-center gap-2 mb-0.5">
-                  <span
-                    className={`text-xs font-bold tracking-wide uppercase ${
-                      isError
-                        ? 'text-rose-400'
-                        : isSuccess
-                        ? 'text-emerald-400'
-                        : 'text-sky-400'
-                    }`}
-                  >
-                    {toast.title || (isError ? 'Login Error' : 'Notification')}
+                  <span className="text-xs font-bold tracking-wide uppercase text-white">
+                    {toast.title || (isError ? 'Notice / Alert' : 'Notification')}
                   </span>
                 </div>
                 <p className="text-xs text-neutral-200 leading-relaxed font-sans font-medium">

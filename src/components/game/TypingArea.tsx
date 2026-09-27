@@ -469,7 +469,7 @@ function TypingAreaComponent({
         <div
           role="status"
           aria-live="polite"
-          className="mb-3 px-3.5 sm:px-4 py-2 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/60 rounded-xl text-blue-900 dark:text-blue-200 text-xs flex items-center justify-between shadow-xs animate-fade-in"
+          className="mb-3 px-3.5 sm:px-4 py-2 bg-neutral-100 dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-xl text-neutral-900 dark:text-neutral-100 text-xs flex items-center justify-between shadow-xs animate-fade-in"
         >
           <span className="flex items-center gap-2">
             <span className="font-semibold">Keyboard focus released.</span>
@@ -480,7 +480,7 @@ function TypingAreaComponent({
           <button
             type="button"
             onClick={handleContainerClick}
-            className="px-2 py-0.5 font-semibold rounded bg-blue-600 text-white hover:bg-blue-700 text-[11px] cursor-pointer"
+            className="px-2.5 py-1 font-semibold rounded bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 text-[11px] cursor-pointer transition-colors"
           >
             Resume Typing
           </button>
@@ -623,8 +623,8 @@ function TypingAreaComponent({
                                 className={`transition-colors duration-75 ${
                                   isError
                                     ? isSpace
-                                      ? 'bg-red-500/25 border-b-2 border-red-500 text-transparent rounded-xs'
-                                      : 'text-red-500 dark:text-red-400 bg-red-500/15 rounded-xs font-semibold'
+                                      ? 'bg-neutral-400/40 dark:bg-neutral-600/40 border-b-2 border-neutral-800 dark:border-neutral-200 text-transparent rounded-xs'
+                                      : 'text-neutral-900 dark:text-white bg-neutral-300/80 dark:bg-neutral-700/80 line-through rounded-xs font-bold'
                                     : isCorrect
                                     ? 'text-neutral-900 dark:text-neutral-100 font-medium'
                                     : isCurrent

@@ -23,17 +23,17 @@ export interface KeyboardLayoutDef {
   fingerMap: Record<string, FingerInfo>;
 }
 
-// Color presets for touch typing fingers
+// Color presets for touch typing fingers (Monochromatic neutral styling)
 const COLORS = {
-  leftPinky: 'text-rose-500 bg-rose-500/20 border-rose-500/40',
-  leftRing: 'text-orange-500 bg-orange-500/20 border-orange-500/40',
-  leftMiddle: 'text-amber-500 bg-amber-500/20 border-amber-500/40',
-  leftIndex: 'text-emerald-500 bg-emerald-500/20 border-emerald-500/40',
-  rightIndex: 'text-cyan-500 bg-cyan-500/20 border-cyan-500/40',
-  rightMiddle: 'text-blue-500 bg-blue-500/20 border-blue-500/40',
-  rightRing: 'text-indigo-500 bg-indigo-500/20 border-indigo-500/40',
-  rightPinky: 'text-purple-500 bg-purple-500/20 border-purple-500/40',
-  thumb: 'text-sky-400 bg-sky-500/20 border-sky-500/40',
+  leftPinky: 'text-neutral-800 dark:text-neutral-200 bg-neutral-200/50 dark:bg-neutral-800/50 border-neutral-300 dark:border-neutral-700',
+  leftRing: 'text-neutral-800 dark:text-neutral-200 bg-neutral-200/50 dark:bg-neutral-800/50 border-neutral-300 dark:border-neutral-700',
+  leftMiddle: 'text-neutral-800 dark:text-neutral-200 bg-neutral-200/50 dark:bg-neutral-800/50 border-neutral-300 dark:border-neutral-700',
+  leftIndex: 'text-neutral-800 dark:text-neutral-200 bg-neutral-200/50 dark:bg-neutral-800/50 border-neutral-300 dark:border-neutral-700',
+  rightIndex: 'text-neutral-800 dark:text-neutral-200 bg-neutral-200/50 dark:bg-neutral-800/50 border-neutral-300 dark:border-neutral-700',
+  rightMiddle: 'text-neutral-800 dark:text-neutral-200 bg-neutral-200/50 dark:bg-neutral-800/50 border-neutral-300 dark:border-neutral-700',
+  rightRing: 'text-neutral-800 dark:text-neutral-200 bg-neutral-200/50 dark:bg-neutral-800/50 border-neutral-300 dark:border-neutral-700',
+  rightPinky: 'text-neutral-800 dark:text-neutral-200 bg-neutral-200/50 dark:bg-neutral-800/50 border-neutral-300 dark:border-neutral-700',
+  thumb: 'text-neutral-800 dark:text-neutral-200 bg-neutral-200/50 dark:bg-neutral-800/50 border-neutral-300 dark:border-neutral-700',
 };
 
 // 1. QWERTY (Standard US)

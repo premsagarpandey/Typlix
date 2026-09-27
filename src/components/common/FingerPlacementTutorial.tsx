@@ -56,8 +56,8 @@ export default function FingerPlacementTutorial() {
       </div>
 
       {/* Ergonomic & Health Advisory (RSI Risk Mitigation) */}
-      <div className="mt-4 p-3.5 border border-amber-500/25 bg-amber-500/5 dark:bg-amber-500/10 rounded-md flex items-start gap-2.5 text-xs text-neutral-700 dark:text-neutral-300">
-        <HeartPulse className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" aria-hidden="true" />
+      <div className="mt-4 p-3.5 border border-neutral-300 dark:border-neutral-800 bg-neutral-100/70 dark:bg-neutral-900/60 rounded-md flex items-start gap-2.5 text-xs text-neutral-700 dark:text-neutral-300">
+        <HeartPulse className="w-4 h-4 text-neutral-800 dark:text-neutral-200 shrink-0 mt-0.5" aria-hidden="true" />
         <div className="leading-relaxed">
           <span className="font-semibold text-neutral-900 dark:text-neutral-100">Ergonomic Safety Tip:</span> Keep your wrists straight and elevated slightly above the desk. Take a short 2-3 minute stretch break every 20 minutes to prevent repetitive strain injury (RSI).
         </div>

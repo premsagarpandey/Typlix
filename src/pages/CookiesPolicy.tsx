@@ -32,7 +32,7 @@ export default function CookiesPolicy() {
     <div className="max-w-4xl mx-auto py-10 px-4 sm:px-6 space-y-10 animate-fade-in text-neutral-800 dark:text-neutral-200">
       {/* Header */}
       <div className="border-b border-neutral-200 dark:border-neutral-800 pb-8 space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-700">
           <Cookie className="w-3.5 h-3.5" />
           <span>Storage & Tracking Transparency</span>
         </div>
@@ -51,12 +51,12 @@ export default function CookiesPolicy() {
             <span className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
               Your Current Consent Status:
             </span>
-            <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
+            <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 border border-neutral-300 dark:border-neutral-700 flex items-center gap-1">
               <CheckCircle2 className="w-3 h-3" aria-hidden="true" />
               {currentConsent ? 'Preferences Saved' : 'Default / Not Set'}
             </span>
             {isGlobalPrivacyControlActive() && (
-              <span className="px-2 py-0.5 rounded-full text-[11px] font-medium bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
+              <span className="px-2 py-0.5 rounded-full text-[11px] font-medium bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-300 dark:border-neutral-700">
                 GPC Signal Enforced
               </span>
             )}
@@ -71,7 +71,7 @@ export default function CookiesPolicy() {
               {currentConsent?.analytics ? 'Enabled' : 'Disabled'}
             </span>{' '}
             · 3rd-Party Tracking Cookies:{' '}
-            <span className="font-semibold text-emerald-600 dark:text-emerald-400">
+            <span className="font-semibold text-neutral-900 dark:text-white">
               0 (None)
             </span>
           </p>
@@ -141,7 +141,7 @@ export default function CookiesPolicy() {
                 <span className="font-semibold text-neutral-900 dark:text-neutral-100">
                   B. Functional & Preference Storage
                 </span>
-                <span className="text-[10px] uppercase font-bold text-emerald-600 bg-emerald-500/10 px-2 py-0.5 rounded">
+                <span className="text-[10px] uppercase font-bold text-neutral-800 dark:text-neutral-200 bg-neutral-200 dark:bg-neutral-800 px-2 py-0.5 rounded border border-neutral-300 dark:border-neutral-700">
                   User Configurable
                 </span>
               </div>
@@ -155,7 +155,7 @@ export default function CookiesPolicy() {
                 <span className="font-semibold text-neutral-900 dark:text-neutral-100">
                   C. Performance & Typing Analytics
                 </span>
-                <span className="text-[10px] uppercase font-bold text-emerald-600 bg-emerald-500/10 px-2 py-0.5 rounded">
+                <span className="text-[10px] uppercase font-bold text-neutral-800 dark:text-neutral-200 bg-neutral-200 dark:bg-neutral-800 px-2 py-0.5 rounded border border-neutral-300 dark:border-neutral-700">
                   User Configurable
                 </span>
               </div>
@@ -250,7 +250,7 @@ export default function CookiesPolicy() {
         </section>
 
         {/* Section 5: DPDP Act & Statutory Consent */}
-        <section className="space-y-3 p-4 rounded-xl border border-blue-500/20 bg-blue-500/5 dark:bg-blue-500/10 text-xs">
+        <section className="space-y-3 p-4 rounded-xl border border-neutral-300 dark:border-neutral-800 bg-neutral-100/70 dark:bg-neutral-900/60 text-xs">
           <h3 className="font-semibold text-sm text-neutral-900 dark:text-neutral-100">
             5. DPDP Act, 2023 (India) & Global Consent Standard
           </h3>

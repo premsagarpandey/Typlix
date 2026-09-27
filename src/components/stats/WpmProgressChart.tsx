@@ -77,42 +77,42 @@ function buildSmoothPath(
 // ─── Chart Colors ───────────────────────────────────────────────────
 const COLORS = {
   light: {
-    wpmStroke: '#171717',
-    wpmGradientTop: 'rgba(23,23,23,0.12)',
-    wpmGradientBot: 'rgba(23,23,23,0.01)',
-    accStroke: '#737373',
-    accGradientTop: 'rgba(115,115,115,0.08)',
-    accGradientBot: 'rgba(115,115,115,0.0)',
+    wpmStroke: '#059669',
+    wpmGradientTop: 'rgba(16, 185, 129, 0.35)',
+    wpmGradientBot: 'rgba(16, 185, 129, 0.02)',
+    accStroke: '#7c3aed',
+    accGradientTop: 'rgba(124, 58, 237, 0.22)',
+    accGradientBot: 'rgba(124, 58, 237, 0.01)',
     gridLine: '#e5e5e5',
-    axisText: '#a3a3a3',
+    axisText: '#737373',
     dotFill: '#ffffff',
-    dotStroke: '#171717',
+    dotStroke: '#059669',
     accDotFill: '#ffffff',
-    accDotStroke: '#737373',
+    accDotStroke: '#7c3aed',
     tooltipBg: '#ffffff',
-    tooltipBorder: '#e5e5e5',
-    tooltipText: '#171717',
-    tooltipSubtext: '#737373',
-    avgLine: '#a3a3a3',
+    tooltipBorder: '#cbd5e1',
+    tooltipText: '#059669',
+    tooltipSubtext: '#64748b',
+    avgLine: '#2563eb',
   },
   dark: {
-    wpmStroke: '#e5e5e5',
-    wpmGradientTop: 'rgba(229,229,229,0.10)',
-    wpmGradientBot: 'rgba(229,229,229,0.0)',
-    accStroke: '#a3a3a3',
-    accGradientTop: 'rgba(163,163,163,0.08)',
-    accGradientBot: 'rgba(163,163,163,0.0)',
+    wpmStroke: '#10b981',
+    wpmGradientTop: 'rgba(16, 185, 129, 0.38)',
+    wpmGradientBot: 'rgba(16, 185, 129, 0.01)',
+    accStroke: '#a855f7',
+    accGradientTop: 'rgba(168, 85, 247, 0.28)',
+    accGradientBot: 'rgba(168, 85, 247, 0.01)',
     gridLine: '#262626',
-    axisText: '#525252',
+    axisText: '#737373',
     dotFill: '#0a0a0a',
-    dotStroke: '#e5e5e5',
+    dotStroke: '#34d399',
     accDotFill: '#0a0a0a',
-    accDotStroke: '#a3a3a3',
+    accDotStroke: '#c084fc',
     tooltipBg: '#171717',
-    tooltipBorder: '#262626',
-    tooltipText: '#f5f5f5',
-    tooltipSubtext: '#a3a3a3',
-    avgLine: '#525252',
+    tooltipBorder: '#334155',
+    tooltipText: '#34d399',
+    tooltipSubtext: '#94a3b8',
+    avgLine: '#38bdf8',
   },
 };
 
@@ -408,34 +408,34 @@ export default function WpmProgressChart({ sessions }: WpmProgressChartProps) {
           x2={plotRight}
           y2={avgY}
           stroke={colors.avgLine}
-          strokeWidth={1}
+          strokeWidth={1.5}
           strokeDasharray="6,4"
-          opacity={0.5}
+          opacity={0.8}
         />
         <text
           x={plotRight}
           y={avgY - 6}
           textAnchor="end"
           fill={colors.avgLine}
-          fontSize={9}
+          fontSize={10}
+          fontWeight="bold"
           fontFamily="JetBrains Mono, Fira Code, monospace"
-          opacity={0.7}
+          opacity={0.9}
         >
-          avg {avgWpm}
+          avg {avgWpm} wpm
         </text>
 
         {/* Accuracy area + line (behind WPM) */}
         {showAccuracy && n > 1 && (
-          <g opacity={0.7}>
+          <g opacity={0.85}>
             <path d={accAreaPath} fill={`url(#${gAcc})`} />
             <path
               d={accLinePath}
               fill="none"
               stroke={colors.accStroke}
-              strokeWidth={1.5}
+              strokeWidth={2}
               strokeLinecap="round"
               strokeLinejoin="round"
-              opacity={0.6}
             />
           </g>
         )}
@@ -448,7 +448,7 @@ export default function WpmProgressChart({ sessions }: WpmProgressChartProps) {
           d={wpmLinePath}
           fill="none"
           stroke={colors.wpmStroke}
-          strokeWidth={2}
+          strokeWidth={2.5}
           strokeLinecap="round"
           strokeLinejoin="round"
         />
@@ -515,12 +515,12 @@ export default function WpmProgressChart({ sessions }: WpmProgressChartProps) {
           {/* Trend badge */}
           {trendInfo && (
             <span
-              className={`inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[10px] font-semibold font-mono ${
+              className={`inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[10px] font-semibold font-mono border ${
                 trendInfo.diff > 0
-                  ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900'
+                  ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/30'
                   : trendInfo.diff < 0
-                  ? 'bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-400 dark:border-neutral-600'
-                  : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400'
+                  ? 'bg-rose-500/15 text-rose-700 dark:text-rose-400 border-rose-500/30'
+                  : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border-neutral-300 dark:border-neutral-700'
               }`}
             >
               {trendInfo.diff > 0 ? '↑' : trendInfo.diff < 0 ? '↓' : '→'}
@@ -537,9 +537,9 @@ export default function WpmProgressChart({ sessions }: WpmProgressChartProps) {
             aria-checked={showAccuracy}
             aria-label={showAccuracy ? 'Hide accuracy line on chart' : 'Show accuracy line on chart'}
             onClick={() => setShowAccuracy(!showAccuracy)}
-            className={`px-2 py-1 text-[10px] font-medium rounded-md border transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white ${
+            className={`px-2.5 py-1 text-[10px] font-medium rounded-md border transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-purple-500 ${
               showAccuracy
-                ? 'border-neutral-900 dark:border-white bg-neutral-900 dark:bg-white text-white dark:text-neutral-900'
+                ? 'border-purple-400 dark:border-purple-600 bg-purple-500/15 text-purple-700 dark:text-purple-300 font-semibold shadow-xs'
                 : 'border-neutral-300 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100'
             }`}
           >
@@ -573,11 +573,11 @@ export default function WpmProgressChart({ sessions }: WpmProgressChartProps) {
       <div className="relative p-4 pt-2">
         {/* Axis labels */}
         <div className="flex items-center justify-between px-1 mb-1">
-          <span className="text-[9px] font-mono uppercase tracking-widest text-neutral-600 dark:text-neutral-400">
+          <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-600 dark:text-emerald-400 font-bold">
             wpm
           </span>
           {showAccuracy && (
-            <span className="text-[9px] font-mono uppercase tracking-widest text-neutral-600 dark:text-neutral-400">
+            <span className="text-[10px] font-mono uppercase tracking-widest text-purple-600 dark:text-purple-400 font-bold">
               accuracy %
             </span>
           )}
@@ -614,24 +614,23 @@ export default function WpmProgressChart({ sessions }: WpmProgressChartProps) {
                     }}
                   >
                     <div
-                      className="text-xs font-semibold mb-1"
-                      style={{ color: colors.tooltipText }}
+                      className="text-xs font-bold mb-1"
+                      style={{ color: colors.wpmStroke }}
                     >
                       {tooltip.session.wpm}{' '}
-                      <span className="font-normal" style={{ color: colors.tooltipSubtext }}>
+                      <span className="font-normal text-[11px] opacity-80" style={{ color: colors.tooltipSubtext }}>
                         wpm
                       </span>
                     </div>
                     <div className="flex items-center gap-3">
                       <span
-                        className="text-[10px]"
+                        className="text-[10px] font-semibold"
                         style={{ color: colors.accStroke }}
                       >
                         {tooltip.session.accuracy}% acc
                       </span>
                       <span
-                        className="text-[10px]"
-                        style={{ color: colors.tooltipSubtext }}
+                        className="text-[10px] font-medium text-amber-600 dark:text-amber-400"
                       >
                         {tooltip.session.maxCombo}x combo
                       </span>
@@ -654,36 +653,36 @@ export default function WpmProgressChart({ sessions }: WpmProgressChartProps) {
         )}
 
         {/* Legend */}
-        <div className="flex items-center justify-center gap-4 mt-3">
+        <div className="flex items-center justify-center gap-5 mt-3">
           <div className="flex items-center gap-1.5">
             <span
-              className="inline-block w-3 h-[2px] rounded-full"
+              className="inline-block w-3.5 h-[3px] rounded-full shadow-xs"
               style={{ background: colors.wpmStroke }}
             />
-            <span className="text-[10px] text-neutral-600 dark:text-neutral-400">
-              WPM
+            <span className="text-[10px] font-semibold text-emerald-700 dark:text-emerald-400">
+              WPM (Speed)
             </span>
           </div>
           {showAccuracy && (
             <div className="flex items-center gap-1.5">
               <span
-                className="inline-block w-3 h-[2px] rounded-full"
+                className="inline-block w-3.5 h-[3px] rounded-full shadow-xs"
                 style={{ background: colors.accStroke }}
               />
-              <span className="text-[10px] text-neutral-600 dark:text-neutral-400">
-                Accuracy
+              <span className="text-[10px] font-semibold text-purple-700 dark:text-purple-400">
+                Accuracy (%)
               </span>
             </div>
           )}
           <div className="flex items-center gap-1.5">
             <span
-              className="inline-block w-3 h-[1px] rounded-full"
+              className="inline-block w-4 h-[2px] rounded-full"
               style={{
                 background: colors.avgLine,
-                borderTop: `1px dashed ${colors.avgLine}`,
+                borderTop: `2px dashed ${colors.avgLine}`,
               }}
             />
-            <span className="text-[10px] text-neutral-600 dark:text-neutral-400">
+            <span className="text-[10px] font-semibold text-blue-700 dark:text-sky-400">
               Average
             </span>
           </div>

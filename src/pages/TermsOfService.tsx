@@ -118,7 +118,7 @@ export default function TermsOfService() {
             5. DMCA & Copyright Infringement Notice Procedure
           </h3>
           <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed">
-            If you are a copyright owner or authorized agent and believe that any visual asset, quotation, or content accessible on Typlix infringes upon your copyright, you may submit a formal notification to our designated copyright team at <a href="mailto:copyright@typlix.app" className="underline font-medium text-neutral-900 dark:text-white">copyright@typlix.app</a> or <a href="mailto:legal@typlix.app" className="underline font-medium text-neutral-900 dark:text-white">legal@typlix.app</a> with:
+            If you are a copyright owner or authorized agent and believe that any visual asset, quotation, or content accessible on Typlix infringes upon your copyright, you may submit a formal notification to our designated maintainer at <a href="mailto:premsagarpandey.cs@gmail.com" className="underline font-medium text-neutral-900 dark:text-white">premsagarpandey.cs@gmail.com</a> with:
           </p>
           <ul className="list-disc list-inside space-y-1 text-neutral-600 dark:text-neutral-400 pl-1">
             <li>Identification of the copyrighted work claimed to have been infringed;</li>
@@ -234,14 +234,10 @@ export default function TermsOfService() {
           <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/40 flex items-center gap-3">
             <Mail className="w-5 h-5 text-neutral-500" />
             <div>
-              <div className="font-semibold text-neutral-900 dark:text-neutral-100">Legal Affairs & Copyright Desk</div>
+              <div className="font-semibold text-neutral-900 dark:text-neutral-100">Maintainer & Legal Contact</div>
               <div className="flex flex-wrap gap-x-4 text-xs text-neutral-500 mt-0.5">
-                <a href="mailto:legal@typlix.app" className="hover:text-neutral-900 dark:hover:text-white underline">
-                  legal@typlix.app
-                </a>
-                <span>·</span>
-                <a href="mailto:copyright@typlix.app" className="hover:text-neutral-900 dark:hover:text-white underline">
-                  copyright@typlix.app
+                <a href="mailto:premsagarpandey.cs@gmail.com" className="hover:text-neutral-900 dark:hover:text-white underline">
+                  premsagarpandey.cs@gmail.com
                 </a>
               </div>
             </div>

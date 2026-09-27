@@ -294,16 +294,15 @@ export default function PrivacyPolicy() {
               <div><span className="text-neutral-500">Lead Operator:</span> Prem Sagar Pandey</div>
               <div><span className="text-neutral-500">Project Type:</span> Educational Touch-Typing Platform</div>
               <div><span className="text-neutral-500">Jurisdiction:</span> India</div>
-              <div><span className="text-neutral-500">Support Desk:</span> <a href="mailto:support@typlix.app" className="underline hover:text-neutral-900 dark:hover:text-white">support@typlix.app</a></div>
+              <div><span className="text-neutral-500">Support Desk:</span> <a href="mailto:premsagarpandey.cs@gmail.com" className="underline hover:text-neutral-900 dark:hover:text-white">premsagarpandey.cs@gmail.com</a></div>
             </div>
 
             <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/40 space-y-1.5 text-xs">
               <div className="font-semibold text-sm text-neutral-900 dark:text-neutral-100 flex items-center gap-1.5">
                 <Mail className="w-4 h-4 text-neutral-500" aria-hidden="true" /> Designated Grievance Officer
               </div>
-              <div><span className="text-neutral-500">Officer:</span> Grievance Redressal Officer</div>
-              <div><span className="text-neutral-500">Grievance Email:</span> <a href="mailto:grievance@typlix.app" className="underline font-medium text-neutral-900 dark:text-white">grievance@typlix.app</a></div>
-              <div><span className="text-neutral-500">Privacy Desk:</span> <a href="mailto:privacy@typlix.app" className="underline hover:text-neutral-900 dark:hover:text-white">privacy@typlix.app</a></div>
+              <div><span className="text-neutral-500">Officer:</span> Grievance Redressal Officer (Prem Sagar Pandey)</div>
+              <div><span className="text-neutral-500">Grievance / Privacy Email:</span> <a href="mailto:premsagarpandey.cs@gmail.com" className="underline font-medium text-neutral-900 dark:text-white">premsagarpandey.cs@gmail.com</a></div>
               <div><span className="text-neutral-500">Acknowledgement:</span> Within 24 hours</div>
               <div><span className="text-neutral-500">Resolution SLA:</span> Within 48–72 business hours</div>
             </div>

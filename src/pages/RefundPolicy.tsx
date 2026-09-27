@@ -110,7 +110,7 @@ export default function RefundPolicy() {
             <div>
               <div className="font-semibold text-neutral-900 dark:text-neutral-100">Typlix Interactive · Open Educational Project</div>
               <p className="text-xs text-neutral-600 dark:text-neutral-400">
-                Lead Maintainer: Prem Sagar Pandey · Contact: <a href="mailto:support@typlix.app" className="underline hover:text-neutral-900 dark:hover:text-white">support@typlix.app</a>
+                Lead Maintainer: Prem Sagar Pandey · Contact: <a href="mailto:premsagarpandey.cs@gmail.com" className="underline hover:text-neutral-900 dark:hover:text-white">premsagarpandey.cs@gmail.com</a>
               </p>
             </div>
           </div>

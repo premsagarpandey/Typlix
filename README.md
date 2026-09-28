@@ -19,7 +19,12 @@ Typlix is a high-performance, minimalist touch typing training web application b
 - **Smooth 3-Line Scroller**: Active line focus with precise trailing cursor caret and real-time error highlighting.
 - **Finger Placement Guides**: Interactive on-screen guides and home-row tutorials.
 
-### 3. Data Minimization & Privacy
+### 3. Minimalist Monochromatic Visual System
+- **Focus-First Neutral Palette**: Distraction-free monochromatic aesthetic engineered to reduce cognitive load and eye strain during sustained typing sessions.
+- **Selective Data Telemetry**: High-contrast, vibrant data visualizations preserved exclusively for performance graphs and metrics (WPM, Accuracy, Streak).
+- **Adaptive Contrast**: Native light/dark theme switching adhering to WCAG 2.1 AA accessibility guidelines.
+
+### 4. Data Minimization & Privacy
 - **Strict Data Minimization**: Typlix collects **only necessary data** (WPM, accuracy, completed lesson progress, and audio settings).
 - **Zero Third-Party Tracking**: No marketing pixels, no cross-site profiling, and no data sales.
 - **Cookie Consent Architecture**: Granular controls for Strictly Necessary, Functional, and Analytics storage, fully reconfigurable anytime.
@@ -127,6 +132,15 @@ typlix/
 
 ---
 
+## Maintainer & Contact
+
+- **Lead Maintainer**: Prem Sagar Pandey
+- **Contact & Support**: [premsagarpandey.cs@gmail.com](mailto:premsagarpandey.cs@gmail.com)
+- **Repository**: [https://github.com/premsagarpandey/Typlix](https://github.com/premsagarpandey/Typlix)
+
+---
+
 ## License
 
 This project is licensed under the MIT License.
+

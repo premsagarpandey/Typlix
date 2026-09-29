@@ -129,7 +129,7 @@ export function useTypingGame(
           newStatus = 'failed';
         }
       } else {
-        newStatus = 'passed';
+        newStatus = 'finished';
       }
 
       setStatus(newStatus);
@@ -158,7 +158,7 @@ export function useTypingGame(
               hour: '2-digit',
               minute: '2-digit',
             }),
-            passed: newStatus === 'passed',
+            passed: newStatus === 'passed' || newStatus === 'finished',
             mode,
             modeLabel: label,
           };
@@ -233,9 +233,10 @@ export function useTypingGame(
       const lastCharIndex = value.length - 1;
       const isCorrect = value[lastCharIndex] === currentTarget[lastCharIndex];
       let newTotalTyped = totalCharsTypedRef.current;
+      const addedChars = value.length - prevTyped.length;
 
-      if (value.length > prevTyped.length) {
-        newTotalTyped = totalCharsTypedRef.current + 1;
+      if (addedChars > 0) {
+        newTotalTyped = totalCharsTypedRef.current + addedChars;
         totalCharsTypedRef.current = newTotalTyped;
         setTotalCharsTyped(newTotalTyped);
         if (isCorrect) {

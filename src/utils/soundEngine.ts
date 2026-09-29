@@ -331,6 +331,13 @@ function synthesize(
     gain.gain.linearRampToValueAtTime(peakGain, now + layer.attack);
     gain.gain.exponentialRampToValueAtTime(0.001, now + layer.attack + layer.decay);
 
+    osc.onended = () => {
+      try {
+        osc.disconnect();
+        gain.disconnect();
+      } catch {}
+    };
+
     osc.connect(gain);
     gain.connect(master);
 
@@ -361,6 +368,14 @@ function synthesize(
     source.connect(noiseFilter);
     noiseFilter.connect(noiseGain);
     noiseGain.connect(master);
+
+    source.onended = () => {
+      try {
+        source.disconnect();
+        noiseFilter.disconnect();
+        noiseGain.disconnect();
+      } catch {}
+    };
 
     // Random start offset in the 1-second noise buffer
     const offset = Math.random() * 0.7;

@@ -1,3 +1,4 @@
+import { createPortal } from 'react-dom';
 import type { LevelConfig } from '../../data/levels';
 import type { GameStatus, GameMode } from '../../hooks/useTypingGame';
 
@@ -55,15 +56,21 @@ export default function ResultsModal({
     return 'You finished typing the custom text.';
   };
 
-  return (
+  if (typeof document === 'undefined') return null;
+
+  return createPortal(
     <div
-      role="status"
-      aria-live="polite"
-      className="w-full max-w-sm mx-auto p-6 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg text-center animate-fade-in transition-colors shadow-xl"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="results-modal-title"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in"
     >
-      <h2 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-1">
-        {getTitle()}
-      </h2>
+      <div
+        className="w-full max-w-sm mx-auto p-6 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl text-center shadow-2xl transition-colors"
+      >
+        <h2 id="results-modal-title" className="text-xl font-bold text-neutral-900 dark:text-neutral-100 mb-1">
+          {getTitle()}
+        </h2>
 
       <p className="text-xs text-neutral-600 dark:text-neutral-400 mb-5">{getSubtitle()}</p>
 
@@ -102,17 +109,17 @@ export default function ResultsModal({
       {isLesson && levelConfig && (
         <div className="mb-4">
           {isPassed ? (
-            <div className="p-3 rounded-lg bg-neutral-100 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100 text-xs text-center font-medium">
+            <div className="p-3 rounded-xl bg-neutral-100 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100 text-xs text-center font-medium">
               <span aria-hidden="true">✓</span> <span className="font-semibold">Level {levelConfig.level} Cleared!</span>{' '}
               {levelConfig.level < 50
-                ? `Level ${levelConfig.level + 1} ab unlock ho chuka hai.`
-                : 'Congratulations! Aapne saare 50 levels pass kar liye!'}
+                ? `Level ${levelConfig.level + 1} is now unlocked.`
+                : 'Congratulations! You have completed all 50 levels!'}
             </div>
           ) : (
-            <div className="p-3 rounded-lg bg-neutral-100 dark:bg-neutral-850 border border-dashed border-neutral-400 dark:border-neutral-600 text-neutral-700 dark:text-neutral-300 text-xs text-center font-medium">
-              <span aria-hidden="true">✕</span> <span className="font-semibold">Level Not Cleared.</span> Agla level unlock karne ke liye{' '}
-              <span className="font-bold text-neutral-900 dark:text-white">{levelConfig.targetWpm} WPM</span> aur{' '}
-              <span className="font-bold text-neutral-900 dark:text-white">{levelConfig.targetAccuracy}% Accuracy</span> chahiye.
+            <div className="p-3 rounded-xl bg-neutral-100 dark:bg-neutral-850 border border-dashed border-neutral-400 dark:border-neutral-600 text-neutral-700 dark:text-neutral-300 text-xs text-center font-medium">
+              <span aria-hidden="true">✕</span> <span className="font-semibold">Requirements Not Met.</span> Target:{' '}
+              <span className="font-bold text-neutral-900 dark:text-white">{levelConfig.targetWpm} WPM</span> &{' '}
+              <span className="font-bold text-neutral-900 dark:text-white">{levelConfig.targetAccuracy}% Accuracy</span>.
             </div>
           )}
         </div>
@@ -129,7 +136,7 @@ export default function ResultsModal({
             isLesson && !isPassed
               ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:opacity-90'
               : 'border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300'
-          } font-medium rounded-md text-sm cursor-pointer flex items-center justify-center gap-2 transition-all shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white`}
+          } font-medium rounded-lg text-sm cursor-pointer flex items-center justify-center gap-2 transition-all shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white`}
         >
           {isLesson && !isPassed ? 'Try Again' : 'Retry'}
           <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 rounded" aria-hidden="true">
@@ -142,7 +149,7 @@ export default function ResultsModal({
             type="button"
             onClick={onNextLevel}
             aria-label={levelConfig && levelConfig.level >= 50 ? 'All 50 levels completed' : `Proceed to next level ${levelConfig ? levelConfig.level + 1 : ''} (Shortcut: Enter)`}
-            className="flex-1 py-2.5 px-4 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 font-medium rounded-md text-sm cursor-pointer flex items-center justify-center gap-2 transition-colors shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+            className="flex-1 py-2.5 px-4 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 font-medium rounded-lg text-sm cursor-pointer flex items-center justify-center gap-2 transition-colors shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
           >
             {levelConfig && levelConfig.level >= 50 ? (
               <span>All Done <span aria-hidden="true">✓</span></span>
@@ -160,7 +167,7 @@ export default function ResultsModal({
             type="button"
             onClick={onOpenCustomModal}
             aria-label="Open custom text editor"
-            className="flex-1 py-2.5 px-4 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-medium rounded-md text-sm cursor-pointer hover:opacity-90 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+            className="flex-1 py-2.5 px-4 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-medium rounded-lg text-sm cursor-pointer hover:opacity-90 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
           >
             Edit Text
           </button>
@@ -177,7 +184,7 @@ export default function ResultsModal({
                 ? 'Proceed to next code snippet (Shortcut: Enter)'
                 : 'Proceed to next test (Shortcut: Enter)'
             }
-            className="flex-1 py-2.5 px-4 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-medium rounded-md text-sm cursor-pointer flex items-center justify-center gap-2 hover:opacity-90 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+            className="flex-1 py-2.5 px-4 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-medium rounded-lg text-sm cursor-pointer flex items-center justify-center gap-2 hover:opacity-90 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
           >
             {mode === 'quotes' ? 'Next Quote' : mode === 'code' ? 'Next Snippet' : 'Next'}
             <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-white/20 dark:bg-neutral-900/20 rounded" aria-hidden="true">
@@ -194,6 +201,8 @@ export default function ResultsModal({
           <span>Press <kbd className="px-1 py-0.5 font-mono bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 rounded text-[10px]">Enter</kbd> or <kbd className="px-1 py-0.5 font-mono bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 rounded text-[10px]">R</kbd> to continue</span>
         )}
       </div>
-    </div>
+      </div>
+    </div>,
+    document.body
   );
 }

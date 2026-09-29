@@ -29,8 +29,9 @@ export default function FingerPlacementModal({
         localStorage.setItem('typlix_skip_finger_guide', 'true');
       } catch {}
     }
+    onClose();
     navigate(targetPath);
-  }, [dontShowAgain, navigate, targetPath]);
+  }, [dontShowAgain, onClose, navigate, targetPath]);
 
   useEffect(() => {
     if (!isOpen) return;

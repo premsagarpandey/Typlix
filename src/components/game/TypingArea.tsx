@@ -122,10 +122,19 @@ function TypingAreaComponent({
     isFocusReleasedRef.current = isFocusReleased;
   }, [typedText, targetText, status, capsLockOn, autoFixCapsLock, onInput, isFocusReleased]);
 
-  // Container width for line computation
+  // Container width & responsive font size for line computation
   const [containerWidth, setContainerWidth] = useState(0);
+  const [fontSize, setFontSize] = useState(() =>
+    typeof window !== 'undefined'
+      ? window.innerWidth >= 1024
+        ? 30
+        : window.innerWidth >= 640
+        ? 26
+        : 20
+      : 26
+  );
 
-  // Measure container width on mount & resize
+  // Measure container width and responsive font size on mount & resize
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -135,6 +144,7 @@ function TypingAreaComponent({
       const paddingLeft = parseFloat(style.paddingLeft) || 0;
       const paddingRight = parseFloat(style.paddingRight) || 0;
       setContainerWidth(el.clientWidth - paddingLeft - paddingRight);
+      setFontSize(window.innerWidth >= 1024 ? 30 : window.innerWidth >= 640 ? 26 : 20);
     };
 
     measure();
@@ -249,8 +259,13 @@ function TypingAreaComponent({
         return;
       }
 
-      // System shortcuts (Ctrl, Alt, Meta)
-      if (e.ctrlKey || e.metaKey || e.altKey) {
+      // Check if AltGr is being used to type special characters (AltGr sets ctrlKey and altKey, or AltGraph)
+      const isAltGrChar =
+        e.key.length === 1 &&
+        (Boolean(e.getModifierState && e.getModifierState('AltGraph')) || (e.ctrlKey && e.altKey));
+
+      // System shortcuts (Ctrl, Alt, Meta) - preserve AltGr characters
+      if (!isAltGrChar && (e.ctrlKey || e.metaKey || e.altKey)) {
         if (e.ctrlKey && e.key === 'Backspace') {
           e.preventDefault();
           const currentTyped = typedTextRef.current;
@@ -407,8 +422,7 @@ function TypingAreaComponent({
   // Tokenize text
   const tokens = useMemo(() => tokenize(targetText), [targetText]);
 
-  // Compute font metrics – match the monospace font set in CSS
-  const fontSize = typeof window !== 'undefined' && window.innerWidth >= 1024 ? 30 : window.innerWidth >= 640 ? 26 : 20;
+  // Font family matching the monospace font set in CSS
   const fontFamily = "'JetBrains Mono', 'Fira Code', monospace";
 
   // Break tokens into visual lines
@@ -620,7 +634,7 @@ function TypingAreaComponent({
                           return (
                             <span key={index} className="relative inline-block">
                               <span
-                                className={`transition-colors duration-75 ${
+                                className={`${
                                   isError
                                     ? isSpace
                                       ? 'bg-neutral-400/40 dark:bg-neutral-600/40 border-b-2 border-neutral-800 dark:border-neutral-200 text-transparent rounded-xs'

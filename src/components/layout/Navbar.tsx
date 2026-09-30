@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import ThemeToggle from '../common/ThemeToggle';
 import { useAuth } from '../../hooks/useAuth';
-import { LogIn } from 'lucide-react';
+import { LogIn, Menu, X } from 'lucide-react';
 import AuthModal from '../common/AuthModal';
 import UserAvatar from '../common/UserAvatar';
 
@@ -18,12 +18,32 @@ export default function Navbar() {
   const location = useLocation();
   const { user } = useAuth();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location.pathname]);
+
+  // Close mobile menu on click outside
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(e.target as Node)) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isMobileMenuOpen]);
 
   return (
     <>
       <nav
         aria-label="Main Navigation"
         className="border-b border-neutral-200 dark:border-neutral-800/80 px-4 sm:px-8 py-2.5 flex items-center justify-between sticky top-0 z-50 bg-neutral-50/90 dark:bg-neutral-950/90 backdrop-blur-md transition-colors"
+        ref={mobileMenuRef}
       >
         <Link
           to="/"
@@ -38,7 +58,8 @@ export default function Navbar() {
           </span>
         </Link>
 
-        <div className="flex items-center gap-1 sm:gap-2">
+        {/* Desktop Nav Links */}
+        <div className="hidden md:flex items-center gap-1 sm:gap-2">
           <div className="flex items-center gap-0.5 sm:gap-1" role="menubar">
             {NAV_LINKS.map(({ path, label }) => {
               const isActive = location.pathname === path;
@@ -89,6 +110,79 @@ export default function Navbar() {
             <ThemeToggle />
           </div>
         </div>
+
+        {/* Mobile: Theme + Hamburger */}
+        <div className="flex md:hidden items-center gap-2">
+          <ThemeToggle />
+          <button
+            type="button"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            aria-expanded={isMobileMenuOpen}
+            className="p-2 rounded-lg text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+          >
+            {isMobileMenuOpen ? (
+              <X className="w-5 h-5" />
+            ) : (
+              <Menu className="w-5 h-5" />
+            )}
+          </button>
+        </div>
+
+        {/* Mobile Dropdown Menu */}
+        {isMobileMenuOpen && (
+          <div className="absolute top-full left-0 right-0 bg-neutral-50/95 dark:bg-neutral-950/95 backdrop-blur-md border-b border-neutral-200 dark:border-neutral-800 shadow-lg md:hidden animate-fade-in z-50">
+            <div className="flex flex-col py-2 px-4">
+              {NAV_LINKS.map(({ path, label }) => {
+                const isActive = location.pathname === path;
+                return (
+                  <Link
+                    key={path}
+                    to={path}
+                    aria-current={isActive ? 'page' : undefined}
+                    className={`px-4 py-3 text-sm font-medium rounded-lg transition-all ${
+                      isActive
+                        ? 'bg-neutral-200/80 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100'
+                        : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-900/60'
+                    }`}
+                  >
+                    {label}
+                  </Link>
+                );
+              })}
+
+              {/* Auth in mobile menu */}
+              <div className="border-t border-neutral-200 dark:border-neutral-800 mt-2 pt-2">
+                {user ? (
+                  <Link
+                    to="/profile"
+                    className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-900/60 transition-all"
+                  >
+                    <UserAvatar
+                      photoURL={user.photoURL}
+                      name={user.displayName}
+                      email={user.email}
+                      size="sm"
+                    />
+                    <span>{user.displayName || user.email?.split('@')[0] || 'Profile'}</span>
+                  </Link>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      setIsAuthModalOpen(true);
+                    }}
+                    className="w-full flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-medium bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:opacity-90 transition-colors cursor-pointer"
+                  >
+                    <LogIn className="w-4 h-4" aria-hidden="true" />
+                    <span>Sign In</span>
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </nav>
 
       <AuthModal 
@@ -98,4 +192,3 @@ export default function Navbar() {
     </>
   );
 }
-

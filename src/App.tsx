@@ -45,7 +45,7 @@ function AppLayout() {
         id="main-content"
         tabIndex={-1}
         role="main"
-        className={`flex-1 w-full focus:outline-none ${isGamePage ? 'px-2 sm:px-4 py-2 h-[calc(100vh-50px)] overflow-hidden' : 'px-4 sm:px-6 md:px-8 py-4'}`}
+        className={`flex-1 w-full focus:outline-none ${isGamePage ? 'px-2 sm:px-4 py-2 md:h-[calc(100vh-50px)] md:overflow-hidden' : 'px-4 sm:px-6 md:px-8 py-4'}`}
       >
         <Suspense fallback={<PageFallback />}>
           <Routes>

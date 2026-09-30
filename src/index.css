@@ -235,3 +235,78 @@ html.light body {
   }
 }
 
+/* ═══════════════════ Mobile / Touch Device Optimizations ═══════════════════ */
+
+/* Prevent iOS Safari from zooming when focusing inputs (uses 16px threshold) */
+@media screen and (max-width: 767px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+
+  /* Tighter padding on mobile for more typing space */
+  .typing-area-container {
+    padding: 12px 14px !important;
+    border-radius: 12px !important;
+  }
+
+  /* Smaller border for mobile */
+  .typing-area-container {
+    border-width: 1.5px !important;
+  }
+}
+
+/* Tap-to-type pulse glow for mobile focus cue */
+@keyframes mobileTapPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(23, 23, 23, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(23, 23, 23, 0.05);
+  }
+}
+
+.dark .typing-area-container.mobile-tap-cue {
+  animation: mobileTapPulseDark 2s ease-in-out infinite;
+}
+
+@keyframes mobileTapPulseDark {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(245, 245, 245, 0.12);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(245, 245, 245, 0.04);
+  }
+}
+
+.typing-area-container.mobile-tap-cue {
+  animation: mobileTapPulse 2s ease-in-out infinite;
+}
+
+/* Disable text selection and callout menu on typing area for mobile */
+@media (hover: none) and (pointer: coarse) {
+  .typing-area-container {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    touch-action: manipulation;
+  }
+}
+
+/* Scale-in animation for mobile menu dropdown */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.15s ease-out forwards;
+}
+

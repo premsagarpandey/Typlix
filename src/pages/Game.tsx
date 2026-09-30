@@ -14,10 +14,12 @@ import { CODE_SNIPPETS } from '../data/codeSnippets';
 import type { CodeLanguage } from '../data/codeSnippets';
 import GameSidebar from '../components/game/GameSidebar';
 import { secureStorage } from '../utils/secureStorage';
+import { useIsMobile } from '../hooks/useIsMobile';
 
 
 export default function Game() {
   const [searchParams] = useSearchParams();
+  const isMobile = useIsMobile();
   const [mode, setMode] = useLocalStorage<GameMode>('typlix_game_mode', 'lesson');
   const [maxUnlockedLevel] = useLocalStorage<number>('typingGameLevel', 1);
   const [currentLevel, setCurrentLevel] = useLocalStorage<number>('typlix_active_level', 1);
@@ -64,8 +66,12 @@ export default function Game() {
   const levelConfig = useMemo(() => getLevelConfig(effectiveLevel), [effectiveLevel]);
 
   // Sidebar & Virtual Keyboard visibility states (persisted)
-  const [isSidebarOpen, setIsSidebarOpen] = useLocalStorage<boolean>('typlix_sidebar_visible', true);
-  const [showVirtualKeyboard, setShowVirtualKeyboard] = useLocalStorage<boolean>('typlix_keyboard_visible', true);
+  const [isSidebarOpenPref, setIsSidebarOpen] = useLocalStorage<boolean>('typlix_sidebar_visible', true);
+  const [showVirtualKeyboardPref, setShowVirtualKeyboard] = useLocalStorage<boolean>('typlix_keyboard_visible', true);
+
+  // On mobile: always hide sidebar and virtual keyboard (they're for physical keyboards)
+  const isSidebarOpen = isMobile ? false : isSidebarOpenPref;
+  const showVirtualKeyboard = isMobile ? false : showVirtualKeyboardPref;
 
   const activeInitialTime = useMemo(() => {
     if (mode === 'lesson') return levelConfig.timeLimit;
@@ -379,23 +385,25 @@ export default function Game() {
           )}
         </div>
 
-        {/* Virtual Keyboard (toggleable) */}
-        {showVirtualKeyboard ? (
-          <div className="shrink-0 mt-2 sm:mt-3 pb-1 sm:pb-2 animate-fade-in w-full">
-            <VirtualKeyboard nextChar={targetText[typedText.length] || ''} />
-          </div>
-        ) : (
-          <div className="shrink-0 flex items-center justify-center py-1">
-            <button
-              type="button"
-              onClick={() => setShowVirtualKeyboard(true)}
-              aria-label="Show on-screen virtual keyboard"
-              className="text-xs text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 flex items-center gap-1.5 px-3 py-1 rounded-full border border-dashed border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
-            >
-              <span aria-hidden="true">⌨</span>
-              <span>Show Virtual Keyboard</span>
-            </button>
-          </div>
+        {/* Virtual Keyboard (toggleable, hidden on mobile) */}
+        {!isMobile && (
+          showVirtualKeyboard ? (
+            <div className="shrink-0 mt-2 sm:mt-3 pb-1 sm:pb-2 animate-fade-in w-full">
+              <VirtualKeyboard nextChar={targetText[typedText.length] || ''} />
+            </div>
+          ) : (
+            <div className="shrink-0 flex items-center justify-center py-1">
+              <button
+                type="button"
+                onClick={() => setShowVirtualKeyboard(true)}
+                aria-label="Show on-screen virtual keyboard"
+                className="text-xs text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 flex items-center gap-1.5 px-3 py-1 rounded-full border border-dashed border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+              >
+                <span aria-hidden="true">⌨</span>
+                <span>Show Virtual Keyboard</span>
+              </button>
+            </div>
+          )
         )}
       </section>
 

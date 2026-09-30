@@ -2,6 +2,7 @@ import { useRef, useEffect, useMemo, useState, useCallback, memo } from 'react';
 import type { GameStatus } from '../../hooks/useTypingGame';
 import CapsLockWarningModal from '../common/CapsLockWarningModal';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 interface TypingAreaProps {
   targetText: string;
@@ -95,6 +96,7 @@ function TypingAreaComponent({
 }: TypingAreaProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
 
   // Caps Lock state & warning modal control
   const [capsLockOn, setCapsLockOn] = useState(false);
@@ -130,7 +132,9 @@ function TypingAreaComponent({
         ? 30
         : window.innerWidth >= 640
         ? 26
-        : 20
+        : window.innerWidth >= 400
+        ? 18
+        : 16
       : 26
   );
 
@@ -144,7 +148,12 @@ function TypingAreaComponent({
       const paddingLeft = parseFloat(style.paddingLeft) || 0;
       const paddingRight = parseFloat(style.paddingRight) || 0;
       setContainerWidth(el.clientWidth - paddingLeft - paddingRight);
-      setFontSize(window.innerWidth >= 1024 ? 30 : window.innerWidth >= 640 ? 26 : 20);
+      setFontSize(
+        window.innerWidth >= 1024 ? 30
+        : window.innerWidth >= 640 ? 26
+        : window.innerWidth >= 400 ? 18
+        : 16
+      );
     };
 
     measure();
@@ -463,6 +472,22 @@ function TypingAreaComponent({
     }
   }, []);
 
+  // Mobile: Handle touch to focus input and bring up OS keyboard
+  const handleContainerTouchEnd = useCallback((e: React.TouchEvent) => {
+    if (!isMobile) return;
+    e.preventDefault();
+    isFocusReleasedRef.current = false;
+    setIsFocusReleased(false);
+    // Small delay to ensure the touch event completes before focusing
+    setTimeout(() => {
+      inputRef.current?.focus();
+      if (inputRef.current) {
+        const len = inputRef.current.value.length;
+        inputRef.current.setSelectionRange(len, len);
+      }
+    }, 10);
+  }, [isMobile]);
+
   return (
     <div className="relative w-full">
       {/* Hidden screen-reader instructions for touch typing */}
@@ -478,8 +503,8 @@ function TypingAreaComponent({
         onToggleAutoFix={setAutoFixCapsLock}
       />
 
-      {/* ─── Focus Released Accessibility Notice ─── */}
-      {isFocusReleased && (status === 'idle' || status === 'playing') && (
+      {/* ─── Focus Released Accessibility Notice (desktop only) ─── */}
+      {!isMobile && isFocusReleased && (status === 'idle' || status === 'playing') && (
         <div
           role="status"
           aria-live="polite"
@@ -498,6 +523,15 @@ function TypingAreaComponent({
           >
             Resume Typing
           </button>
+        </div>
+      )}
+
+      {/* ─── Mobile: Tap to Start Typing Prompt ─── */}
+      {isMobile && status === 'idle' && typedText.length === 0 && (
+        <div className="mb-2 px-3 py-2 bg-neutral-100 dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-xl text-center animate-fade-in">
+          <span className="text-xs font-medium text-neutral-700 dark:text-neutral-300">
+            👆 Tap the text below to start typing
+          </span>
         </div>
       )}
 
@@ -530,7 +564,7 @@ function TypingAreaComponent({
         aria-label="Touch typing practice area"
         className={`typing-area-container relative p-5 sm:p-7 rounded-2xl border-2 border-neutral-200 dark:border-neutral-800 font-mono select-none transition-all duration-200 bg-white dark:bg-neutral-900/70 shadow-xs backdrop-blur-xs cursor-text ${
           isShaking ? 'animate-shake' : ''
-        }`}
+        } ${isMobile && status === 'idle' && typedText.length === 0 ? 'mobile-tap-cue' : ''}`}
         style={{
           height: `${lineHeightPx * VISIBLE_LINES + (fontSize >= 28 ? 52 : 44)}px`,
           overflow: 'hidden',
@@ -549,6 +583,7 @@ function TypingAreaComponent({
           }
         }}
         onClick={handleContainerClick}
+        onTouchEnd={handleContainerTouchEnd}
       >
         {/* Transparent input overlay for capturing keystrokes */}
         <input
@@ -571,6 +606,8 @@ function TypingAreaComponent({
           onCopy={handleCopy}
           onCut={(e) => e.preventDefault()}
           disabled={status !== 'idle' && status !== 'playing'}
+          inputMode="text"
+          enterKeyHint="done"
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
@@ -578,6 +615,12 @@ function TypingAreaComponent({
           aria-label="Typing input field"
           aria-describedby="typing-instructions"
           className="absolute inset-0 w-full h-full opacity-0 cursor-text z-10 p-0 m-0 select-none"
+          style={{
+            // On mobile, use 16px font-size to prevent iOS zoom on focus
+            fontSize: isMobile ? '16px' : undefined,
+            // Ensure the input is interactive on mobile
+            touchAction: 'manipulation',
+          }}
         />
 
         {/* Scrolling lines container */}

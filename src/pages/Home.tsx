@@ -4,16 +4,25 @@ import { Keyboard, Timer, BarChart2 } from 'lucide-react';
 import FingerPlacementModal from '../components/common/FingerPlacementModal';
 import FingerPlacementTutorial from '../components/common/FingerPlacementTutorial';
 import { useUserProgress } from '../hooks/useUserProgress';
+import { useIsMobile } from '../hooks/useIsMobile';
 
 export default function Home() {
   const navigate = useNavigate();
   const [showPlacementModal, setShowPlacementModal] = useState(false);
   const { level: currentLevel } = useUserProgress();
+  const isMobile = useIsMobile();
 
   const handleStartLesson = () => {
     try {
       localStorage.setItem('typlix_game_mode', JSON.stringify('lesson'));
     } catch {}
+
+    // On mobile, skip the finger placement guide (it's for physical keyboards)
+    if (isMobile) {
+      navigate('/game?mode=lesson');
+      return;
+    }
+
     const skipGuide = localStorage.getItem('typlix_skip_finger_guide') === 'true';
     if (skipGuide) {
       navigate('/game?mode=lesson');
@@ -135,8 +144,8 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Finger Placement Tutorial */}
-      <FingerPlacementTutorial />
+      {/* Finger Placement Tutorial (hidden on mobile — not relevant for phone typing) */}
+      {!isMobile && <FingerPlacementTutorial />}
     </div>
   );
 }

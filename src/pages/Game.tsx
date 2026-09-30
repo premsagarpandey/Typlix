@@ -276,7 +276,7 @@ export default function Game() {
   }, [status, mode, handleNextLevel, handleRetry]);
 
   return (
-    <div className="w-full h-full max-h-[calc(100vh-62px)] flex flex-col md:flex-row gap-3 sm:gap-4 items-stretch overflow-hidden">
+    <div className="w-full h-full max-h-[calc(100dvh-50px)] flex flex-col md:flex-row gap-2 sm:gap-3 items-stretch overflow-hidden">
       {/* ═══════════════════ LEFT SIDEBAR: Mode & Lesson Controls ═══════════════════ */}
       {isSidebarOpen && (
         <GameSidebar

@@ -2,7 +2,7 @@ import { useRef, useEffect, useMemo, useState, useCallback, memo } from 'react';
 import type { GameStatus } from '../../hooks/useTypingGame';
 import CapsLockWarningModal from '../common/CapsLockWarningModal';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
-import { useIsMobile } from '../../hooks/useIsMobile';
+import { useIsMobile, useIsLandscapePhone } from '../../hooks/useIsMobile';
 
 interface TypingAreaProps {
   targetText: string;
@@ -97,6 +97,7 @@ function TypingAreaComponent({
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
+  const isLandscapePhone = useIsLandscapePhone();
 
   // Caps Lock state & warning modal control
   const [capsLockOn, setCapsLockOn] = useState(false);
@@ -126,17 +127,16 @@ function TypingAreaComponent({
 
   // Container width & responsive font size for line computation
   const [containerWidth, setContainerWidth] = useState(0);
-  const [fontSize, setFontSize] = useState(() =>
-    typeof window !== 'undefined'
-      ? window.innerWidth >= 1024
-        ? 30
-        : window.innerWidth >= 640
-        ? 26
-        : window.innerWidth >= 400
-        ? 18
-        : 16
-      : 26
-  );
+  const [fontSize, setFontSize] = useState(() => {
+    if (typeof window !== 'undefined') {
+      if (window.innerWidth > window.innerHeight && window.innerHeight <= 550) return 20;
+      if (window.innerWidth >= 1024) return 30;
+      if (window.innerWidth >= 640) return 26;
+      if (window.innerWidth >= 400) return 18;
+      return 16;
+    }
+    return 26;
+  });
 
   // Measure container width and responsive font size on mount & resize
   useEffect(() => {
@@ -148,8 +148,10 @@ function TypingAreaComponent({
       const paddingLeft = parseFloat(style.paddingLeft) || 0;
       const paddingRight = parseFloat(style.paddingRight) || 0;
       setContainerWidth(el.clientWidth - paddingLeft - paddingRight);
+      const isLandscape = window.innerWidth > window.innerHeight && window.innerHeight <= 550;
       setFontSize(
-        window.innerWidth >= 1024 ? 30
+        isLandscape ? 20
+        : window.innerWidth >= 1024 ? 30
         : window.innerWidth >= 640 ? 26
         : window.innerWidth >= 400 ? 18
         : 16
@@ -160,7 +162,13 @@ function TypingAreaComponent({
 
     const ro = new ResizeObserver(measure);
     ro.observe(el);
-    return () => ro.disconnect();
+    window.addEventListener('resize', measure);
+    window.addEventListener('orientationchange', measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', measure);
+      window.removeEventListener('orientationchange', measure);
+    };
   }, []);
 
   // Hardware-accelerated CSS shake on error (zero Framer Motion JS overhead)
@@ -527,8 +535,8 @@ function TypingAreaComponent({
       )}
 
       {/* ─── Mobile: Tap to Start Typing Prompt ─── */}
-      {isMobile && status === 'idle' && typedText.length === 0 && (
-        <div className="mb-2 px-3 py-2 bg-neutral-100 dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-xl text-center animate-fade-in">
+      {isMobile && status === 'idle' && typedText.length === 0 && !isLandscapePhone && (
+        <div className="mb-2 px-3 py-1.5 bg-neutral-100 dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-xl text-center animate-fade-in">
           <span className="text-xs font-medium text-neutral-700 dark:text-neutral-300">
             👆 Tap the text below to start typing
           </span>
@@ -562,11 +570,11 @@ function TypingAreaComponent({
         ref={containerRef}
         role="region"
         aria-label="Touch typing practice area"
-        className={`typing-area-container relative p-5 sm:p-7 rounded-2xl border-2 border-neutral-200 dark:border-neutral-800 font-mono select-none transition-all duration-200 bg-white dark:bg-neutral-900/70 shadow-xs backdrop-blur-xs cursor-text ${
+        className={`typing-area-container relative ${isLandscapePhone ? 'p-3 sm:p-4' : 'p-4 sm:p-7'} rounded-2xl border-2 border-neutral-200 dark:border-neutral-800 font-mono select-none transition-all duration-200 bg-white dark:bg-neutral-900/70 shadow-xs backdrop-blur-xs cursor-text ${
           isShaking ? 'animate-shake' : ''
         } ${isMobile && status === 'idle' && typedText.length === 0 ? 'mobile-tap-cue' : ''}`}
         style={{
-          height: `${lineHeightPx * VISIBLE_LINES + (fontSize >= 28 ? 52 : 44)}px`,
+          height: `${lineHeightPx * VISIBLE_LINES + (isLandscapePhone ? 32 : fontSize >= 28 ? 52 : 44)}px`,
           overflow: 'hidden',
           fontSize: `${fontSize}px`,
         }}

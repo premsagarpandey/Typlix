@@ -43,7 +43,7 @@ function GameStatsComponent({
   const isLesson = mode === 'lesson';
 
   return (
-    <div className="flex items-center justify-between gap-3 py-1.5 px-1 text-sm select-none">
+    <div className="flex flex-col md:flex-row items-center justify-between gap-2 md:gap-3 py-1.5 px-1 text-sm select-none">
       {/* ─── LEFT: Level Number + Name + Prev/Next Buttons OR Timed Durations OR Custom Button ─── */}
       <div className="flex items-center gap-2 min-w-0">
         {isLesson ? (
@@ -147,7 +147,7 @@ function GameStatsComponent({
       </div>
 
       {/* ─── RIGHT: TIME, WPM, ACC, COMBO (Grouped close together) ─── */}
-      <div className="flex items-center gap-4 sm:gap-6 shrink-0">
+      <div className="flex flex-wrap justify-center md:justify-end items-center gap-3 sm:gap-6 shrink-0 w-full md:w-auto">
         {/* Time */}
         <div className="flex items-center gap-1.5">
           <span className="text-xs text-neutral-600 dark:text-neutral-400 uppercase tracking-wider font-medium">

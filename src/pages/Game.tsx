@@ -312,7 +312,7 @@ export default function Game() {
       <section className="flex-1 min-w-0 flex flex-col justify-between gap-2.5 h-full overflow-hidden">
         {/* Live Stats Bar + Unhide Sidebar Button if hidden */}
         <div className="shrink-0 flex items-center gap-2">
-          {!isSidebarOpen && (
+          {!isMobile && !isSidebarOpen && (
             <button
               type="button"
               onClick={() => setIsSidebarOpen(true)}

@@ -26,23 +26,43 @@ export default function Navbar() {
     setIsMobileMenuOpen(false);
   }, [location.pathname]);
 
-  // Close mobile menu on click outside
+  // Prevent background scrolling when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileMenuOpen]);
+
+  // Close mobile menu on click/touch outside
   useEffect(() => {
     if (!isMobileMenuOpen) return;
-    const handleClickOutside = (e: MouseEvent) => {
+    const handleClickOutside = (e: MouseEvent | TouchEvent) => {
       if (mobileMenuRef.current && !mobileMenuRef.current.contains(e.target as Node)) {
         setIsMobileMenuOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside, { passive: true });
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
   }, [isMobileMenuOpen]);
 
   return (
     <>
       <nav
         aria-label="Main Navigation"
-        className="border-b border-neutral-200 dark:border-neutral-800/80 px-4 sm:px-8 py-2.5 flex items-center justify-between sticky top-0 z-50 bg-neutral-50/90 dark:bg-neutral-950/90 backdrop-blur-md transition-colors"
+        className={`border-b border-neutral-200 dark:border-neutral-800/80 px-4 sm:px-8 py-2.5 flex items-center justify-between sticky top-0 z-50 transition-colors ${
+          isMobileMenuOpen
+            ? 'bg-white dark:bg-neutral-900 shadow-xs'
+            : 'bg-neutral-50/90 dark:bg-neutral-950/90 backdrop-blur-md'
+        }`}
         ref={mobileMenuRef}
       >
         <Link
@@ -129,34 +149,36 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* Mobile Dropdown Menu */}
+        {/* Mobile Dropdown Menu (Solid Opaque, No Transparency/Blur Bleed) */}
         {isMobileMenuOpen && (
-          <div className="absolute top-full left-0 right-0 bg-neutral-50/95 dark:bg-neutral-950/95 backdrop-blur-md border-b border-neutral-200 dark:border-neutral-800 shadow-lg md:hidden animate-fade-in z-50">
-            <div className="flex flex-col py-2 px-4">
-              {NAV_LINKS.map(({ path, label }) => {
-                const isActive = location.pathname === path;
-                return (
-                  <Link
-                    key={path}
-                    to={path}
-                    aria-current={isActive ? 'page' : undefined}
-                    className={`px-4 py-3 text-sm font-medium rounded-lg transition-all ${
-                      isActive
-                        ? 'bg-neutral-200/80 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100'
-                        : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-900/60'
-                    }`}
-                  >
-                    {label}
-                  </Link>
-                );
-              })}
+          <div className="absolute top-full left-0 right-0 bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 shadow-2xl md:hidden animate-fade-in z-50">
+            <div className="flex flex-col py-2 px-4 divide-y divide-neutral-100 dark:divide-neutral-800/60">
+              <div className="flex flex-col gap-1 pb-2">
+                {NAV_LINKS.map(({ path, label }) => {
+                  const isActive = location.pathname === path;
+                  return (
+                    <Link
+                      key={path}
+                      to={path}
+                      aria-current={isActive ? 'page' : undefined}
+                      className={`px-4 py-3 text-sm font-medium rounded-lg transition-all ${
+                        isActive
+                          ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 font-semibold'
+                          : 'text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800/50'
+                      }`}
+                    >
+                      {label}
+                    </Link>
+                  );
+                })}
+              </div>
 
               {/* Auth in mobile menu */}
-              <div className="border-t border-neutral-200 dark:border-neutral-800 mt-2 pt-2">
+              <div className="pt-3 pb-1">
                 {user ? (
                   <Link
                     to="/profile"
-                    className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-900/60 transition-all"
+                    className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-all"
                   >
                     <UserAvatar
                       photoURL={user.photoURL}
@@ -173,7 +195,7 @@ export default function Navbar() {
                       setIsMobileMenuOpen(false);
                       setIsAuthModalOpen(true);
                     }}
-                    className="w-full flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-medium bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:opacity-90 transition-colors cursor-pointer"
+                    className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-medium bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 active:scale-[0.99] transition-all cursor-pointer shadow-xs"
                   >
                     <LogIn className="w-4 h-4" aria-hidden="true" />
                     <span>Sign In</span>
@@ -184,6 +206,15 @@ export default function Navbar() {
           </div>
         )}
       </nav>
+
+      {/* Backdrop overlay when mobile menu is open */}
+      {isMobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black/40 z-40 md:hidden animate-fade-in transition-opacity"
+          onClick={() => setIsMobileMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
 
       <AuthModal 
         isOpen={isAuthModalOpen} 

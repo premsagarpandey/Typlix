@@ -2,16 +2,28 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // User progress and public stats
+    // 1. Explicitly deny access to all collections by default
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // 2. User profiles, public stats, and leaderboard rankings
     match /users/{userId} {
       // Allow reading user stats for leaderboard and profile displays
       allow read: if true;
 
-      // Only authenticated users can write/update their own document
-      // Data Minimization Policy: Disallow storing personal email addresses in public user documents
-      allow write: if request.auth != null 
+      // Prevent document deletion via client SDK
+      allow delete: if false;
+
+      // Only authenticated users can write/update their own document with strict validation
+      allow create, update: if request.auth != null 
                    && request.auth.uid == userId
-                   && (!('email' in request.resource.data) || request.resource.data.email == null);
+                   // Security & Privacy: Disallow storing personal email addresses in public user documents
+                   && (!('email' in request.resource.data) || request.resource.data.email == null)
+                   // Anti-Cheat: Validate WPM bounds (humanly possible typing speed: 0 to 350 WPM)
+                   && (!('bestWpm' in request.resource.data) || (request.resource.data.bestWpm is number && request.resource.data.bestWpm >= 0 && request.resource.data.bestWpm <= 350))
+                   // Anti-Cheat: Validate accuracy bounds (0% to 100%)
+                   && (!('avgAccuracy' in request.resource.data) || (request.resource.data.avgAccuracy is number && request.resource.data.avgAccuracy >= 0 && request.resource.data.avgAccuracy <= 100));
     }
   }
 }

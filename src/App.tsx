@@ -1,4 +1,4 @@
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, Link } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import Home from './pages/Home';
@@ -7,6 +7,7 @@ import ErrorBoundary from './components/common/ErrorBoundary';
 import GlobalToast from './components/common/GlobalToast';
 import CookieConsent from './components/common/CookieConsent';
 import { openCookieConsentModal } from './utils/cookieConsent';
+import { initSecurityShield } from './utils/securityShield';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
 
@@ -30,6 +31,10 @@ function PageFallback() {
 function AppLayout() {
   const location = useLocation();
   const isGamePage = location.pathname === '/game';
+
+  useEffect(() => {
+    return initSecurityShield();
+  }, []);
 
   return (
     <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 flex flex-col transition-colors duration-200">

@@ -157,7 +157,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
       if (err.code === 'auth/popup-closed-by-user') {
         message = 'Sign-in cancelled. The Google window was closed.';
       } else if (err.code === 'auth/popup-blocked') {
-        message = 'Google sign-in popup was blocked by browser. Please allow popups for localhost.';
+        message = 'Google sign-in popup was blocked by browser. Please allow popups for this site.';
       } else if (err.code === 'auth/cancelled-popup-request') {
         message = 'Sign-in request interrupted. Please click Google once.';
       } else if (err.code === 'auth/unauthorized-domain') {

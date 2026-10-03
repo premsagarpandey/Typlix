@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { exportStatsAsCSV, exportDataAsJSON } from '../utils/dataBackup';
 import WpmProgressChart from '../components/stats/WpmProgressChart';
 import { useUserProgress } from '../hooks/useUserProgress';
+import { X, FileSpreadsheet, Download } from 'lucide-react';
 
 export default function Stats() {
   const [feedback, setFeedback] = useState<string | null>(null);
@@ -49,17 +50,19 @@ export default function Stats() {
               <button
                 onClick={handleExportCSV}
                 aria-label="Export recorded typing sessions as CSV spreadsheet"
-                className="px-2.5 py-1.5 text-xs font-medium rounded-md border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-md border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
                 title="Export session data as CSV"
               >
+                <FileSpreadsheet className="w-3.5 h-3.5" aria-hidden="true" />
                 CSV Export
               </button>
               <button
                 onClick={handleExportJSON}
                 aria-label="Export complete typing progress backup as JSON file"
-                className="px-2.5 py-1.5 text-xs font-medium rounded-md border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-md border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
                 title="Export full JSON backup"
               >
+                <Download className="w-3.5 h-3.5" aria-hidden="true" />
                 JSON Backup
               </button>
             </div>
@@ -82,7 +85,7 @@ export default function Stats() {
             aria-label="Dismiss feedback message"
             className="cursor-pointer opacity-70 hover:opacity-100 p-1 rounded focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white dark:focus-visible:ring-neutral-900"
           >
-            <span aria-hidden="true">✕</span>
+            <X className="w-3.5 h-3.5" aria-hidden="true" />
           </button>
         </div>
       )}

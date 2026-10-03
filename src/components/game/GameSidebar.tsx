@@ -1,5 +1,19 @@
 import { memo } from 'react';
 import { Link } from 'react-router-dom';
+import {
+  BookOpen,
+  Timer,
+  Quote,
+  Code,
+  Pencil,
+  RotateCcw,
+  LayoutGrid,
+  Keyboard,
+  Target,
+  Lightbulb,
+  Lock,
+  ChevronLeft,
+} from 'lucide-react';
 import type { GameMode } from '../../hooks/useTypingGame';
 import { getLevelConfig } from '../../data/levels';
 import { QUOTE_CATEGORIES } from '../../data/quotes';
@@ -86,7 +100,8 @@ function GameSidebarComponent({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-700">
-                      📖 Lesson
+                      <BookOpen className="w-3.5 h-3.5" aria-hidden="true" />
+                      <span>Lesson</span>
                     </span>
                     <span className="text-[11px] text-neutral-600 dark:text-neutral-400 font-medium uppercase tracking-wider">
                       {levelConfig.category}
@@ -101,7 +116,7 @@ function GameSidebarComponent({
                     title="Hide this panel"
                   >
                     <span className="text-[11px]">Hide</span>
-                    <span className="text-xs" aria-hidden="true">◀</span>
+                    <ChevronLeft className="w-3.5 h-3.5" aria-hidden="true" />
                   </button>
                 </div>
 
@@ -121,13 +136,19 @@ function GameSidebarComponent({
                     Target Goals
                   </div>
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-neutral-700 dark:text-neutral-300 font-medium">🎯 Target Speed</span>
+                    <span className="text-neutral-700 dark:text-neutral-300 font-medium flex items-center gap-1.5">
+                      <Target className="w-3.5 h-3.5 text-neutral-600 dark:text-neutral-400" aria-hidden="true" />
+                      <span>Target Speed</span>
+                    </span>
                     <span className="font-mono font-bold text-neutral-900 dark:text-neutral-100">
                       {levelConfig.targetWpm} WPM
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-neutral-700 dark:text-neutral-300 font-medium">🎯 Min Accuracy</span>
+                    <span className="text-neutral-700 dark:text-neutral-300 font-medium flex items-center gap-1.5">
+                      <Target className="w-3.5 h-3.5 text-neutral-600 dark:text-neutral-400" aria-hidden="true" />
+                      <span>Min Accuracy</span>
+                    </span>
                     <span className="font-mono font-bold text-neutral-900 dark:text-neutral-100">
                       {levelConfig.targetAccuracy}%
                     </span>
@@ -136,8 +157,9 @@ function GameSidebarComponent({
 
                 {/* Lesson Instructions */}
                 <div className="p-3 bg-neutral-100/70 dark:bg-neutral-800/40 border border-neutral-200 dark:border-neutral-700/60 rounded-xl text-xs text-neutral-800 dark:text-neutral-200 leading-relaxed">
-                  <span className="font-semibold text-neutral-900 dark:text-neutral-100 block mb-1">
-                    💡 Instruction
+                  <span className="font-semibold text-neutral-900 dark:text-neutral-100 flex items-center gap-1.5 mb-1">
+                    <Lightbulb className="w-3.5 h-3.5 text-neutral-600 dark:text-neutral-400" aria-hidden="true" />
+                    <span>Instruction</span>
                   </span>
                   {levelConfig.instruction}
                 </div>
@@ -202,8 +224,9 @@ function GameSidebarComponent({
 
                 {/* Lock notice when on the highest unlocked level */}
                 {currentLevel >= maxUnlockedLevel && currentLevel < 50 && (
-                  <div className="text-[11px] text-neutral-700 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 px-2 py-1 rounded-md text-center font-medium">
-                    🔒 Clear Level {currentLevel} to unlock Level {currentLevel + 1}
+                  <div className="text-[11px] text-neutral-700 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 px-2.5 py-1 rounded-md text-center font-medium flex items-center justify-center gap-1.5">
+                    <Lock className="w-3 h-3 shrink-0" aria-hidden="true" />
+                    <span>Clear Level {currentLevel} to unlock Level {currentLevel + 1}</span>
                   </div>
                 )}
 
@@ -212,17 +235,19 @@ function GameSidebarComponent({
                   <button
                     onClick={handleRetry}
                     aria-label="Restart current lesson test"
-                    className="flex-1 py-1.5 px-3 text-xs font-semibold rounded-lg bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:opacity-90 cursor-pointer transition-all text-center flex items-center justify-center gap-1 shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+                    className="flex-1 py-1.5 px-3 text-xs font-semibold rounded-lg bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:opacity-90 cursor-pointer transition-all text-center flex items-center justify-center gap-1.5 shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
                   >
-                    <span aria-hidden="true">↻</span> Restart
+                    <RotateCcw className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                    <span>Restart</span>
                   </button>
                   <Link
                     to="/"
                     aria-label="Back to home screen to switch typing modes"
-                    className="py-1.5 px-3 text-xs font-medium rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 cursor-pointer transition-colors text-center focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+                    className="py-1.5 px-3 text-xs font-medium rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 cursor-pointer transition-colors text-center flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
                     title="Back to Home to switch modes"
                   >
-                    <span aria-hidden="true">←</span> Modes
+                    <LayoutGrid className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                    <span>Modes</span>
                   </Link>
                 </div>
 
@@ -231,10 +256,10 @@ function GameSidebarComponent({
                   type="button"
                   onClick={() => setShowVirtualKeyboard(!showVirtualKeyboard)}
                   aria-label={showVirtualKeyboard ? 'Hide virtual on-screen keyboard' : 'Show virtual on-screen keyboard'}
-                  className="w-full py-1.5 px-3 text-xs font-medium rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 cursor-pointer transition-colors text-center flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+                  className="w-full py-1.5 px-3 text-xs font-medium rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 cursor-pointer transition-colors text-center flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
                   title="Toggle on-screen virtual keyboard"
                 >
-                  <span aria-hidden="true">⌨</span>
+                  <Keyboard className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
                   <span>{showVirtualKeyboard ? 'Hide Keyboard' : 'Show Keyboard'}</span>
                 </button>
               </div>
@@ -247,7 +272,8 @@ function GameSidebarComponent({
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-700">
-                    ⏱ Timed
+                    <Timer className="w-3.5 h-3.5" aria-hidden="true" />
+                    <span>Timed</span>
                   </span>
                   <button
                     type="button"
@@ -257,7 +283,7 @@ function GameSidebarComponent({
                     title="Hide this panel"
                   >
                     <span className="text-[11px]">Hide</span>
-                    <span className="text-xs" aria-hidden="true">◀</span>
+                    <ChevronLeft className="w-3.5 h-3.5" aria-hidden="true" />
                   </button>
                 </div>
 
@@ -301,16 +327,18 @@ function GameSidebarComponent({
                 <button
                   onClick={handleRetry}
                   aria-label="Restart speed test session"
-                  className="w-full py-2 px-3 text-xs font-semibold rounded-lg bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:opacity-90 cursor-pointer transition-all text-center flex items-center justify-center gap-1 shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+                  className="w-full py-2 px-3 text-xs font-semibold rounded-lg bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:opacity-90 cursor-pointer transition-all text-center flex items-center justify-center gap-1.5 shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
                 >
-                  <span aria-hidden="true">↻</span> Restart Test
+                  <RotateCcw className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                  <span>Restart Test</span>
                 </button>
                 <Link
                   to="/"
                   aria-label="Back to home screen to switch typing modes"
-                  className="block w-full py-1.5 px-3 text-xs font-medium rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 cursor-pointer transition-colors text-center focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+                  className="w-full py-1.5 px-3 text-xs font-medium rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 cursor-pointer transition-colors text-center flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
                 >
-                  <span aria-hidden="true">←</span> Modes
+                  <LayoutGrid className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                  <span>Modes</span>
                 </Link>
                 <button
                   type="button"
@@ -318,7 +346,7 @@ function GameSidebarComponent({
                   aria-label={showVirtualKeyboard ? 'Hide virtual on-screen keyboard' : 'Show virtual on-screen keyboard'}
                   className="w-full py-1.5 px-3 text-xs font-medium rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 cursor-pointer transition-colors text-center flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
                 >
-                  <span aria-hidden="true">⌨</span>
+                  <Keyboard className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
                   <span>{showVirtualKeyboard ? 'Hide Keyboard' : 'Show Keyboard'}</span>
                 </button>
               </div>
@@ -332,7 +360,8 @@ function GameSidebarComponent({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-700">
-                      <span aria-hidden="true">💬</span> Quotes
+                      <Quote className="w-3.5 h-3.5" aria-hidden="true" />
+                      <span>Quotes</span>
                     </span>
                     {quoteCategory && (
                       <span className="text-[11px] text-neutral-600 dark:text-neutral-400 font-medium uppercase tracking-wider">
@@ -347,7 +376,7 @@ function GameSidebarComponent({
                     className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
                   >
                     <span className="text-[11px]">Hide</span>
-                    <span className="text-xs" aria-hidden="true">◀</span>
+                    <ChevronLeft className="w-3.5 h-3.5" aria-hidden="true" />
                   </button>
                 </div>
 
@@ -431,23 +460,25 @@ function GameSidebarComponent({
                   aria-label="Load next quote"
                   className="w-full py-2 px-3 text-xs font-semibold rounded-lg bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:opacity-90 cursor-pointer transition-all text-center shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
                 >
-                  Next Quote <span aria-hidden="true">▶</span>
+                  Next Quote
                 </button>
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     type="button"
                     onClick={handleRetry}
                     aria-label="Restart current quote"
-                    className="py-1.5 px-3 text-xs font-medium rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 cursor-pointer transition-colors text-center focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+                    className="py-1.5 px-3 text-xs font-medium rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 cursor-pointer transition-colors text-center flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
                   >
-                    <span aria-hidden="true">↻</span> Restart
+                    <RotateCcw className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                    <span>Restart</span>
                   </button>
                   <Link
                     to="/"
                     aria-label="Back to home screen to switch typing modes"
-                    className="py-1.5 px-3 text-xs font-medium rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 cursor-pointer transition-colors text-center focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+                    className="py-1.5 px-3 text-xs font-medium rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 cursor-pointer transition-colors text-center flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
                   >
-                    <span aria-hidden="true">←</span> Modes
+                    <LayoutGrid className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                    <span>Modes</span>
                   </Link>
                 </div>
                 <button
@@ -456,7 +487,7 @@ function GameSidebarComponent({
                   aria-label={showVirtualKeyboard ? 'Hide virtual on-screen keyboard' : 'Show virtual on-screen keyboard'}
                   className="w-full py-1.5 px-3 text-xs font-medium rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 cursor-pointer transition-colors text-center flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
                 >
-                  <span aria-hidden="true">⌨</span>
+                  <Keyboard className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
                   <span>{showVirtualKeyboard ? 'Hide Keyboard' : 'Show Keyboard'}</span>
                 </button>
               </div>
@@ -470,7 +501,8 @@ function GameSidebarComponent({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-700">
-                      <span aria-hidden="true">⌨</span> Code
+                      <Code className="w-3.5 h-3.5" aria-hidden="true" />
+                      <span>Code</span>
                     </span>
                     {currentSnippetInfo.language && (
                       <span className="text-[11px] font-medium text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">
@@ -485,7 +517,7 @@ function GameSidebarComponent({
                     className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
                   >
                     <span className="text-[11px]">Hide</span>
-                    <span className="text-xs" aria-hidden="true">◀</span>
+                    <ChevronLeft className="w-3.5 h-3.5" aria-hidden="true" />
                   </button>
                 </div>
 
@@ -569,23 +601,25 @@ function GameSidebarComponent({
                   aria-label="Load next code snippet"
                   className="w-full py-2 px-3 text-xs font-semibold rounded-lg bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:opacity-90 cursor-pointer transition-all text-center shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
                 >
-                  Next Snippet <span aria-hidden="true">▶</span>
+                  Next Snippet
                 </button>
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     type="button"
                     onClick={handleRetry}
                     aria-label="Restart current code snippet"
-                    className="py-1.5 px-3 text-xs font-medium rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 cursor-pointer transition-colors text-center focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+                    className="py-1.5 px-3 text-xs font-medium rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 cursor-pointer transition-colors text-center flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
                   >
-                    <span aria-hidden="true">↻</span> Restart
+                    <RotateCcw className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                    <span>Restart</span>
                   </button>
                   <Link
                     to="/"
                     aria-label="Back to home screen to switch typing modes"
-                    className="py-1.5 px-3 text-xs font-medium rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 cursor-pointer transition-colors text-center focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+                    className="py-1.5 px-3 text-xs font-medium rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 cursor-pointer transition-colors text-center flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
                   >
-                    <span aria-hidden="true">←</span> Modes
+                    <LayoutGrid className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                    <span>Modes</span>
                   </Link>
                 </div>
                 <button
@@ -594,7 +628,7 @@ function GameSidebarComponent({
                   aria-label={showVirtualKeyboard ? 'Hide virtual on-screen keyboard' : 'Show virtual on-screen keyboard'}
                   className="w-full py-1.5 px-3 text-xs font-medium rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 cursor-pointer transition-colors text-center flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
                 >
-                  <span aria-hidden="true">⌨</span>
+                  <Keyboard className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
                   <span>{showVirtualKeyboard ? 'Hide Keyboard' : 'Show Keyboard'}</span>
                 </button>
               </div>
@@ -607,7 +641,8 @@ function GameSidebarComponent({
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-700">
-                    <span aria-hidden="true">✏</span> Custom
+                    <Pencil className="w-3.5 h-3.5" aria-hidden="true" />
+                    <span>Custom</span>
                   </span>
                   <button
                     type="button"
@@ -616,7 +651,7 @@ function GameSidebarComponent({
                     className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
                   >
                     <span className="text-[11px]">Hide</span>
-                    <span className="text-xs" aria-hidden="true">◀</span>
+                    <ChevronLeft className="w-3.5 h-3.5" aria-hidden="true" />
                   </button>
                 </div>
 
@@ -656,25 +691,28 @@ function GameSidebarComponent({
                   type="button"
                   onClick={() => setIsCustomModalOpen(true)}
                   aria-label="Open custom text editor"
-                  className="w-full py-2 px-3 text-xs font-semibold rounded-lg bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:opacity-90 cursor-pointer transition-all text-center shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+                  className="w-full py-2 px-3 text-xs font-semibold rounded-lg bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:opacity-90 cursor-pointer transition-all text-center shadow-xs flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
                 >
-                  <span aria-hidden="true">✎</span> Edit Text
+                  <Pencil className="w-3.5 h-3.5" aria-hidden="true" />
+                  <span>Edit Text</span>
                 </button>
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     type="button"
                     onClick={handleRetry}
                     aria-label="Restart custom text session"
-                    className="py-1.5 px-3 text-xs font-medium rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 cursor-pointer transition-colors text-center focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+                    className="py-1.5 px-3 text-xs font-medium rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 cursor-pointer transition-colors text-center flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
                   >
-                    <span aria-hidden="true">↻</span> Restart
+                    <RotateCcw className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                    <span>Restart</span>
                   </button>
                   <Link
                     to="/"
                     aria-label="Back to home screen to switch typing modes"
-                    className="py-1.5 px-3 text-xs font-medium rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 cursor-pointer transition-colors text-center focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+                    className="py-1.5 px-3 text-xs font-medium rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 cursor-pointer transition-colors text-center flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
                   >
-                    <span aria-hidden="true">←</span> Modes
+                    <LayoutGrid className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                    <span>Modes</span>
                   </Link>
                 </div>
                 <button
@@ -683,7 +721,7 @@ function GameSidebarComponent({
                   aria-label={showVirtualKeyboard ? 'Hide virtual on-screen keyboard' : 'Show virtual on-screen keyboard'}
                   className="w-full py-1.5 px-3 text-xs font-medium rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 cursor-pointer transition-colors text-center flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
                 >
-                  <span aria-hidden="true">⌨</span>
+                  <Keyboard className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
                   <span>{showVirtualKeyboard ? 'Hide Keyboard' : 'Show Keyboard'}</span>
                 </button>
               </div>

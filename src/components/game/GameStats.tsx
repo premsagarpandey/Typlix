@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import { Timer, Pencil, Quote, Code } from 'lucide-react';
 import type { GameMode } from '../../hooks/useTypingGame';
 
 interface GameStatsProps {
@@ -91,7 +92,7 @@ function GameStatsComponent({
         ) : mode === 'timed' ? (
           <div className="flex items-center gap-2 shrink-0">
             <span className="text-xs text-neutral-600 dark:text-neutral-400 uppercase tracking-wider font-semibold flex items-center gap-1 shrink-0">
-              <span aria-hidden="true">⏱</span>
+              <Timer className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Time:</span>
             </span>
             <div className="inline-flex items-center border border-neutral-200 dark:border-neutral-700 rounded-lg overflow-hidden bg-neutral-100/60 dark:bg-neutral-800/60 p-0.5 shrink-0">
@@ -117,8 +118,8 @@ function GameStatsComponent({
           </div>
         ) : mode === 'custom' ? (
           <div className="flex items-center gap-2 shrink-0">
-            <span className="text-xs text-neutral-600 dark:text-neutral-400 uppercase tracking-wider font-semibold flex items-center gap-1 shrink-0">
-              <span aria-hidden="true">✏</span>
+            <span className="text-xs text-neutral-600 dark:text-neutral-400 uppercase tracking-wider font-semibold flex items-center gap-1.5 shrink-0">
+              <Pencil className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Custom</span>
             </span>
             {onOpenCustomModal && (
@@ -129,17 +130,25 @@ function GameStatsComponent({
                 className="px-2.5 py-0.5 text-xs font-semibold rounded-md border border-neutral-300 dark:border-neutral-700 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-800 dark:text-neutral-200 hover:text-neutral-950 dark:hover:text-white transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs active:scale-95 whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
                 title="Enter or edit custom practice text"
               >
-                <span className="text-neutral-600 dark:text-neutral-400" aria-hidden="true">✎</span>
+                <Pencil className="w-3 h-3 text-neutral-600 dark:text-neutral-400" aria-hidden="true" />
                 <span className="whitespace-nowrap">Enter Custom Text</span>
               </button>
             )}
           </div>
         ) : (
           <div className="flex items-center gap-1.5 shrink-0">
-            <span className="text-xs text-neutral-600 dark:text-neutral-400 uppercase tracking-wider font-semibold">
-              {mode === 'quotes'
-                ? '💬 Quotes'
-                : '⌨ Code'}
+            <span className="text-xs text-neutral-600 dark:text-neutral-400 uppercase tracking-wider font-semibold flex items-center gap-1.5">
+              {mode === 'quotes' ? (
+                <>
+                  <Quote className="w-3.5 h-3.5" aria-hidden="true" />
+                  <span>Quotes</span>
+                </>
+              ) : (
+                <>
+                  <Code className="w-3.5 h-3.5" aria-hidden="true" />
+                  <span>Code</span>
+                </>
+              )}
             </span>
           </div>
         )}

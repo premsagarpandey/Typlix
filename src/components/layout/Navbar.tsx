@@ -25,9 +25,11 @@ export default function Navbar() {
   const isTypingMode = location.pathname.startsWith('/game');
 
   // Close mobile menu on route change
-  useEffect(() => {
+  const [prevPath, setPrevPath] = useState(location.pathname);
+  if (location.pathname !== prevPath) {
+    setPrevPath(location.pathname);
     setIsMobileMenuOpen(false);
-  }, [location.pathname]);
+  }
 
   // Prevent background scrolling when mobile menu is open
   useEffect(() => {

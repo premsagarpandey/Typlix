@@ -9,7 +9,7 @@ import { KEYBOARD_LAYOUTS, type KeyboardLayoutId } from '../data/keyboardLayouts
 import { exportDataAsJSON, exportStatsAsCSV, importDataFromJSON } from '../utils/dataBackup';
 import { resetLevelProgress, clearStatsHistory } from '../services/cloudProgress';
 import { openCookieConsentModal, resetCookieConsent, isGlobalPrivacyControlActive } from '../utils/cookieConsent';
-import { ShieldCheck, EyeOff, Lock, Check } from 'lucide-react';
+import { ShieldCheck, EyeOff, Lock, Check, Download, Upload, FileSpreadsheet, Cookie, X, Play, Volume2 } from 'lucide-react';
 
 export default function Settings() {
   const [soundEnabled, setSoundEnabled] = useLocalStorage('sound', true);
@@ -124,7 +124,7 @@ export default function Settings() {
             aria-label="Dismiss notification"
             className="text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200 cursor-pointer ml-2 p-0.5 rounded focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
           >
-            <span aria-hidden="true">✕</span>
+            <X className="w-3.5 h-3.5" aria-hidden="true" />
           </button>
         </div>
       )}
@@ -297,7 +297,11 @@ export default function Settings() {
                     `}
                     aria-label={isPreviewing ? `Playing ${profile.name} sound effect` : `Preview ${profile.name} sound effect`}
                   >
-                    <span aria-hidden="true">{isPreviewing ? '♪' : '▶'}</span>
+                    {isPreviewing ? (
+                      <Volume2 className="w-3 h-3" aria-hidden="true" />
+                    ) : (
+                      <Play className="w-3 h-3" aria-hidden="true" />
+                    )}
                   </button>
                 </div>
               );
@@ -370,7 +374,8 @@ export default function Settings() {
               aria-label="Export all typing session records as JSON file"
               className="flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium rounded-md border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
             >
-              <span aria-hidden="true">💾</span> Export JSON
+              <Download className="w-3.5 h-3.5" aria-hidden="true" />
+              <span>Export JSON</span>
             </button>
 
             <button
@@ -378,7 +383,8 @@ export default function Settings() {
               aria-label="Export all typing session records as CSV spreadsheet"
               className="flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium rounded-md border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
             >
-              <span aria-hidden="true">📊</span> Export CSV
+              <FileSpreadsheet className="w-3.5 h-3.5" aria-hidden="true" />
+              <span>Export CSV</span>
             </button>
 
             <button
@@ -386,7 +392,8 @@ export default function Settings() {
               aria-label="Import typing session records from a JSON backup file"
               className="flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium rounded-md bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:opacity-90 transition-opacity cursor-pointer shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
             >
-              <span aria-hidden="true">📥</span> Import JSON
+              <Upload className="w-3.5 h-3.5" aria-hidden="true" />
+              <span>Import JSON</span>
             </button>
           </div>
         </div>
@@ -522,7 +529,8 @@ export default function Settings() {
             aria-label="Open cookie and privacy consent preferences modal"
             className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors cursor-pointer shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
           >
-            <span aria-hidden="true">🍪</span> Manage Cookie Consent
+            <Cookie className="w-3.5 h-3.5" aria-hidden="true" />
+            <span>Manage Cookie Consent</span>
           </button>
           <Link
             to="/privacy"

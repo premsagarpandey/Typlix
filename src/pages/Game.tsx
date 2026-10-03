@@ -15,7 +15,7 @@ import type { CodeLanguage } from '../data/codeSnippets';
 import GameSidebar from '../components/game/GameSidebar';
 import { secureStorage } from '../utils/secureStorage';
 import { useIsMobile } from '../hooks/useIsMobile';
-
+import { PanelLeftOpen, Keyboard as KeyboardIcon } from 'lucide-react';
 
 export default function Game() {
   const [searchParams] = useSearchParams();
@@ -320,7 +320,7 @@ export default function Game() {
               className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-2xs hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white cursor-pointer transition-all animate-fade-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
               title="Show lesson / practice sidebar"
             >
-              <span className="text-neutral-700 dark:text-neutral-300" aria-hidden="true">▶</span>
+              <PanelLeftOpen className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Show {mode === 'lesson' ? 'Lesson' : 'Controls'}</span>
             </button>
           )}
@@ -399,7 +399,7 @@ export default function Game() {
                 aria-label="Show on-screen virtual keyboard"
                 className="text-xs text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 flex items-center gap-1.5 px-3 py-1 rounded-full border border-dashed border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
               >
-                <span aria-hidden="true">⌨</span>
+                <KeyboardIcon className="w-3.5 h-3.5" aria-hidden="true" />
                 <span>Show Virtual Keyboard</span>
               </button>
             </div>

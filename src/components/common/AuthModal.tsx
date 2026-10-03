@@ -115,23 +115,24 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
       }
       handleClose();
       navigate('/');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Email Auth Error:', err);
+      const authError = err as { code?: string; message?: string };
       let message = 'An error occurred during authentication.';
       if (
-        err.code === 'auth/invalid-credential' ||
-        err.code === 'auth/wrong-password' ||
-        err.code === 'auth/user-not-found'
+        authError.code === 'auth/invalid-credential' ||
+        authError.code === 'auth/wrong-password' ||
+        authError.code === 'auth/user-not-found'
       ) {
         message = 'Invalid email or password. Please check your credentials.';
-      } else if (err.code === 'auth/email-already-in-use') {
+      } else if (authError.code === 'auth/email-already-in-use') {
         message = 'This email is already registered. Please sign in instead.';
-      } else if (err.code === 'auth/weak-password') {
+      } else if (authError.code === 'auth/weak-password') {
         message = 'Password is too weak. Please use at least 6 characters.';
-      } else if (err.code === 'auth/too-many-requests') {
+      } else if (authError.code === 'auth/too-many-requests') {
         message = 'Too many attempts. Please wait a few moments and try again.';
-      } else if (err.message) {
-        message = err.message;
+      } else if (authError.message) {
+        message = authError.message;
       }
 
       handleClose();
@@ -151,19 +152,20 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
       toast.success('Signed in with Google successfully!', 'Welcome Back');
       handleClose();
       navigate('/');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Google Auth Error:', err);
+      const authError = err as { code?: string; message?: string };
       let message = 'Failed to authenticate with Google.';
-      if (err.code === 'auth/popup-closed-by-user') {
+      if (authError.code === 'auth/popup-closed-by-user') {
         message = 'Sign-in cancelled. The Google window was closed.';
-      } else if (err.code === 'auth/popup-blocked') {
+      } else if (authError.code === 'auth/popup-blocked') {
         message = 'Google sign-in popup was blocked by browser. Please allow popups for this site.';
-      } else if (err.code === 'auth/cancelled-popup-request') {
+      } else if (authError.code === 'auth/cancelled-popup-request') {
         message = 'Sign-in request interrupted. Please click Google once.';
-      } else if (err.code === 'auth/unauthorized-domain') {
+      } else if (authError.code === 'auth/unauthorized-domain') {
         message = 'This domain is not authorized in Firebase settings.';
-      } else if (err.message) {
-        message = err.message;
+      } else if (authError.message) {
+        message = authError.message;
       }
 
       handleClose();
@@ -180,10 +182,11 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
     try {
       await loginWithGoogleRedirect();
-    } catch (err: any) {
+    } catch (err: unknown) {
       handleClose();
       navigate('/');
-      toast.error(err.message || 'Failed to redirect to Google.', 'Redirect Error');
+      const authError = err as { message?: string };
+      toast.error(authError.message || 'Failed to redirect to Google.', 'Redirect Error');
       setGoogleLoading(false);
     }
   };

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Keyboard, Timer, BarChart2 } from 'lucide-react';
+import { Keyboard, Timer, BarChart2, BookOpen, Quote, Code, Pencil } from 'lucide-react';
 import FingerPlacementModal from '../components/common/FingerPlacementModal';
 import FingerPlacementTutorial from '../components/common/FingerPlacementTutorial';
 import { useUserProgress } from '../hooks/useUserProgress';
@@ -50,7 +50,7 @@ export default function Home() {
           aria-label={currentLevel > 1 ? `Continue typing practice at Lesson ${currentLevel}` : 'Start touch typing Lesson 1'}
           className="px-5 sm:px-6 py-3 bg-neutral-900 dark:bg-neutral-100 hover:bg-neutral-800 dark:hover:bg-neutral-200 active:scale-[0.98] transition-all text-white dark:text-neutral-900 text-sm font-semibold rounded-lg cursor-pointer flex items-center gap-2 shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
         >
-          <span className="text-base leading-none" aria-hidden="true">📖</span>
+          <BookOpen className="w-4 h-4 shrink-0" aria-hidden="true" />
           <span>{currentLevel > 1 ? `Continue Lesson ${currentLevel}` : 'Start Lesson 1'}</span>
         </button>
 
@@ -65,7 +65,7 @@ export default function Home() {
           }}
           className="px-4 sm:px-5 py-3 border border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100/70 dark:hover:bg-neutral-900/70 text-neutral-700 dark:text-neutral-300 text-sm font-medium rounded-lg transition-all cursor-pointer flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
         >
-          <span className="text-base leading-none" aria-hidden="true">⏱</span>
+          <Timer className="w-4 h-4 shrink-0" aria-hidden="true" />
           <span>Speed Test</span>
         </Link>
 
@@ -80,7 +80,7 @@ export default function Home() {
           }}
           className="px-4 sm:px-5 py-3 border border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100/70 dark:hover:bg-neutral-900/70 text-neutral-700 dark:text-neutral-300 text-sm font-medium rounded-lg transition-all cursor-pointer flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
         >
-          <span className="text-base leading-none" aria-hidden="true">💬</span>
+          <Quote className="w-4 h-4 shrink-0" aria-hidden="true" />
           <span>Quotes</span>
         </Link>
 
@@ -95,7 +95,7 @@ export default function Home() {
           }}
           className="px-4 sm:px-5 py-3 border border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100/70 dark:hover:bg-neutral-900/70 text-neutral-700 dark:text-neutral-300 text-sm font-medium rounded-lg transition-all cursor-pointer flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
         >
-          <span className="text-base leading-none" aria-hidden="true">⌨</span>
+          <Code className="w-4 h-4 shrink-0" aria-hidden="true" />
           <span>Code</span>
         </Link>
 
@@ -110,7 +110,7 @@ export default function Home() {
           }}
           className="px-4 sm:px-5 py-3 border border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100/70 dark:hover:bg-neutral-900/70 text-neutral-700 dark:text-neutral-300 text-sm font-medium rounded-lg transition-all cursor-pointer flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
         >
-          <span className="text-base leading-none" aria-hidden="true">✏</span>
+          <Pencil className="w-4 h-4 shrink-0" aria-hidden="true" />
           <span>Custom</span>
         </Link>
       </div>

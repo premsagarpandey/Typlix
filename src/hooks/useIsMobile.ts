@@ -65,26 +65,3 @@ export function useIsLandscapePhone(): boolean {
   return isLandscape;
 }
 
-/**
- * Returns true only if the device has a narrow viewport (phone-sized),
- * or is in phone landscape mode.
- */
-export function useIsSmallScreen(): boolean {
-  const [isSmall, setIsSmall] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return window.innerWidth < MOBILE_BREAKPOINT || window.innerHeight <= 550;
-  });
-
-  useEffect(() => {
-    const check = () =>
-      setIsSmall(window.innerWidth < MOBILE_BREAKPOINT || window.innerHeight <= 550);
-    window.addEventListener('resize', check);
-    window.addEventListener('orientationchange', check);
-    return () => {
-      window.removeEventListener('resize', check);
-      window.removeEventListener('orientationchange', check);
-    };
-  }, []);
-
-  return isSmall;
-}

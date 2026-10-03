@@ -500,7 +500,7 @@ function TypingAreaComponent({
     <div className="relative w-full">
       {/* Hidden screen-reader instructions for touch typing */}
       <div id="typing-instructions" className="sr-only">
-        Touch typing exercise. Type the characters shown on screen. Green indicates correct, red indicates an error. Press Escape to release keyboard focus and navigate other page controls.
+        Touch typing exercise. Type the characters shown on screen. Highlighted characters indicate correct progress, strikethrough indicates typos. Press Escape to release keyboard focus and navigate other page controls.
       </div>
 
       {/* ─── Caps Lock Warning Preferences Modal (only on explicit user request) ─── */}

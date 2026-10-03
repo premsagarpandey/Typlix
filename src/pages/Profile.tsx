@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useUserProgress } from '../hooks/useUserProgress';
-import { LogOut, User, Mail, Calendar, Shield, Activity, TrendingUp, Trophy, RefreshCw, CheckCircle2 } from 'lucide-react';
+import { LogOut, User, Mail, Calendar, Shield, Activity, TrendingUp, Trophy, RefreshCw, CheckCircle2, X } from 'lucide-react';
 import UserAvatar from '../components/common/UserAvatar';
 
 export default function Profile() {
@@ -79,7 +79,7 @@ export default function Profile() {
             aria-label="Dismiss feedback message"
             className="cursor-pointer opacity-70 hover:opacity-100 p-1 rounded focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
           >
-            <span aria-hidden="true">✕</span>
+            <X className="w-3.5 h-3.5" aria-hidden="true" />
           </button>
         </div>
       )}

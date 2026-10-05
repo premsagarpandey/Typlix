@@ -24,6 +24,9 @@ export default function Game() {
   const [maxUnlockedLevel] = useLocalStorage<number>('typingGameLevel', 1);
   const [currentLevel, setCurrentLevel] = useLocalStorage<number>('typlix_active_level', 1);
   const [timedDuration, setTimedDuration] = useLocalStorage<number>('typlix_timed_duration', 30);
+  const [hasPunctuation, setHasPunctuation] = useLocalStorage<boolean>('typlix_punctuation', false);
+  const [hasNumbers, setHasNumbers] = useLocalStorage<boolean>('typlix_numbers', false);
+
   const [customText, setCustomText] = useLocalStorage<string>(
     'typlix_custom_text',
     'The quick brown fox jumps over the lazy dog while sleek keyboards rhythmically click under nimble typing fingers.'
@@ -94,11 +97,19 @@ export default function Game() {
     timeRemaining,
     targetText,
     typedText,
+    words,
+    currentWordIndex,
+    currentInput,
+    typedWords,
     wpm,
+    rawWpm,
     accuracy,
     combo,
     maxCombo,
+    consistency,
+    history,
     shakeTrigger,
+    handleKeyStroke,
     handleInput,
     resetGame,
   } = useTypingGame(activeInitialTime, levelConfig, {
@@ -109,6 +120,8 @@ export default function Game() {
     quoteDifficulty,
     codeLanguage,
     codeDifficulty,
+    punctuation: hasPunctuation,
+    numbers: hasNumbers,
   });
 
   // Derived quote info from target text
@@ -154,7 +167,6 @@ export default function Game() {
     }
   }, [mode, resetGame]);
 
-
   // Switch timed duration
   const handleSelectTimedDuration = useCallback(
     (dur: number) => {
@@ -164,7 +176,7 @@ export default function Game() {
     [setTimedDuration, resetGame]
   );
 
-  // Select lesson level (strictly capped to unlocked progress)
+  // Select lesson level
   const handleSelectLevel = useCallback(
     (lvl: number) => {
       const latestUnlocked = secureStorage.getItem<number>('typingGameLevel', maxUnlockedLevel);
@@ -275,9 +287,18 @@ export default function Game() {
     };
   }, [status, mode, handleNextLevel, handleRetry]);
 
+  // Next expected char for VirtualKeyboard highlighting
+  const nextChar = useMemo(() => {
+    const curWord = words[currentWordIndex]?.text || '';
+    if (currentInput.length < curWord.length) {
+      return curWord[currentInput.length];
+    }
+    return ' ';
+  }, [words, currentWordIndex, currentInput]);
+
   return (
     <div className="w-full h-full max-h-[calc(100dvh-50px)] flex flex-col md:flex-row gap-2 sm:gap-3 items-stretch overflow-hidden">
-      {/* ═══════════════════ LEFT SIDEBAR: Mode & Lesson Controls ═══════════════════ */}
+      {/* ═══════════════════ LEFT SIDEBAR ═══════════════════ */}
       {isSidebarOpen && (
         <GameSidebar
           mode={mode}
@@ -308,9 +329,9 @@ export default function Game() {
         />
       )}
 
-      {/* ═══════════════════ RIGHT MAIN AREA: Stats + Big Typing Area + Keyboard ═══════════════════ */}
+      {/* ═══════════════════ RIGHT MAIN AREA ═══════════════════ */}
       <section className="flex-1 min-w-0 flex flex-col justify-between gap-2.5 h-full overflow-hidden">
-        {/* Live Stats Bar + Unhide Sidebar Button if hidden */}
+        {/* Live Stats Bar + Sidebar Toggle */}
         <div className="shrink-0 flex items-center gap-2">
           {!isMobile && !isSidebarOpen && (
             <button
@@ -344,6 +365,18 @@ export default function Game() {
               selectedDuration={timedDuration}
               onSelectDuration={handleSelectTimedDuration}
               onOpenCustomModal={handleOpenCustomModal}
+              punctuation={hasPunctuation}
+              onTogglePunctuation={() => {
+                const next = !hasPunctuation;
+                setHasPunctuation(next);
+                resetGame();
+              }}
+              numbers={hasNumbers}
+              onToggleNumbers={() => {
+                const next = !hasNumbers;
+                setHasNumbers(next);
+                resetGame();
+              }}
             />
           </div>
         </div>
@@ -355,7 +388,13 @@ export default function Game() {
             typedText={typedText}
             status={status}
             shakeTrigger={shakeTrigger}
+            words={words}
+            currentWordIndex={currentWordIndex}
+            currentInput={currentInput}
+            typedWords={typedWords}
+            onKeyStroke={handleKeyStroke}
             onInput={handleInput}
+            onQuickRestart={handleRetry}
           />
 
           {/* Quote attribution */}
@@ -385,11 +424,11 @@ export default function Game() {
           )}
         </div>
 
-        {/* Virtual Keyboard (toggleable, hidden on mobile) */}
+        {/* Virtual Keyboard */}
         {!isMobile && (
           showVirtualKeyboard ? (
             <div className="shrink-0 mt-2 sm:mt-3 pb-1 sm:pb-2 animate-fade-in w-full">
-              <VirtualKeyboard nextChar={targetText[typedText.length] || ''} />
+              <VirtualKeyboard nextChar={nextChar} />
             </div>
           ) : (
             <div className="shrink-0 flex items-center justify-center py-1">
@@ -411,8 +450,11 @@ export default function Game() {
       {(status === 'passed' || status === 'failed' || status === 'finished') && (
         <ResultsModal
           wpm={wpm}
+          rawWpm={rawWpm}
           accuracy={accuracy}
           maxCombo={maxCombo}
+          consistency={consistency}
+          history={history}
           status={status}
           mode={mode}
           levelConfig={levelConfig}

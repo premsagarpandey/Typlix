@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { ShieldCheck } from 'lucide-react';
+import { ShieldCheck, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { PRESET_CUSTOM_TEXTS, type CustomPreset } from '../../data/words';
-import { sanitizeCustomText } from '../../utils/textUtils';
+import { sanitizeCustomText, validateTextSafety } from '../../utils/textUtils';
 
 interface CustomTextModalProps {
   isOpen: boolean;
@@ -63,6 +63,7 @@ export default function CustomTextModal({
 
   const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0;
   const charCount = text.length;
+  const safetyReport = useMemo(() => validateTextSafety(text), [text]);
 
   const handleSelectPreset = (preset: CustomPreset) => {
     setText(preset.text);
@@ -154,9 +155,26 @@ export default function CustomTextModal({
             rows={5}
             className="w-full p-3 text-sm font-mono bg-white dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-700 rounded-md text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-500 focus:outline-none focus:border-neutral-500 dark:focus:border-neutral-500 focus:ring-1 focus:ring-neutral-500 resize-none"
           />
-          <div className="flex items-center gap-1.5 mt-1 text-[11px] text-neutral-500 dark:text-neutral-400">
-            <ShieldCheck className="w-3.5 h-3.5 text-neutral-800 dark:text-neutral-300 shrink-0" aria-hidden="true" />
-            <span>Stored 100% locally in your browser. Custom text is never uploaded to any server.</span>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 mt-1 text-[11px] text-neutral-500 dark:text-neutral-400">
+            <div className="flex items-center gap-1.5">
+              <ShieldCheck className="w-3.5 h-3.5 text-neutral-800 dark:text-neutral-300 shrink-0" aria-hidden="true" />
+              <span>Stored 100% locally. Never transmitted over network.</span>
+            </div>
+            {text.length > 0 && (
+              <div className="flex items-center gap-1 text-[11px]">
+                {safetyReport.isSafe ? (
+                  <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-medium">
+                    <CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" />
+                    <span>Safe text</span>
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 text-amber-600 dark:text-amber-400 font-medium" title="Unsafe HTML or control characters will be automatically neutralized">
+                    <AlertTriangle className="w-3.5 h-3.5" aria-hidden="true" />
+                    <span>Auto-neutralized</span>
+                  </span>
+                )}
+              </div>
+            )}
           </div>
         </div>
 

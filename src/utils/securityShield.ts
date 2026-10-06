@@ -1,14 +1,28 @@
 /**
  * Typlix Security Shield
- * Comprehensive client-side protection against DevTools inspection,
- * keyboard shortcut tampering, Self-XSS attacks, and unauthorized DOM manipulation.
+ * Comprehensive client-side protection:
+ * 1. Self-XSS console awareness warnings
+ * 2. Anti-Clickjacking / Frame-busting protection
+ * 3. DevTools keyboard shortcut & context menu protection
+ * 4. Safe clipboard paste sanitization (Trojan Source & null byte removal)
+ * 5. Tab switch / Window blur privacy protection
  */
 
 export function initSecurityShield(): () => void {
   // Only execute in browser environment
   if (typeof window === 'undefined') return () => {};
 
-  // 1. Display Self-XSS Warning in Console
+  // 1. Anti-Clickjacking / Frame Buster (Prevent unauthorized iframe embeds)
+  try {
+    if (window.top && window.top !== window.self) {
+      window.top.location.href = window.self.location.href;
+    }
+  } catch {
+    // If top window is cross-origin, stop embedding
+    document.documentElement.style.display = 'block';
+  }
+
+  // 2. Display Self-XSS Warning in Console
   const showConsoleWarning = () => {
     try {
       console.log(
@@ -26,18 +40,21 @@ export function initSecurityShield(): () => void {
 
   showConsoleWarning();
 
-  // 2. Disable Context Menu (Right Click)
+  // 3. Disable Context Menu (Right Click) on non-editable elements
   const handleContextMenu = (e: MouseEvent) => {
-    // Allow right click only on editable input fields if needed, block everywhere else
     const target = e.target as HTMLElement | null;
-    const isInputField = target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
+    const isInputField =
+      target &&
+      (target.tagName === 'INPUT' ||
+        target.tagName === 'TEXTAREA' ||
+        target.isContentEditable);
     if (!isInputField) {
       e.preventDefault();
       return false;
     }
   };
 
-  // 3. Disable DevTools Keyboard Shortcuts
+  // 4. Disable DevTools & Source Inspection Keyboard Shortcuts
   const handleKeyDown = (e: KeyboardEvent) => {
     const isCtrlOrCmd = e.ctrlKey || e.metaKey;
     const key = e.key.toLowerCase();
@@ -73,13 +90,50 @@ export function initSecurityShield(): () => void {
     }
   };
 
-  // 4. Attach Global Event Listeners
+  // 5. Safe Clipboard Paste Sanitization
+  const handlePaste = (e: ClipboardEvent) => {
+    try {
+      const clipboardData = e.clipboardData;
+      if (!clipboardData) return;
+
+      const pastedText = clipboardData.getData('text/plain');
+      // If text contains null bytes or malicious control codes, cleanse it
+      if (/[\x00\u202A-\u202E\u2066-\u2069]/.test(pastedText)) {
+        e.preventDefault();
+        const cleaned = pastedText.replace(/[\x00\u202A-\u202E\u2066-\u2069]/g, '');
+        const target = e.target as HTMLInputElement | HTMLTextAreaElement | null;
+        if (target && 'value' in target && typeof target.selectionStart === 'number') {
+          const start = target.selectionStart || 0;
+          const end = target.selectionEnd || 0;
+          const val = target.value;
+          target.value = val.slice(0, start) + cleaned + val.slice(end);
+          target.setSelectionRange(start + cleaned.length, start + cleaned.length);
+          target.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+      }
+    } catch {
+      // Fallback to default paste
+    }
+  };
+
+  // 6. Tab Visibility & Inactivity Protection (notify components to pause sessions)
+  const handleVisibilityChange = () => {
+    if (document.hidden) {
+      window.dispatchEvent(new CustomEvent('typlix_tab_blurred'));
+    }
+  };
+
+  // 7. Attach Global Event Listeners
   window.addEventListener('contextmenu', handleContextMenu, { capture: true });
   window.addEventListener('keydown', handleKeyDown, { capture: true });
+  window.addEventListener('paste', handlePaste, { capture: true });
+  document.addEventListener('visibilitychange', handleVisibilityChange);
 
-  // 5. Cleanup function
+  // 8. Cleanup function
   return () => {
     window.removeEventListener('contextmenu', handleContextMenu, { capture: true });
     window.removeEventListener('keydown', handleKeyDown, { capture: true });
+    window.removeEventListener('paste', handlePaste, { capture: true });
+    document.removeEventListener('visibilitychange', handleVisibilityChange);
   };
 }

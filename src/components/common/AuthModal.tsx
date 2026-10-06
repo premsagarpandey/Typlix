@@ -21,7 +21,17 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const [agreeDataConsent, setAgreeDataConsent] = useState(false);
   const [emailLoading, setEmailLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [lockoutRemaining, setLockoutRemaining] = useState(0);
+  const failedAttemptsRef = useRef<number[]>([]);
   const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (lockoutRemaining <= 0) return;
+    const interval = setInterval(() => {
+      setLockoutRemaining((prev) => Math.max(0, prev - 1));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [lockoutRemaining]);
 
   const handleClose = useCallback(() => {
     setEmail('');
@@ -84,6 +94,11 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     e.preventDefault();
     if (emailLoading || googleLoading) return;
 
+    if (lockoutRemaining > 0) {
+      toast.error(`Account security lockdown active. Please wait ${lockoutRemaining}s before retrying.`, 'Security Guard');
+      return;
+    }
+
     if (!isLoginMode) {
       if (!agreeTerms) {
         toast.error('Please accept the Terms & Conditions and Privacy Policy to continue.', 'Consent Required');
@@ -108,15 +123,27 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     try {
       if (isLoginMode) {
         await loginWithEmail(emailLower, password);
+        failedAttemptsRef.current = [];
         toast.success('Signed in successfully!', 'Welcome Back');
       } else {
         await signupWithEmail(emailLower, password);
+        failedAttemptsRef.current = [];
         toast.success('Account created successfully!', 'Welcome to Typlix');
       }
       handleClose();
       navigate('/');
     } catch (err: unknown) {
       console.error('Email Auth Error:', err);
+
+      // Track failed attempt for rate limiting & brute-force defense
+      const now = Date.now();
+      const recentAttempts = [...failedAttemptsRef.current.filter((t) => now - t < 60000), now];
+      failedAttemptsRef.current = recentAttempts;
+
+      if (recentAttempts.length >= 5) {
+        setLockoutRemaining(30);
+      }
+
       const authError = err as { code?: string; message?: string };
       let message = 'An error occurred during authentication.';
       if (
@@ -354,11 +381,13 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 <button
                   type="submit"
                   aria-label={isLoginMode ? 'Sign in with email and password' : 'Create new Typlix account'}
-                  disabled={emailLoading || googleLoading || (!isLoginMode && (!agreeTerms || !agreeDataConsent))}
+                  disabled={emailLoading || googleLoading || lockoutRemaining > 0 || (!isLoginMode && (!agreeTerms || !agreeDataConsent))}
                   className="w-full flex items-center justify-center gap-2 py-2.5 px-4 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-neutral-900 hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   {emailLoading ? (
                     <div className="w-5 h-5 border-2 border-white/30 dark:border-neutral-900/30 border-t-white dark:border-t-neutral-900 rounded-full animate-spin" />
+                  ) : lockoutRemaining > 0 ? (
+                    <span>Wait {lockoutRemaining}s (Security lockout)</span>
                   ) : (
                     <>
                       {isLoginMode ? 'Sign In' : 'Create Account'}

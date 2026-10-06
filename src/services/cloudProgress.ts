@@ -1,7 +1,7 @@
 import { doc, getDoc, setDoc, getDocs, collection, query, orderBy, limit } from 'firebase/firestore';
 import type { User } from 'firebase/auth';
 import { db, auth } from '../lib/firebase';
-import { secureStorage, type TypingSessionRecord } from '../utils/secureStorage';
+import { secureStorage, sanitizeSessionRecord, type TypingSessionRecord } from '../utils/secureStorage';
 import { canCollectAnalytics } from '../utils/cookieConsent';
 
 export interface UserCloudData {
@@ -84,7 +84,10 @@ export function getLocalProgress() {
  * 1. Saves into local secureStorage
  * 2. If user is signed in to Firebase, syncs immediately to Firestore
  */
-export async function saveTypingSession(record: TypingSessionRecord): Promise<void> {
+export async function saveTypingSession(rawRecord: TypingSessionRecord): Promise<void> {
+  const record = sanitizeSessionRecord(rawRecord);
+  if (!record) return;
+
   try {
     // Check if user has consented to analytics/performance data recording
     const isAnalyticsAllowed = canCollectAnalytics();

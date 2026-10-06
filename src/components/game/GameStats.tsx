@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { Pencil, Quote, Code } from 'lucide-react';
 import type { GameMode } from '../../hooks/useTypingGame';
+import type { DictionaryType } from '../../data/words';
 
 interface GameStatsProps {
   timeRemaining: number;
@@ -24,6 +25,8 @@ interface GameStatsProps {
   onTogglePunctuation?: () => void;
   numbers?: boolean;
   onToggleNumbers?: () => void;
+  dictionary?: DictionaryType;
+  onSelectDictionary?: (dict: DictionaryType) => void;
 }
 
 function GameStatsComponent({
@@ -48,6 +51,8 @@ function GameStatsComponent({
   onTogglePunctuation,
   numbers = false,
   onToggleNumbers,
+  dictionary = 'english-1k',
+  onSelectDictionary,
 }: GameStatsProps) {
   const isLesson = mode === 'lesson';
 
@@ -128,6 +133,33 @@ function GameStatsComponent({
                 # numbers
               </button>
             </div>
+
+            {/* Word Bank Dictionary Selector */}
+            {onSelectDictionary && (
+              <div className="inline-flex items-center border border-neutral-200 dark:border-neutral-700 rounded-lg overflow-hidden bg-neutral-100/60 dark:bg-neutral-800/60 p-0.5 shrink-0" role="group" aria-label="Word dictionary selection">
+                {(['english-1k', 'english-5k', 'english-200'] as const).map((dictId) => {
+                  const isSelected = dictionary === dictId;
+                  const label = dictId === 'english-1k' ? '1k' : dictId === 'english-5k' ? '5k' : '200';
+                  const title = dictId === 'english-1k' ? 'Standard 1,000 words' : dictId === 'english-5k' ? 'Extended 5,000 words' : 'Core 200 words';
+                  return (
+                    <button
+                      key={dictId}
+                      type="button"
+                      onClick={() => onSelectDictionary(dictId)}
+                      aria-pressed={isSelected}
+                      className={`px-2 py-0.5 text-[11px] font-mono rounded-md transition-all cursor-pointer ${
+                        isSelected
+                          ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-bold shadow-2xs'
+                          : 'text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100'
+                      }`}
+                      title={`Dictionary: ${title}`}
+                    >
+                      {label}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
 
             {/* Timed Durations */}
             <div className="inline-flex items-center border border-neutral-200 dark:border-neutral-700 rounded-lg overflow-hidden bg-neutral-100/60 dark:bg-neutral-800/60 p-0.5 shrink-0">

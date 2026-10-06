@@ -20,6 +20,7 @@ import { QUOTE_CATEGORIES } from '../../data/quotes';
 import type { QuoteCategory, Difficulty } from '../../data/quotes';
 import { CODE_LANGUAGES } from '../../data/codeSnippets';
 import type { CodeLanguage } from '../../data/codeSnippets';
+import { DICTIONARY_LIST, type DictionaryType } from '../../data/words';
 
 const LEVEL_OPTIONS = Array.from({ length: 50 }, (_, i) => {
   const lvl = i + 1;
@@ -49,6 +50,8 @@ interface GameSidebarProps {
   setShowVirtualKeyboard: (show: boolean) => void;
   timedDuration: number;
   handleSelectTimedDuration: (dur: number) => void;
+  dictionary?: DictionaryType;
+  handleDictionaryChange?: (dict: DictionaryType) => void;
   quoteCategory: QuoteCategory | null;
   handleQuoteCategoryChange: (cat: QuoteCategory | null) => void;
   quoteDifficulty: Difficulty | null;
@@ -77,6 +80,8 @@ function GameSidebarComponent({
   setShowVirtualKeyboard,
   timedDuration,
   handleSelectTimedDuration,
+  dictionary = 'english-1k',
+  handleDictionaryChange,
   quoteCategory,
   handleQuoteCategoryChange,
   quoteDifficulty,
@@ -321,6 +326,41 @@ function GameSidebarComponent({
                     ))}
                   </div>
                 </div>
+
+                {/* Word Bank Dictionary Options */}
+                {handleDictionaryChange && (
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider block">
+                      Word Bank Dictionary
+                    </label>
+                    <div className="grid grid-cols-3 gap-1.5" role="radiogroup" aria-label="Word bank dictionary selection">
+                      {DICTIONARY_LIST.map((dict) => {
+                        const isChecked = dictionary === dict.id;
+                        return (
+                          <button
+                            key={dict.id}
+                            type="button"
+                            role="radio"
+                            aria-checked={isChecked}
+                            aria-label={`${dict.name} (${dict.wordCount} words)`}
+                            onClick={() => handleDictionaryChange(dict.id)}
+                            className={`py-1.5 px-1 text-xs rounded-lg border transition-all cursor-pointer text-center flex flex-col items-center justify-center gap-0.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white ${
+                              isChecked
+                                ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 border-neutral-900 dark:border-neutral-100 shadow-xs font-semibold'
+                                : 'border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300'
+                            }`}
+                          >
+                            <span className="font-mono font-bold text-xs">{dict.badge}</span>
+                            <span className="text-[10px] opacity-75">{dict.wordCount}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <p className="text-[11px] text-neutral-500 dark:text-neutral-400 leading-snug">
+                      {DICTIONARY_LIST.find((d) => d.id === dictionary)?.description}
+                    </p>
+                  </div>
+                )}
               </div>
 
               <div className="space-y-2 pt-2.5 border-t border-neutral-200 dark:border-neutral-800">

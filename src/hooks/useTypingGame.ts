@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { calculateWPM, calculateRawWPM, calculateAccuracy, calculateConsistency } from '../utils/calculations';
 import { generateLevelText } from '../data/levels';
 import type { LevelConfig } from '../data/levels';
-import { generateTimedWords } from '../data/words';
+import { generateTimedWords, type DictionaryType } from '../data/words';
 import { getRandomQuote } from '../data/quotes';
 import type { QuoteCategory, Difficulty } from '../data/quotes';
 import { getRandomSnippet } from '../data/codeSnippets';
@@ -38,6 +38,7 @@ export interface GameOptions {
   codeDifficulty?: Difficulty | null;
   punctuation?: boolean;
   numbers?: boolean;
+  dictionary?: DictionaryType;
 }
 
 /**
@@ -79,6 +80,7 @@ export function useTypingGame(
   const codeDifficulty = options?.codeDifficulty;
   const punctuation = options?.punctuation ?? false;
   const numbers = options?.numbers ?? false;
+  const dictionary = options?.dictionary ?? 'english-1k';
 
   const actualInitialTime = useMemo(() => {
     if (currentMode === 'lesson') {
@@ -101,7 +103,7 @@ export function useTypingGame(
     } else if (currentMode === 'code') {
       return getRandomSnippet(codeLanguage, codeDifficulty).code;
     } else {
-      return generateTimedWords(60, { punctuation, numbers });
+      return generateTimedWords(60, { punctuation, numbers, dictionary });
     }
   });
 
@@ -361,7 +363,7 @@ export function useTypingGame(
 
         // Timed mode: Dynamically append 30 words when approaching end of queue
         if (modeRef.current === 'timed' && nextWordIdx >= currentWords.length - 12) {
-          const newText = generateTimedWords(30, { punctuation, numbers });
+          const newText = generateTimedWords(30, { punctuation, numbers, dictionary });
           setTargetText((prev) => prev + ' ' + newText);
         }
 
@@ -452,7 +454,7 @@ export function useTypingGame(
         }
       }
     },
-    [completeSession, punctuation, numbers]
+    [completeSession, punctuation, numbers, dictionary]
   );
 
   // Fallback for Mobile / Virtual IME Input
@@ -531,11 +533,11 @@ export function useTypingGame(
       } else if (mode === 'code') {
         newTarget = getRandomSnippet(codeLanguage, codeDifficulty).code;
       } else {
-        newTarget = generateTimedWords(60, { punctuation, numbers });
+        newTarget = generateTimedWords(60, { punctuation, numbers, dictionary });
       }
       setTargetText(newTarget);
     },
-    [customText, quoteCategory, quoteDifficulty, codeLanguage, codeDifficulty, punctuation, numbers]
+    [customText, quoteCategory, quoteDifficulty, codeLanguage, codeDifficulty, punctuation, numbers, dictionary]
   );
 
   // Synthesized typedText for backward compatibility

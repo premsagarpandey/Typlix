@@ -12,6 +12,7 @@ import { QUOTES } from '../data/quotes';
 import type { QuoteCategory, Difficulty } from '../data/quotes';
 import { CODE_SNIPPETS } from '../data/codeSnippets';
 import type { CodeLanguage } from '../data/codeSnippets';
+import type { DictionaryType } from '../data/words';
 import GameSidebar from '../components/game/GameSidebar';
 import { secureStorage } from '../utils/secureStorage';
 import { useIsMobile } from '../hooks/useIsMobile';
@@ -26,6 +27,7 @@ export default function Game() {
   const [timedDuration, setTimedDuration] = useLocalStorage<number>('typlix_timed_duration', 30);
   const [hasPunctuation, setHasPunctuation] = useLocalStorage<boolean>('typlix_punctuation', false);
   const [hasNumbers, setHasNumbers] = useLocalStorage<boolean>('typlix_numbers', false);
+  const [dictionary, setDictionary] = useLocalStorage<DictionaryType>('typlix_dictionary', 'english-1k');
 
   const [customText, setCustomText] = useLocalStorage<string>(
     'typlix_custom_text',
@@ -122,6 +124,7 @@ export default function Game() {
     codeDifficulty,
     punctuation: hasPunctuation,
     numbers: hasNumbers,
+    dictionary,
   });
 
   // Derived quote info from target text
@@ -251,6 +254,14 @@ export default function Game() {
     [setCodeDifficulty, resetGame]
   );
 
+  const handleDictionaryChange = useCallback(
+    (dict: DictionaryType) => {
+      setDictionary(dict);
+      resetGame();
+    },
+    [setDictionary, resetGame]
+  );
+
   const handleOpenCustomModal = useCallback(() => {
     setIsCustomModalOpen(true);
   }, []);
@@ -314,6 +325,8 @@ export default function Game() {
           setShowVirtualKeyboard={setShowVirtualKeyboard}
           timedDuration={timedDuration}
           handleSelectTimedDuration={handleSelectTimedDuration}
+          dictionary={dictionary}
+          handleDictionaryChange={handleDictionaryChange}
           quoteCategory={quoteCategory}
           handleQuoteCategoryChange={handleQuoteCategoryChange}
           quoteDifficulty={quoteDifficulty}
@@ -377,6 +390,8 @@ export default function Game() {
                 setHasNumbers(next);
                 resetGame();
               }}
+              dictionary={dictionary}
+              onSelectDictionary={handleDictionaryChange}
             />
           </div>
         </div>

@@ -1,9 +1,7 @@
 import {
   DICTIONARIES,
   DICTIONARY_LIST,
-  ENGLISH_200,
   ENGLISH_1K,
-  ENGLISH_5K,
   type DictionaryType,
   type DictionaryMeta,
 } from './dictionaries';
@@ -11,15 +9,9 @@ import {
 export {
   DICTIONARIES,
   DICTIONARY_LIST,
-  ENGLISH_200,
-  ENGLISH_1K,
-  ENGLISH_5K,
   type DictionaryType,
   type DictionaryMeta,
 };
-
-// Backwards-compatible export
-export const COMMON_WORDS: string[] = [...ENGLISH_200];
 
 export interface CustomPreset {
   id: string;

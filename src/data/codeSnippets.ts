@@ -819,9 +819,3 @@ export function getRandomSnippet(
   return pool[Math.floor(Math.random() * pool.length)];
 }
 
-/**
- * Returns a snippet by its id, or the first snippet as fallback.
- */
-export function getSnippetById(id: string): CodeSnippet {
-  return CODE_SNIPPETS.find((s) => s.id === id) || CODE_SNIPPETS[0];
-}

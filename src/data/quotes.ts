@@ -364,9 +364,3 @@ export function getRandomQuote(
   return pool[Math.floor(Math.random() * pool.length)];
 }
 
-/**
- * Returns a quote by its id, or the first quote as fallback.
- */
-export function getQuoteById(id: string): Quote {
-  return QUOTES.find((q) => q.id === id) || QUOTES[0];
-}

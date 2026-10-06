@@ -7,9 +7,21 @@ export default defineConfig({
   server: {
     host: true,
     port: 5173,
+    open: true,
+    strictPort: false,
+  },
+  preview: {
+    host: true,
+    port: 5173,
+    open: true,
   },
   build: {
+    cssMinify: true,
     sourcemap: false,
+    chunkSizeWarningLimit: 800,
+    modulePreload: {
+      polyfill: false,
+    },
     rollupOptions: {
       output: {
         manualChunks(id: string) {

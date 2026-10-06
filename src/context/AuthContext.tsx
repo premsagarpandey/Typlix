@@ -47,30 +47,50 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [user, triggerSync]);
 
   useEffect(() => {
-    // Check for redirect result if full-page redirect was used
-    getRedirectResult(auth)
-      .then((result) => {
-        if (result?.user) {
-          setUser(result.user);
-          setTimeout(() => triggerSync(result.user).catch(() => {}), 500);
-        }
-      })
-      .catch((error) => {
-        if (error?.code && error.code !== 'auth/null-user') {
-          console.warn('Redirect sign-in check error:', error);
-        }
-      });
+    let unsubscribe = () => {};
+    try {
+      if (auth && typeof onAuthStateChanged === 'function') {
+        getRedirectResult(auth)
+          .then((result) => {
+            if (result?.user) {
+              setUser(result.user);
+              setTimeout(() => triggerSync(result.user).catch(() => {}), 500);
+            }
+          })
+          .catch((error) => {
+            if (error?.code && error.code !== 'auth/null-user') {
+              console.warn('Redirect sign-in check error:', error);
+            }
+          });
 
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setLoading(false);
-      if (currentUser) {
-        // Run full cloud sync so all levels, speed, and history are restored
-        setTimeout(() => triggerSync(currentUser).catch(() => {}), 300);
+        unsubscribe = onAuthStateChanged(
+          auth,
+          (currentUser) => {
+            setUser(currentUser);
+            setLoading(false);
+            if (currentUser) {
+              // Run full cloud sync so all levels, speed, and history are restored
+              setTimeout(() => triggerSync(currentUser).catch(() => {}), 300);
+            }
+          },
+          (error) => {
+            console.warn('Auth state subscription warning:', error);
+            setLoading(false);
+          }
+        );
+      } else {
+        setLoading(false);
       }
-    });
+    } catch (err) {
+      console.warn('Auth setup warning:', err);
+      setLoading(false);
+    }
 
-    return unsubscribe;
+    return () => {
+      try {
+        unsubscribe();
+      } catch {}
+    };
   }, [triggerSync]);
 
   const loginWithGoogleRedirect = async () => {

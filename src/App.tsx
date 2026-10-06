@@ -2,7 +2,6 @@ import { Suspense, lazy, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, Link } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import Home from './pages/Home';
-import Game from './pages/Game';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import GlobalToast from './components/common/GlobalToast';
 import CookieConsent from './components/common/CookieConsent';
@@ -11,6 +10,7 @@ import { initSecurityShield } from './utils/securityShield';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
 
+const Game = lazy(() => import('./pages/Game'));
 const Stats = lazy(() => import('./pages/Stats'));
 const Leaderboard = lazy(() => import('./pages/Leaderboard'));
 const Settings = lazy(() => import('./pages/Settings'));

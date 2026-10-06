@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="theme-color" content="#fafafa" />
     <meta name="description" content="Master high-speed touch typing with progressive lessons, mechanical audio feedback, and multiple keyboard layouts (QWERTY, Dvorak, Colemak, AZERTY)." />
     <meta name="author" content="Prem Sagar Pandey" />
     <meta property="og:title" content="Typlix — Touch Typing Trainer" />
@@ -15,7 +15,22 @@
     <meta name="twitter:description" content="Master high-speed touch typing with progressive lessons, mechanical audio feedback, and multiple keyboard layouts." />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' http://localhost:* http://127.0.0.1:* https://apis.google.com https://www.gstatic.com https://*.firebaseapp.com; style-src 'self' 'unsafe-inline' http://localhost:* http://127.0.0.1:* https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; frame-src 'self' https://*.firebaseapp.com https://*.web.app https://accounts.google.com; connect-src 'self' ws: http://localhost:* ws://localhost:* http://127.0.0.1:* ws://127.0.0.1:* https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://*.firebaseapp.com https://*.web.app https://identitytoolkit.googleapis.com https://securetoken.googleapis.com; object-src 'none'; base-uri 'self';" />
+    <script>
+      (function() {
+        try {
+          var t = localStorage.getItem('typlix_theme');
+          if (t === 'dark') {
+            document.documentElement.classList.add('dark');
+            document.documentElement.classList.remove('light');
+            document.documentElement.style.colorScheme = 'dark';
+          } else {
+            document.documentElement.classList.add('light');
+            document.documentElement.classList.remove('dark');
+            document.documentElement.style.colorScheme = 'light';
+          }
+        } catch (e) {}
+      })();
+    </script>
     <link rel="preconnect" href="https://accounts.google.com" crossorigin />
     <link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossorigin />
     <link rel="preconnect" href="https://typlix.web.app" crossorigin />
@@ -30,8 +45,20 @@
     <link rel="icon" type="image/png" href="/logo.png" />
     <title>Typlix — Touch Typing Trainer</title>
   </head>
-  <body class="bg-neutral-950 text-neutral-100 antialiased">
-    <div id="root"></div>
+  <body class="bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 antialiased">
+    <div id="root">
+      <div style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #fafafa; color: #525252; font-family: 'Inter', system-ui, sans-serif;">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 14px;">
+          <div style="width: 32px; height: 32px; border: 3px solid #e5e5e5; border-top-color: #171717; border-radius: 50%; animation: typlix-spin 0.8s linear infinite;"></div>
+          <span style="font-size: 13px; font-weight: 500; letter-spacing: 0.03em; color: #737373;">Loading Typlix...</span>
+        </div>
+      </div>
+      <style>
+        @keyframes typlix-spin {
+          to { transform: rotate(360deg); }
+        }
+      </style>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

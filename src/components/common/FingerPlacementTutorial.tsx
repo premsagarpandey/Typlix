@@ -26,7 +26,8 @@ export default function FingerPlacementTutorial() {
           src="/tutorial-image.jpg"
           alt={`Hands positioned on keyboard in touch-typing home row posture. Left hand fingers rest on keys ${layout.homeRowLeft.join(', ')} and right hand fingers on keys ${layout.homeRowRight.join(', ')} for the ${layout.name} layout.`}
           className="w-full h-auto object-cover"
-          loading="eager"
+          loading="lazy"
+          decoding="async"
         />
       </div>
 

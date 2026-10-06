@@ -40,8 +40,15 @@ export function initSecurityShield(): () => void {
 
   showConsoleWarning();
 
-  // 3. Disable Context Menu (Right Click) on non-editable elements
+  const isLocalDev =
+    Boolean(import.meta.env?.DEV) ||
+    window.location.hostname === 'localhost' ||
+    window.location.hostname === '127.0.0.1' ||
+    window.location.hostname === '[::1]';
+
+  // 3. Disable Context Menu (Right Click) on non-editable elements (Production only)
   const handleContextMenu = (e: MouseEvent) => {
+    if (isLocalDev) return;
     const target = e.target as HTMLElement | null;
     const isInputField =
       target &&
@@ -54,8 +61,9 @@ export function initSecurityShield(): () => void {
     }
   };
 
-  // 4. Disable DevTools & Source Inspection Keyboard Shortcuts
+  // 4. Disable DevTools & Source Inspection Keyboard Shortcuts (Production only)
   const handleKeyDown = (e: KeyboardEvent) => {
+    if (isLocalDev) return;
     const isCtrlOrCmd = e.ctrlKey || e.metaKey;
     const key = e.key.toLowerCase();
 

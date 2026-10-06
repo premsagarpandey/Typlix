@@ -99,10 +99,6 @@ export default function Game() {
     timeRemaining,
     targetText,
     typedText,
-    words,
-    currentWordIndex,
-    currentInput,
-    typedWords,
     wpm,
     rawWpm,
     accuracy,
@@ -111,7 +107,6 @@ export default function Game() {
     consistency,
     history,
     shakeTrigger,
-    handleKeyStroke,
     handleInput,
     resetGame,
   } = useTypingGame(activeInitialTime, levelConfig, {
@@ -300,12 +295,8 @@ export default function Game() {
 
   // Next expected char for VirtualKeyboard highlighting
   const nextChar = useMemo(() => {
-    const curWord = words[currentWordIndex]?.text || '';
-    if (currentInput.length < curWord.length) {
-      return curWord[currentInput.length];
-    }
-    return ' ';
-  }, [words, currentWordIndex, currentInput]);
+    return targetText[typedText.length] || '';
+  }, [targetText, typedText]);
 
   return (
     <div className="w-full h-full max-h-[calc(100dvh-50px)] flex flex-col md:flex-row gap-2 sm:gap-3 items-stretch overflow-hidden">
@@ -403,11 +394,6 @@ export default function Game() {
             typedText={typedText}
             status={status}
             shakeTrigger={shakeTrigger}
-            words={words}
-            currentWordIndex={currentWordIndex}
-            currentInput={currentInput}
-            typedWords={typedWords}
-            onKeyStroke={handleKeyStroke}
             onInput={handleInput}
             onQuickRestart={handleRetry}
           />

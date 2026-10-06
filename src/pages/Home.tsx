@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Keyboard, Timer, BarChart2, BookOpen, Quote, Code, Pencil } from 'lucide-react';
-import FingerPlacementModal from '../components/common/FingerPlacementModal';
 import FingerPlacementTutorial from '../components/common/FingerPlacementTutorial';
 import { useUserProgress } from '../hooks/useUserProgress';
 import { useIsMobile } from '../hooks/useIsMobile';
+
+const FingerPlacementModal = lazy(() => import('../components/common/FingerPlacementModal'));
 
 export default function Home() {
   const navigate = useNavigate();
@@ -115,13 +116,17 @@ export default function Home() {
         </Link>
       </div>
 
-      {/* Finger Placement Modal */}
-      <FingerPlacementModal
-        isOpen={showPlacementModal}
-        onClose={() => setShowPlacementModal(false)}
-        targetPath="/game?mode=lesson"
-        durationSeconds={3}
-      />
+      {/* Finger Placement Modal (Loaded on-demand) */}
+      {showPlacementModal && (
+        <Suspense fallback={null}>
+          <FingerPlacementModal
+            isOpen={showPlacementModal}
+            onClose={() => setShowPlacementModal(false)}
+            targetPath="/game?mode=lesson"
+            durationSeconds={3}
+          />
+        </Suspense>
+      )}
 
       {/* Feature Highlights Grid */}
       <div className="w-full grid grid-cols-1 sm:grid-cols-3 gap-px bg-neutral-200 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-800 rounded-lg overflow-hidden">

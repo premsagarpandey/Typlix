@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { initializeApp, getApps, type FirebaseApp } from "firebase/app";
+import { getAuth, type Auth } from "firebase/auth";
+import { getFirestore, type Firestore } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -13,9 +13,26 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+// Resilient initialization
+let app: FirebaseApp;
+let auth: Auth;
+let db: Firestore;
+
+try {
+  if (firebaseConfig.apiKey) {
+    app = getApps().length > 0 ? getApps()[0] : initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    db = getFirestore(app);
+  } else {
+    app = {} as FirebaseApp;
+    auth = {} as Auth;
+    db = {} as Firestore;
+  }
+} catch (error) {
+  console.warn("Firebase initialization warning (running in resilient offline mode):", error);
+  app = {} as FirebaseApp;
+  auth = {} as Auth;
+  db = {} as Firestore;
+}
 
 export { app, auth, db };

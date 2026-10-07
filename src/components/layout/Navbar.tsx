@@ -11,7 +11,6 @@ const NAV_LINKS = [
   { path: '/', label: 'Home' },
   { path: '/game', label: 'Practice' },
   { path: '/stats', label: 'Stats' },
-  { path: '/leaderboard', label: 'Leaderboard' },
   { path: '/settings', label: 'Settings' },
 ];
 

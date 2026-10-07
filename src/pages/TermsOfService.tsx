@@ -43,7 +43,7 @@ export default function TermsOfService() {
             <span>2.</span> User Accounts and Security
           </h2>
           <p className="text-neutral-600 dark:text-neutral-400">
-            While basic typing lessons can be utilized anonymously without registration, signing in unlocks cloud synchronization, cross-device stats, and public leaderboard rankings.
+            While basic typing lessons can be utilized anonymously without registration, signing in unlocks cloud synchronization, cross-device stats, and verified student progress records.
           </p>
           <ul className="list-disc list-inside space-y-1 text-neutral-600 dark:text-neutral-400">
             <li>You are responsible for safeguarding your login credentials (passwords or Google authentication tokens).</li>
@@ -63,7 +63,7 @@ export default function TermsOfService() {
             </span>
           </div>
           <p className="text-neutral-600 dark:text-neutral-400">
-            Typlix is designed to help human typists hone real muscle memory and measurable keyboard skills. To maintain competitive integrity across leaderboards:
+            Typlix is designed to help human typists hone real muscle memory and measurable keyboard skills. To maintain record integrity:
           </p>
           <div className="p-4 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-neutral-100/50 dark:bg-neutral-900/40 space-y-2">
             <div className="font-semibold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
@@ -71,7 +71,7 @@ export default function TermsOfService() {
             </div>
             <ul className="list-disc list-inside text-xs text-neutral-700 dark:text-neutral-300 space-y-1">
               <li>Using automated typing bots, macros, autoclickers, or headless scripts to simulate keystrokes.</li>
-              <li>Injecting artificial high scores or tampering with WebSocket/HTTP payloads to skew leaderboard rankings.</li>
+              <li>Injecting artificial high scores or tampering with WebSocket/HTTP payloads to falsify practice metrics.</li>
               <li>Attempting to reverse-engineer, decompile, or exploit vulnerabilities in our application API.</li>
               <li>Engaging in offensive, defamatory, or abusive behavior in public usernames or profile avatars.</li>
             </ul>

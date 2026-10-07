@@ -1,16 +1,53 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useMemo } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useUserProgress } from '../hooks/useUserProgress';
-import { LogOut, User, Mail, Calendar, Shield, Activity, TrendingUp, Trophy, RefreshCw, CheckCircle2, X } from 'lucide-react';
+import { LogOut, User, Mail, Calendar, Shield, Activity, TrendingUp, Trophy, RefreshCw, CheckCircle2, X, Code, ArrowRight, FileText } from 'lucide-react';
 import UserAvatar from '../components/common/UserAvatar';
+import StudentReportModal from '../components/common/StudentReportModal';
+
+function formatDuration(totalSeconds: number): string {
+  if (!totalSeconds || totalSeconds <= 0) return '0m';
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  if (hours > 0) {
+    return `${hours}h ${minutes}m`;
+  }
+  return `${Math.max(1, minutes)}m`;
+}
 
 export default function Profile() {
   const { user, logout } = useAuth();
-  const { level, summary, isSyncing, lastSyncedAt, syncNow } = useUserProgress();
+  const { level, stats, summary, isSyncing, lastSyncedAt, syncNow } = useUserProgress();
   const navigate = useNavigate();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [syncFeedback, setSyncFeedback] = useState<string | null>(null);
+
+  // Coding specific metrics
+  const codeStats = useMemo(() => {
+    const list = stats.filter((s) => s.mode === 'code');
+    const total = list.length;
+    if (total === 0) {
+      return { total: 0, bestWpm: 0, avgAccuracy: 0, totalSeconds: 0, languages: [] as string[] };
+    }
+    const bestWpm = Math.max(...list.map((s) => s.wpm || 0), 0);
+    const avgAccuracy = Math.round(list.reduce((acc, s) => acc + (s.accuracy || 0), 0) / total);
+    const totalSeconds = list.reduce((acc, s) => acc + (s.durationSeconds || 60), 0);
+
+    const languages = Array.from(
+      new Set(
+        list.map((s) => {
+          if (s.modeLabel && s.modeLabel.includes('·')) {
+            return s.modeLabel.split('·')[1]?.trim();
+          }
+          return 'Code';
+        })
+      )
+    ).filter(Boolean) as string[];
+
+    return { total, bestWpm, avgAccuracy, totalSeconds, languages };
+  }, [stats]);
 
   // If user accesses /profile without logging in, render fallback prompt
   if (!user) {
@@ -110,6 +147,15 @@ export default function Profile() {
               <Shield className="w-3.5 h-3.5 text-neutral-800 dark:text-neutral-200" aria-hidden="true" /> Firestore Cloud Synced
             </span>
             <button
+              onClick={() => setIsReportModalOpen(true)}
+              aria-label="Generate official student progress report card"
+              className="px-2.5 py-1 text-[11px] font-medium rounded-md bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 flex items-center gap-1.5 hover:opacity-90 transition-opacity cursor-pointer shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+              title="View and download student progress report card"
+            >
+              <FileText className="w-3.5 h-3.5" aria-hidden="true" />
+              <span>Report Card</span>
+            </button>
+            <button
               onClick={handleManualSync}
               disabled={isSyncing}
               aria-label="Sync latest local typing progress with Firestore cloud"
@@ -161,6 +207,86 @@ export default function Profile() {
         </div>
       </div>
 
+      {/* Coding Typing Proficiency Card */}
+      <div className="p-5 border border-neutral-200 dark:border-neutral-800 rounded-lg bg-neutral-50/50 dark:bg-neutral-900/20 space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="p-1.5 rounded-md bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900">
+              <Code className="w-4 h-4" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 text-sm">Coding Proficiency</h3>
+              <p className="text-xs text-neutral-500">Programming syntax speed & accuracy</p>
+            </div>
+          </div>
+          <Link
+            to="/stats"
+            className="text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 flex items-center gap-1"
+          >
+            Detailed Stats <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+
+        {codeStats.total > 0 ? (
+          <div className="space-y-3">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
+              <div className="p-3 rounded-md bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
+                <div className="text-[11px] text-neutral-500 font-medium">Best Speed</div>
+                <div className="text-lg font-bold font-mono text-neutral-900 dark:text-neutral-100 mt-0.5">
+                  {codeStats.bestWpm} <span className="text-[11px] font-normal text-neutral-500">wpm</span>
+                </div>
+              </div>
+              <div className="p-3 rounded-md bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
+                <div className="text-[11px] text-neutral-500 font-medium">Avg Accuracy</div>
+                <div className="text-lg font-bold font-mono text-neutral-900 dark:text-neutral-100 mt-0.5">
+                  {codeStats.avgAccuracy}%
+                </div>
+              </div>
+              <div className="p-3 rounded-md bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
+                <div className="text-[11px] text-neutral-500 font-medium">Code Tests</div>
+                <div className="text-lg font-bold font-mono text-neutral-900 dark:text-neutral-100 mt-0.5">
+                  {codeStats.total}
+                </div>
+              </div>
+              <div className="p-3 rounded-md bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
+                <div className="text-[11px] text-neutral-500 font-medium">Practice Time</div>
+                <div className="text-lg font-bold font-mono text-neutral-900 dark:text-neutral-100 mt-0.5">
+                  {formatDuration(codeStats.totalSeconds)}
+                </div>
+              </div>
+            </div>
+
+            {codeStats.languages.length > 0 && (
+              <div className="flex flex-wrap items-center gap-1.5 pt-1 text-xs">
+                <span className="text-neutral-500 text-[11px] font-medium mr-1">Languages:</span>
+                {codeStats.languages.map((lang) => (
+                  <span
+                    key={lang}
+                    className="px-2 py-0.5 rounded text-[11px] font-mono bg-neutral-200/70 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-700"
+                  >
+                    {lang}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="p-4 rounded-md bg-white dark:bg-neutral-900 border border-dashed border-neutral-300 dark:border-neutral-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+            <div>
+              <p className="text-xs font-medium text-neutral-900 dark:text-neutral-100">No coding sessions completed yet</p>
+              <p className="text-[11px] text-neutral-500 mt-0.5">Practice programming syntax in TypeScript, Python, C++, Java, and more.</p>
+            </div>
+            <Link
+              to="/game?mode=code"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:opacity-90 shrink-0"
+            >
+              <Code className="w-3.5 h-3.5" />
+              Practice Code
+            </Link>
+          </div>
+        )}
+      </div>
+
       {/* Account Settings / Log Out */}
       <div className="pt-4 border-t border-neutral-200 dark:border-neutral-800">
         <h3 className="font-medium text-neutral-900 dark:text-neutral-100 text-sm mb-3">Account Actions</h3>
@@ -180,6 +306,16 @@ export default function Profile() {
           </button>
         </div>
       </div>
+
+      {/* Student Progress Report Card Modal */}
+      <StudentReportModal
+        isOpen={isReportModalOpen}
+        onClose={() => setIsReportModalOpen(false)}
+        user={user}
+        level={level}
+        sessions={stats}
+        summary={summary}
+      />
     </div>
   );
 }

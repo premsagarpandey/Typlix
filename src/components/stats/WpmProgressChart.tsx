@@ -3,10 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import type { TypingSessionRecord } from '../../utils/secureStorage';
 import { useTheme } from '../../hooks/useTheme';
 
-type ChartFilter = 'all' | 'lesson' | 'timed' | 'custom';
+export type ChartFilter = 'all' | 'lesson' | 'timed' | 'code' | 'custom';
 
 interface WpmProgressChartProps {
   sessions: TypingSessionRecord[];
+  activeFilter?: ChartFilter;
+  onFilterChange?: (filter: ChartFilter) => void;
 }
 
 interface TooltipData {
@@ -124,16 +126,23 @@ const FILTER_LABELS: Record<ChartFilter, string> = {
   all: 'All',
   lesson: 'Lessons',
   timed: 'Timed',
+  code: 'Code',
   custom: 'Custom',
 };
 
 // ─── Main Component ─────────────────────────────────────────────────
-export default function WpmProgressChart({ sessions }: WpmProgressChartProps) {
+export default function WpmProgressChart({ sessions, activeFilter, onFilterChange }: WpmProgressChartProps) {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const colors = isDark ? COLORS.dark : COLORS.light;
 
-  const [filter, setFilter] = useState<ChartFilter>('all');
+  const [filter, setFilter] = useState<ChartFilter>(activeFilter || 'all');
+
+  useEffect(() => {
+    if (activeFilter) {
+      setFilter(activeFilter);
+    }
+  }, [activeFilter]);
   const [showAccuracy, setShowAccuracy] = useState(true);
   const [tooltip, setTooltip] = useState<TooltipData | null>(null);
   const svgRef = useRef<SVGSVGElement>(null);
@@ -555,7 +564,10 @@ export default function WpmProgressChart({ sessions }: WpmProgressChartProps) {
                 role="tab"
                 aria-selected={filter === key}
                 aria-label={`Show ${FILTER_LABELS[key]} progress chart`}
-                onClick={() => setFilter(key)}
+                onClick={() => {
+                  setFilter(key);
+                  onFilterChange?.(key);
+                }}
                 className={`px-2.5 py-1 text-[10px] font-medium transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white ${
                   filter === key
                     ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900'

@@ -13,7 +13,6 @@ import { useIsMobile } from './hooks/useIsMobile';
 
 const Game = lazy(() => import('./pages/Game'));
 const Stats = lazy(() => import('./pages/Stats'));
-const Leaderboard = lazy(() => import('./pages/Leaderboard'));
 const Settings = lazy(() => import('./pages/Settings'));
 const Profile = lazy(() => import('./pages/Profile'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
@@ -59,7 +58,6 @@ function AppLayout() {
             <Route path="/" element={<Home />} />
             <Route path="/game" element={<Game />} />
             <Route path="/stats" element={<Stats />} />
-            <Route path="/leaderboard" element={<Leaderboard />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />

@@ -195,6 +195,7 @@ export function useTypingGame(
             passed: newStatus === 'passed' || newStatus === 'finished',
             mode,
             modeLabel: label,
+            durationSeconds: Math.max(1, finalElapsed),
           };
 
           // Save session locally and to cloud Firestore if signed in

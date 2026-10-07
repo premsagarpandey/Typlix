@@ -7,9 +7,9 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
-    // 2. User profiles, public stats, and leaderboard rankings
+    // 2. User profiles and cloud progress synchronization
     match /users/{userId} {
-      // Allow reading user stats for leaderboard and profile displays
+      // Allow reading user stats for profile and sync displays
       allow read: if true;
 
       // Prevent document deletion via client SDK

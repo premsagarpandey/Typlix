@@ -61,7 +61,7 @@ typlix/
 │   ├── context/             # AuthContext, ThemeContext
 │   ├── data/                # Lessons, Quotes, Code Snippets, Keyboard Layouts
 │   ├── hooks/               # Custom game, local storage, auth hooks
-│   ├── pages/               # Home, Game, Stats, Leaderboard, Settings, Profile,
+│   ├── pages/               # Home, Game, Stats, Settings, Profile,
 │   │                        # PrivacyPolicy, TermsOfService, CookiesPolicy, RefundPolicy
 │   ├── services/            # Firestore cloud synchronization
 │   ├── utils/               # Sound engine, data backup, cookie consent state

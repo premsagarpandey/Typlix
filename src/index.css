@@ -328,3 +328,44 @@ html.light body {
   scrollbar-width: none;
 }
 
+/* ═══════════════════ Student Report Card Print Styles ═══════════════════ */
+@media print {
+  /* Hide standard page elements and modal overlays */
+  body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  /* Make only the report card document visible */
+  #typlix-printable-report,
+  #typlix-printable-report * {
+    visibility: visible;
+  }
+
+  #typlix-printable-report {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 24px !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}
+
+

@@ -121,7 +121,7 @@ export default function PrivacyPolicy() {
             <li>To render real-time typing feedback, speed graphs, and finger placement tutorials.</li>
             <li>To calculate your typing statistics, personal records, and unlocked lessons.</li>
             <li>To enable multi-device synchronization if you choose to authenticate.</li>
-            <li>To display opt-in rankings on public leaderboards (using your display name or chosen alias).</li>
+            <li>To enable generating student progress reports and verified practice certificates.</li>
             <li>To remember your audio preferences and UI dark/light themes.</li>
           </ul>
         </section>
@@ -142,7 +142,7 @@ export default function PrivacyPolicy() {
               <span className="font-semibold text-neutral-900 dark:text-neutral-100">Contractual & Educational Necessity:</span> To provide touch typing practice services, account authentication, and cloud data persistence as requested by you.
             </div>
             <div className="p-3 rounded-lg border border-neutral-200 dark:border-neutral-800">
-              <span className="font-semibold text-neutral-900 dark:text-neutral-100">Legitimate Interest:</span> To ensure the integrity of the platform, prevent leaderboard spam or automated bot abuse, and maintain application security.
+              <span className="font-semibold text-neutral-900 dark:text-neutral-100">Legitimate Interest:</span> To ensure the integrity of the platform, prevent automated bot abuse, and maintain application security.
             </div>
           </div>
         </section>

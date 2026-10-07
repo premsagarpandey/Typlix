@@ -259,7 +259,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 </h2>
                 <p className="text-sm text-neutral-600 dark:text-neutral-400">
                   {isLoginMode 
-                    ? 'Sign in to sync your typing progress and join the leaderboard'
+                    ? 'Sign in to sync your typing progress and practice records'
                     : 'Create your account to sync your stats and progress across devices'}
                 </p>
               </div>

@@ -1,4 +1,4 @@
-import { doc, getDoc, setDoc, getDocs, collection, query, orderBy, limit } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import type { User } from 'firebase/auth';
 import { db, auth } from '../lib/firebase';
 import { secureStorage, sanitizeSessionRecord, type TypingSessionRecord } from '../utils/secureStorage';
@@ -30,16 +30,6 @@ export interface ProgressState {
   };
   lastSyncedAt: Date | null;
   isSyncing: boolean;
-}
-
-export interface LeaderboardPlayer {
-  rank: number;
-  name: string;
-  wpm: number;
-  accuracy: number;
-  level?: number;
-  photoURL?: string | null;
-  isCurrentUser?: boolean;
 }
 
 /**
@@ -363,40 +353,3 @@ export async function clearStatsHistory(): Promise<void> {
   }
 }
 
-/**
- * Fetches top typists from Firestore for the community leaderboard
- */
-export async function fetchTopPlayersFromFirestore(limitCount: number = 10): Promise<LeaderboardPlayer[]> {
-  try {
-    const usersCol = collection(db, 'users');
-    const q = query(usersCol, orderBy('bestWpm', 'desc'), limit(limitCount));
-    const snapshot = await getDocs(q);
-
-    if (snapshot.empty) return [];
-
-    const currentUid = auth.currentUser?.uid;
-    const players: LeaderboardPlayer[] = [];
-    let rank = 1;
-
-    snapshot.forEach((docSnap) => {
-      const data = docSnap.data();
-      if (typeof data.bestWpm === 'number' && data.bestWpm > 0) {
-        players.push({
-          rank,
-          name: data.displayName || `Typist #${rank}`,
-          wpm: data.bestWpm,
-          accuracy: data.avgAccuracy || 95,
-          level: data.typingGameLevel || 1,
-          photoURL: data.photoURL || null,
-          isCurrentUser: data.uid === currentUid,
-        });
-        rank++;
-      }
-    });
-
-    return players;
-  } catch (error) {
-    console.warn('Could not fetch cloud leaderboard:', error);
-    return [];
-  }
-}

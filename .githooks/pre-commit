@@ -1,0 +1,78 @@
+#!/bin/sh
+# =============================================================================
+# Typlix Pre-Commit Hook — Secret Leak Prevention
+# =============================================================================
+# This hook runs automatically before every 'git commit'. It scans all staged
+# files for patterns that look like hardcoded API keys, tokens, or credentials.
+# If any are found, the commit is BLOCKED with an error message.
+#
+# SETUP: Run `git config core.hooksPath .githooks` to activate these hooks.
+# Or run `npm run setup-hooks` (added to package.json).
+# =============================================================================
+
+echo "🔒 Typlix Security: Scanning staged files for secrets..."
+
+# ── Define dangerous patterns ──
+PATTERNS=(
+  'AIzaSy[0-9A-Za-z_-]{33}'          # Firebase / Google API key
+  'ya29\.[0-9A-Za-z_-]+'             # Google OAuth2 access token
+  'AAAA[A-Za-z0-9_-]{7}:[A-Za-z0-9_-]{140}'  # Firebase Cloud Messaging server key
+  '-----BEGIN (RSA |EC |DSA )?PRIVATE KEY-----'  # Private key files
+  'sk_live_[0-9a-zA-Z]{24,}'         # Stripe secret key
+  'ghp_[0-9a-zA-Z]{36}'              # GitHub personal access token
+  'github_pat_[0-9a-zA-Z_]{82}'      # GitHub fine-grained PAT
+  'xox[bpors]-[0-9]{10,13}-[0-9a-zA-Z-]+'  # Slack tokens
+)
+
+# ── Files to always skip ──
+SKIP_FILES='.env.example|package-lock.json|yarn.lock|pnpm-lock.yaml|\.ico$|\.png$|\.jpg$|\.jpeg$|\.gif$|\.svg$|\.woff|\.ttf|\.eot$|\.mp3$|\.wav$|\.mp4$|\.webm$|\.webp$'
+
+# ── Get list of staged files (only added/modified, not deleted) ──
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM)
+
+if [ -z "$STAGED_FILES" ]; then
+  echo "✅ No staged files to scan."
+  exit 0
+fi
+
+FOUND_SECRETS=0
+
+for FILE in $STAGED_FILES; do
+  # Skip binary / lock / example files
+  if echo "$FILE" | grep -qE "$SKIP_FILES"; then
+    continue
+  fi
+
+  # Skip if file doesn't exist
+  if [ ! -f "$FILE" ]; then
+    continue
+  fi
+
+  for PATTERN in "${PATTERNS[@]}"; do
+    # Search staged content (not working tree) for the pattern
+    MATCHES=$(git diff --cached -U0 "$FILE" 2>/dev/null | grep -E '^\+' | grep -oE "$PATTERN" 2>/dev/null)
+    if [ -n "$MATCHES" ]; then
+      echo ""
+      echo "❌ SECRET DETECTED in: $FILE"
+      echo "   Pattern: $PATTERN"
+      echo "   Match:   $(echo "$MATCHES" | head -1 | cut -c1-20)..."
+      echo ""
+      FOUND_SECRETS=1
+    fi
+  done
+done
+
+if [ "$FOUND_SECRETS" -ne 0 ]; then
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo "🚫 COMMIT BLOCKED: Hardcoded secrets found in staged files!"
+  echo ""
+  echo "   Fix: Move secrets to .env (which is gitignored)."
+  echo "   Use: import.meta.env.VITE_YOUR_KEY in code."
+  echo ""
+  echo "   Emergency bypass: git commit --no-verify"
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  exit 1
+fi
+
+echo "✅ No secrets found. Commit is safe!"
+exit 0

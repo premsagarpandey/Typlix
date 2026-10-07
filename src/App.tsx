@@ -9,6 +9,7 @@ import { openCookieConsentModal } from './utils/cookieConsent';
 import { initSecurityShield } from './utils/securityShield';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
+import { useIsMobile } from './hooks/useIsMobile';
 
 const Game = lazy(() => import('./pages/Game'));
 const Stats = lazy(() => import('./pages/Stats'));
@@ -31,6 +32,7 @@ function PageFallback() {
 function AppLayout() {
   const location = useLocation();
   const isGamePage = location.pathname === '/game';
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     return initSecurityShield();
@@ -69,23 +71,25 @@ function AppLayout() {
         </Suspense>
       </main>
       {!isGamePage && (
-        <footer className="w-full py-6 text-xs text-neutral-600 dark:text-neutral-400 border-t border-neutral-200 dark:border-neutral-800/80 max-w-4xl mx-auto px-4 sm:px-6 md:px-8 space-y-4">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
-            <div className="flex items-center gap-2 flex-wrap justify-center sm:justify-start">
-              <span className="font-bold text-neutral-800 dark:text-neutral-200 text-sm">Typlix</span>
-              <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded bg-neutral-200/80 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-700">
-                Data Minimization
-              </span>
-              <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded bg-neutral-200/80 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-700">
-                DPDP Act 2023
-              </span>
+        <footer className={`w-full py-6 text-xs text-neutral-600 dark:text-neutral-400 border-t border-neutral-200 dark:border-neutral-800/80 max-w-4xl mx-auto px-4 sm:px-6 md:px-8 ${isMobile ? 'space-y-0' : 'space-y-4'}`}>
+          {!isMobile && (
+            <div className="hidden sm:flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+              <div className="flex items-center gap-2 flex-wrap justify-center sm:justify-start">
+                <span className="font-bold text-neutral-800 dark:text-neutral-200 text-sm">Typlix</span>
+                <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded bg-neutral-200/80 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-700">
+                  Data Minimization
+                </span>
+                <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded bg-neutral-200/80 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-700">
+                  DPDP Act 2023
+                </span>
+              </div>
+              <p className="text-neutral-600 dark:text-neutral-400 text-[11px]">
+                Operated by Typlix Interactive (Prem Sagar Pandey) · Minimalist touch typing training.
+              </p>
             </div>
-            <p className="text-neutral-600 dark:text-neutral-400 text-[11px]">
-              Operated by Typlix Interactive (Prem Sagar Pandey) · Minimalist touch typing training.
-            </p>
-          </div>
+          )}
 
-          <div className="flex flex-wrap items-center justify-center sm:justify-between gap-3 pt-2 border-t border-neutral-200/60 dark:border-neutral-800/50">
+          <div className={`flex flex-wrap items-center justify-center sm:justify-between gap-3 ${!isMobile ? 'pt-2 border-t border-neutral-200/60 dark:border-neutral-800/50' : ''}`}>
             <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-[11px]">
               <Link to="/privacy" className="hover:text-neutral-900 dark:hover:text-neutral-200 transition-colors">
                 Privacy Policy

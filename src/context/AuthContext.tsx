@@ -16,8 +16,6 @@ import { AuthContext } from './AuthContextCore';
 
 // Pre-instantiated Google Auth Provider for zero-latency instant popup
 const googleProvider = new GoogleAuthProvider();
-googleProvider.addScope('profile');
-googleProvider.addScope('email');
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -97,11 +95,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await signInWithRedirect(auth, googleProvider);
   };
 
-  const loginWithGoogle = async () => {
+  const loginWithGoogle = async (): Promise<void> => {
     const result = await signInWithPopup(auth, googleProvider);
     if (result?.user) {
       setUser(result.user);
-      setTimeout(() => triggerSync(result.user).catch(() => {}), 300);
     }
   };
 

@@ -27,6 +27,7 @@ interface GameStatsProps {
   onToggleNumbers?: () => void;
   dictionary?: DictionaryType;
   onSelectDictionary?: (dict: DictionaryType) => void;
+  isMobile?: boolean;
 }
 
 function GameStatsComponent({
@@ -53,6 +54,7 @@ function GameStatsComponent({
   onToggleNumbers,
   dictionary = 'english-1k',
   onSelectDictionary,
+  isMobile = false,
 }: GameStatsProps) {
   const isLesson = mode === 'lesson';
 
@@ -104,39 +106,41 @@ function GameStatsComponent({
           </div>
         ) : mode === 'timed' ? (
           <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 shrink-0">
-            {/* Punctuation & Numbers Toggles (Monkeytype style) */}
-            <div className="inline-flex items-center border border-neutral-200 dark:border-neutral-700 rounded-lg overflow-hidden bg-neutral-100/60 dark:bg-neutral-800/60 p-0.5 shrink-0">
-              <button
-                type="button"
-                onClick={onTogglePunctuation}
-                aria-pressed={punctuation}
-                className={`px-2 py-0.5 text-[11px] font-mono rounded-md transition-all cursor-pointer ${
-                  punctuation
-                    ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-bold shadow-2xs'
-                    : 'text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100'
-                }`}
-                title="Toggle punctuation in speed test"
-              >
-                @ punctuation
-              </button>
-              <button
-                type="button"
-                onClick={onToggleNumbers}
-                aria-pressed={numbers}
-                className={`px-2 py-0.5 text-[11px] font-mono rounded-md transition-all cursor-pointer ${
-                  numbers
-                    ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-bold shadow-2xs'
-                    : 'text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100'
-                }`}
-                title="Toggle numbers in speed test"
-              >
-                # numbers
-              </button>
-            </div>
+            {/* Punctuation & Numbers Toggles (Monkeytype style) - hidden on mobile outside, accessible in Controls */}
+            {!isMobile && (
+              <div className="hidden md:inline-flex items-center border border-neutral-200 dark:border-neutral-700 rounded-lg overflow-hidden bg-neutral-100/60 dark:bg-neutral-800/60 p-0.5 shrink-0">
+                <button
+                  type="button"
+                  onClick={onTogglePunctuation}
+                  aria-pressed={punctuation}
+                  className={`px-2 py-0.5 text-[11px] font-mono rounded-md transition-all cursor-pointer ${
+                    punctuation
+                      ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-bold shadow-2xs'
+                      : 'text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100'
+                  }`}
+                  title="Toggle punctuation in speed test"
+                >
+                  @ punctuation
+                </button>
+                <button
+                  type="button"
+                  onClick={onToggleNumbers}
+                  aria-pressed={numbers}
+                  className={`px-2 py-0.5 text-[11px] font-mono rounded-md transition-all cursor-pointer ${
+                    numbers
+                      ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-bold shadow-2xs'
+                      : 'text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100'
+                  }`}
+                  title="Toggle numbers in speed test"
+                >
+                  # numbers
+                </button>
+              </div>
+            )}
 
-            {/* Word Bank Dictionary Selector */}
-            {onSelectDictionary && (
-              <div className="inline-flex items-center border border-neutral-200 dark:border-neutral-700 rounded-lg overflow-hidden bg-neutral-100/60 dark:bg-neutral-800/60 p-0.5 shrink-0" role="group" aria-label="Word dictionary selection">
+            {/* Word Bank Dictionary Selector - hidden on mobile outside, accessible in Controls */}
+            {!isMobile && onSelectDictionary && (
+              <div className="hidden md:inline-flex items-center border border-neutral-200 dark:border-neutral-700 rounded-lg overflow-hidden bg-neutral-100/60 dark:bg-neutral-800/60 p-0.5 shrink-0" role="group" aria-label="Word dictionary selection">
                 {(['english-1k', 'english-5k', 'english-200'] as const).map((dictId) => {
                   const isSelected = dictionary === dictId;
                   const label = dictId === 'english-1k' ? '1k' : dictId === 'english-5k' ? '5k' : '200';

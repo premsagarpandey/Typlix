@@ -58,6 +58,13 @@ export function calculateStatsSummary(sessions: TypingSessionRecord[]) {
 }
 
 /**
+ * Strips out undefined values so Firestore setDoc does not throw
+ */
+function sanitizeFirestorePayload<T extends Record<string, any>>(obj: T): T {
+  return JSON.parse(JSON.stringify(obj, (_, v) => (v === undefined ? null : v)));
+}
+
+/**
  * Dispatches a custom window event to notify all components that progress has updated
  */
 export function notifyProgressUpdated(detail?: Record<string, unknown>) {
@@ -129,7 +136,7 @@ export async function saveTypingSession(rawRecord: TypingSessionRecord): Promise
       // Data Minimization: We NEVER store email in the public /users Firestore collection
       await setDoc(
         userRef,
-        {
+        sanitizeFirestorePayload({
           uid: currentUser.uid,
           displayName: currentUser.displayName || 'Typist',
           photoURL: currentUser.photoURL || null,
@@ -139,7 +146,7 @@ export async function saveTypingSession(rawRecord: TypingSessionRecord): Promise
           totalTests: summary.totalTests,
           typingGameLevel: currentLevel,
           updatedAt: new Date().toISOString(),
-        },
+        }),
         { merge: true }
       );
     }
@@ -252,7 +259,7 @@ export async function syncUserProgressWithCloud(currentUser: User): Promise<{
     // Save consolidated progress back to Firestore (omitting email for data minimization)
     await setDoc(
       userRef,
-      {
+      sanitizeFirestorePayload({
         uid: currentUser.uid,
         displayName: currentUser.displayName || 'Typist',
         photoURL: currentUser.photoURL || null,
@@ -263,7 +270,7 @@ export async function syncUserProgressWithCloud(currentUser: User): Promise<{
         typlix_stats: finalStats,
         lastLoginAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-      },
+      }),
       { merge: true }
     );
 

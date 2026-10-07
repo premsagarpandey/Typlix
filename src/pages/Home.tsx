@@ -42,32 +42,107 @@ export default function Home() {
         Build real muscle memory with precise metrics.
       </p>
 
-      {/* Mode CTA Action Buttons */}
-      <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 mb-16 max-w-2xl mx-auto">
-        {/* 1. Lessons Mode (Primary CTA) */}
+      {/* ─── Mobile View (< sm): Clean Symmetrical Monochromatic Layout ─── */}
+      <div className="flex flex-col gap-2.5 w-full max-w-sm mx-auto sm:hidden mb-16 px-1">
+        {/* Row 1: The Two Flagship Black CTAs (Equal 50/50 columns) */}
+        <div className="grid grid-cols-2 gap-2.5 w-full">
+          <button
+            type="button"
+            onClick={handleStartLesson}
+            aria-label={currentLevel > 1 ? `Continue typing practice at Lesson ${currentLevel}` : 'Start touch typing Lesson 1'}
+            className="flex items-center justify-center gap-1.5 px-3 py-3 bg-neutral-900 dark:bg-neutral-100 hover:bg-neutral-800 dark:hover:bg-neutral-200 active:scale-[0.98] transition-all text-white dark:text-neutral-900 text-xs sm:text-sm font-semibold rounded-lg cursor-pointer shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white min-w-0"
+          >
+            <BookOpen className="w-4 h-4 shrink-0" aria-hidden="true" />
+            <span className="truncate">{currentLevel > 1 ? `Continue Lesson ${currentLevel}` : 'Start Lesson 1'}</span>
+          </button>
+
+          <Link
+            to="/game?mode=timed"
+            aria-label="Start Speed Test timed typing session"
+            onClick={() => {
+              try {
+                localStorage.setItem('typlix_game_mode', JSON.stringify('timed'));
+              } catch {}
+            }}
+            className="flex items-center justify-center gap-1.5 px-3 py-3 bg-neutral-900 dark:bg-neutral-100 hover:bg-neutral-800 dark:hover:bg-neutral-200 active:scale-[0.98] transition-all text-white dark:text-neutral-900 text-xs sm:text-sm font-semibold rounded-lg cursor-pointer shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white min-w-0"
+          >
+            <Timer className="w-4 h-4 shrink-0" aria-hidden="true" />
+            <span className="truncate">Speed Test</span>
+          </Link>
+        </div>
+
+        {/* Row 2: The Three Secondary White Practice Modes (Equal 33.3% columns) */}
+        <div className="grid grid-cols-3 gap-2 w-full">
+          <Link
+            to="/game?mode=code"
+            aria-label="Practice typing code snippets"
+            onClick={() => {
+              try {
+                localStorage.setItem('typlix_game_mode', JSON.stringify('code'));
+              } catch {}
+            }}
+            className="flex items-center justify-center gap-1.5 px-2 py-2.5 border border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100/70 dark:hover:bg-neutral-900/70 text-neutral-700 dark:text-neutral-300 text-xs font-medium rounded-lg transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white min-w-0"
+          >
+            <Code className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+            <span className="truncate">Code</span>
+          </Link>
+
+          <Link
+            to="/game?mode=quotes"
+            aria-label="Practice typing famous quotes"
+            onClick={() => {
+              try {
+                localStorage.setItem('typlix_game_mode', JSON.stringify('quotes'));
+              } catch {}
+            }}
+            className="flex items-center justify-center gap-1.5 px-2 py-2.5 border border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100/70 dark:hover:bg-neutral-900/70 text-neutral-700 dark:text-neutral-300 text-xs font-medium rounded-lg transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white min-w-0"
+          >
+            <Quote className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+            <span className="truncate">Quotes</span>
+          </Link>
+
+          <Link
+            to="/game?mode=custom"
+            aria-label="Practice typing custom text or exercises"
+            onClick={() => {
+              try {
+                localStorage.setItem('typlix_game_mode', JSON.stringify('custom'));
+              } catch {}
+            }}
+            className="flex items-center justify-center gap-1.5 px-2 py-2.5 border border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100/70 dark:hover:bg-neutral-900/70 text-neutral-700 dark:text-neutral-300 text-xs font-medium rounded-lg transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white min-w-0"
+          >
+            <Pencil className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+            <span className="truncate">Custom</span>
+          </Link>
+        </div>
+      </div>
+
+      {/* ─── Desktop & Laptop View (>= sm): EXACT Unchanged Layout ─── */}
+      <div className="hidden sm:flex sm:flex-wrap sm:gap-3 sm:max-w-2xl sm:items-center sm:justify-center mb-16 mx-auto">
+        {/* 1. Lessons Mode */}
         <button
           type="button"
           onClick={handleStartLesson}
           aria-label={currentLevel > 1 ? `Continue typing practice at Lesson ${currentLevel}` : 'Start touch typing Lesson 1'}
-          className="px-5 sm:px-6 py-3 bg-neutral-900 dark:bg-neutral-100 hover:bg-neutral-800 dark:hover:bg-neutral-200 active:scale-[0.98] transition-all text-white dark:text-neutral-900 text-sm font-semibold rounded-lg cursor-pointer flex items-center gap-2 shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+          className="inline-flex min-w-[170px] px-5 sm:px-6 py-3 bg-neutral-900 dark:bg-neutral-100 hover:bg-neutral-800 dark:hover:bg-neutral-200 active:scale-[0.98] transition-all text-white dark:text-neutral-900 text-sm font-semibold rounded-lg cursor-pointer items-center justify-center gap-2 shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
         >
           <BookOpen className="w-4 h-4 shrink-0" aria-hidden="true" />
           <span>{currentLevel > 1 ? `Continue Lesson ${currentLevel}` : 'Start Lesson 1'}</span>
         </button>
 
-        {/* 2. Speed Test (Timed Mode) */}
+        {/* 2. Code Snippets Mode */}
         <Link
-          to="/game?mode=timed"
-          aria-label="Start Speed Test timed typing session"
+          to="/game?mode=code"
+          aria-label="Practice typing code snippets"
           onClick={() => {
             try {
-              localStorage.setItem('typlix_game_mode', JSON.stringify('timed'));
+              localStorage.setItem('typlix_game_mode', JSON.stringify('code'));
             } catch {}
           }}
-          className="px-4 sm:px-5 py-3 border border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100/70 dark:hover:bg-neutral-900/70 text-neutral-700 dark:text-neutral-300 text-sm font-medium rounded-lg transition-all cursor-pointer flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+          className="px-4 sm:px-5 py-3 border border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100/70 dark:hover:bg-neutral-900/70 text-neutral-700 dark:text-neutral-300 text-sm font-medium rounded-lg transition-all cursor-pointer flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
         >
-          <Timer className="w-4 h-4 shrink-0" aria-hidden="true" />
-          <span>Speed Test</span>
+          <Code className="w-4 h-4 shrink-0" aria-hidden="true" />
+          <span>Code</span>
         </Link>
 
         {/* 3. Quotes Mode */}
@@ -79,25 +154,25 @@ export default function Home() {
               localStorage.setItem('typlix_game_mode', JSON.stringify('quotes'));
             } catch {}
           }}
-          className="px-4 sm:px-5 py-3 border border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100/70 dark:hover:bg-neutral-900/70 text-neutral-700 dark:text-neutral-300 text-sm font-medium rounded-lg transition-all cursor-pointer flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+          className="px-4 sm:px-5 py-3 border border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100/70 dark:hover:bg-neutral-900/70 text-neutral-700 dark:text-neutral-300 text-sm font-medium rounded-lg transition-all cursor-pointer flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
         >
           <Quote className="w-4 h-4 shrink-0" aria-hidden="true" />
           <span>Quotes</span>
         </Link>
 
-        {/* 4. Code Snippets Mode */}
+        {/* 4. Speed Test */}
         <Link
-          to="/game?mode=code"
-          aria-label="Practice typing code snippets"
+          to="/game?mode=timed"
+          aria-label="Start Speed Test timed typing session"
           onClick={() => {
             try {
-              localStorage.setItem('typlix_game_mode', JSON.stringify('code'));
+              localStorage.setItem('typlix_game_mode', JSON.stringify('timed'));
             } catch {}
           }}
-          className="px-4 sm:px-5 py-3 border border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100/70 dark:hover:bg-neutral-900/70 text-neutral-700 dark:text-neutral-300 text-sm font-medium rounded-lg transition-all cursor-pointer flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+          className="inline-flex min-w-[170px] px-5 sm:px-6 py-3 bg-neutral-900 dark:bg-neutral-100 hover:bg-neutral-800 dark:hover:bg-neutral-200 active:scale-[0.98] transition-all text-white dark:text-neutral-900 text-sm font-semibold rounded-lg cursor-pointer items-center justify-center gap-2 shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
         >
-          <Code className="w-4 h-4 shrink-0" aria-hidden="true" />
-          <span>Code</span>
+          <Timer className="w-4 h-4 shrink-0" aria-hidden="true" />
+          <span>Speed Test</span>
         </Link>
 
         {/* 5. Custom Text Mode */}
@@ -109,7 +184,7 @@ export default function Home() {
               localStorage.setItem('typlix_game_mode', JSON.stringify('custom'));
             } catch {}
           }}
-          className="px-4 sm:px-5 py-3 border border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100/70 dark:hover:bg-neutral-900/70 text-neutral-700 dark:text-neutral-300 text-sm font-medium rounded-lg transition-all cursor-pointer flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+          className="px-4 sm:px-5 py-3 border border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100/70 dark:hover:bg-neutral-900/70 text-neutral-700 dark:text-neutral-300 text-sm font-medium rounded-lg transition-all cursor-pointer flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
         >
           <Pencil className="w-4 h-4 shrink-0" aria-hidden="true" />
           <span>Custom</span>

@@ -114,6 +114,7 @@ function TypingAreaComponent({
   const [autoFixCapsLock, setAutoFixCapsLock] = useLocalStorage<boolean>('typlix_capslock_autofix', true);
   const [isShaking, setIsShaking] = useState(false);
   const [isFocusReleased, setIsFocusReleased] = useState(false);
+  const [isInputFocused, setIsInputFocused] = useState(false);
   const [tabRestartHint, setTabRestartHint] = useState(false);
 
   // Stable refs for event listeners
@@ -220,6 +221,26 @@ function TypingAreaComponent({
     []
   );
 
+  // Auto-focus input immediately on mount
+  useEffect(() => {
+    const doInitialFocus = () => {
+      if (inputRef.current && !isFocusReleasedRef.current) {
+        inputRef.current.focus({ preventScroll: true });
+        const len = inputRef.current.value.length;
+        inputRef.current.setSelectionRange(len, len);
+      }
+    };
+    doInitialFocus();
+    const t1 = setTimeout(doInitialFocus, 30);
+    const t2 = setTimeout(doInitialFocus, 100);
+    const t3 = setTimeout(doInitialFocus, 250);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+    };
+  }, []);
+
   // Direct Keystroke Engine & Auto-Focus Keeper
   useEffect(() => {
     if (status !== 'idle' && status !== 'playing') return;
@@ -228,15 +249,16 @@ function TypingAreaComponent({
       if (isFocusReleasedRef.current) return;
       const el = inputRef.current;
       if (!el) return;
-      // Don't steal focus from open text inputs, modals, navigation, or buttons
+      // Don't steal focus from open text inputs, modals, navigation
       const active = document.activeElement;
-      if (active) {
+      if (active && active !== el) {
         const activeTag = active.tagName;
         if (activeTag === 'TEXTAREA' || activeTag === 'SELECT') return;
-        if (active.closest('[role="dialog"]')) return;
+        if (active.closest('[role="dialog"]') || active.closest('[role="menu"]')) return;
         if (active.closest('nav') || active.closest('aside') || active.closest('footer')) return;
-        if (activeTag === 'BUTTON' || activeTag === 'A') return;
-        if (activeTag === 'INPUT' && active !== el) return;
+        if (activeTag === 'INPUT') return;
+        // On desktop, don't steal focus if user intentionally navigated to a button via Tab
+        if (!isMobile && (activeTag === 'BUTTON' || activeTag === 'A')) return;
       }
       if (document.activeElement !== el) {
         el.focus({ preventScroll: true });
@@ -522,20 +544,17 @@ function TypingAreaComponent({
     }
   }, []);
 
-  // Mobile: Handle touch to focus input and bring up OS keyboard
-  const handleContainerTouchEnd = useCallback((e: React.TouchEvent) => {
+  // Mobile: Handle touch to focus input and bring up OS keyboard synchronously
+  const handleContainerTouchEnd = useCallback((_e: React.TouchEvent) => {
     if (!isMobile) return;
-    e.preventDefault();
     isFocusReleasedRef.current = false;
     setIsFocusReleased(false);
-    // Small delay to ensure the touch event completes before focusing
-    setTimeout(() => {
-      inputRef.current?.focus();
-      if (inputRef.current) {
-        const len = inputRef.current.value.length;
-        inputRef.current.setSelectionRange(len, len);
-      }
-    }, 10);
+    // Direct synchronous focus ensures iOS Safari and Android Chrome reliably open the on-screen keyboard
+    inputRef.current?.focus();
+    if (inputRef.current) {
+      const len = inputRef.current.value.length;
+      inputRef.current.setSelectionRange(len, len);
+    }
   }, [isMobile]);
 
   return (
@@ -577,7 +596,7 @@ function TypingAreaComponent({
       )}
 
       {/* ─── Mobile: Tap to Start Typing Prompt ─── */}
-      {isMobile && status === 'idle' && typedText.length === 0 && !isLandscapePhone && (
+      {isMobile && !isInputFocused && status === 'idle' && typedText.length === 0 && !isLandscapePhone && (
         <div className="mb-2 px-3 py-1.5 bg-neutral-100 dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-xl text-center animate-fade-in">
           <span className="text-xs font-medium text-neutral-700 dark:text-neutral-300">
             👆 Tap the text below to start typing
@@ -614,7 +633,7 @@ function TypingAreaComponent({
         aria-label="Touch typing practice area"
         className={`typing-area-container relative ${isLandscapePhone ? 'p-3 sm:p-4' : 'p-5 sm:p-7'} rounded-2xl border border-neutral-200/90 dark:border-neutral-800 font-mono select-none transition-all duration-200 bg-white dark:bg-neutral-900/60 shadow-xs backdrop-blur-xs cursor-text ${
           isShaking ? 'animate-shake' : ''
-        } ${isMobile && status === 'idle' && typedText.length === 0 ? 'mobile-tap-cue' : ''}`}
+        } ${isMobile && !isInputFocused && status === 'idle' && typedText.length === 0 ? 'mobile-tap-cue' : ''}`}
         style={{
           height: `${lineHeightPx * VISIBLE_LINES + (isLandscapePhone ? 32 : fontSize >= 28 ? 52 : 44)}px`,
           overflow: 'hidden',
@@ -638,9 +657,18 @@ function TypingAreaComponent({
         {/* Transparent input overlay for capturing keystrokes */}
         <input
           ref={inputRef}
+          autoFocus
           type="text"
           value={typedText}
           onChange={(e) => handleInputChange(e.target.value)}
+          onFocus={() => {
+            setIsInputFocused(true);
+            isFocusReleasedRef.current = false;
+            setIsFocusReleased(false);
+          }}
+          onBlur={() => {
+            setIsInputFocused(false);
+          }}
           onKeyDown={handleKeyDown}
           onKeyUp={handleKeyUp}
           onClick={(e) => {
@@ -660,8 +688,8 @@ function TypingAreaComponent({
           enterKeyHint="done"
           autoComplete="off"
           autoCorrect="off"
-          autoCapitalize="off"
-          spellCheck="false"
+          autoCapitalize="none"
+          spellCheck={false}
           aria-label="Typing input field"
           aria-describedby="typing-instructions"
           className="absolute inset-0 w-full h-full opacity-0 cursor-text z-10 p-0 m-0 select-none"
@@ -800,7 +828,7 @@ function TypingAreaComponent({
 
       {/* Quick Restart and Keyboard Shortcut Footer Hint */}
       <div className="flex items-center justify-between text-[11px] text-neutral-500 dark:text-neutral-400 mt-2 px-1">
-        <span className="flex items-center gap-1.5">
+        <span className="hidden sm:flex items-center gap-1.5">
           <kbd className="px-1.5 py-0.5 font-mono bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded text-[10px]">
             Tab
           </kbd>
@@ -812,17 +840,23 @@ function TypingAreaComponent({
           <kbd className="px-1.5 py-0.5 font-mono bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded text-[10px]">
             Esc
           </kbd>
-          <span className="hidden sm:inline">to instant restart</span>
+          <span>to instant restart</span>
         </span>
 
-        {status === 'playing' && (
+        {/* Mobile Status / Hint */}
+        <span className="sm:hidden text-[11px] text-neutral-500 dark:text-neutral-400 font-medium">
+          {status === 'playing' ? 'Session active · type the text' : 'Tap area to begin typing'}
+        </span>
+
+        {/* Touch-Friendly Restart Button (available anytime on mobile, or when playing on desktop) */}
+        {(status === 'playing' || isMobile) && (
           <button
             type="button"
             onClick={() => onQuickRestartRef.current?.()}
-            className="flex items-center gap-1 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer border border-neutral-200 dark:border-neutral-700 shadow-2xs text-xs font-semibold"
             title="Restart current test"
           >
-            <RotateCcw className="w-3 h-3" />
+            <RotateCcw className="w-3.5 h-3.5" />
             <span>Restart</span>
           </button>
         )}

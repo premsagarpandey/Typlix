@@ -10,7 +10,10 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "type-check": "tsc --noEmit",
-    "preview": "vite preview --open"
+    "preview": "vite preview --open",
+    "setup-hooks": "git config core.hooksPath .githooks && echo ✅ Git hooks activated from .githooks/",
+    "security-check": "node scripts/check-secrets.js",
+    "postinstall": "git config core.hooksPath .githooks 2>nul || true"
   },
   "dependencies": {
     "firebase": "^12.19.0",

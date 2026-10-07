@@ -10,9 +10,10 @@ import { exportDataAsJSON, exportStatsAsCSV, importDataFromJSON } from '../utils
 import { resetLevelProgress, clearStatsHistory } from '../services/cloudProgress';
 import { openCookieConsentModal, resetCookieConsent, isGlobalPrivacyControlActive } from '../utils/cookieConsent';
 import { ShieldCheck, EyeOff, Lock, Check, Download, Upload, FileSpreadsheet, Cookie, X, Play, Volume2 } from 'lucide-react';
+import { checkIsPhone } from '../hooks/useIsMobile';
 
 export default function Settings() {
-  const [soundEnabled, setSoundEnabled] = useLocalStorage('sound', true);
+  const [soundEnabled, setSoundEnabled] = useLocalStorage('sound', !checkIsPhone());
   const [soundProfile, setSoundProfile] = useLocalStorage<SoundProfileId>('soundProfile', 'cherry-mx-blue');
   const [soundVolume, setSoundVolume] = useLocalStorage<number>('soundVolume', 70);
   const [keyboardLayout, setKeyboardLayout] = useLocalStorage<KeyboardLayoutId>('keyboardLayout', 'qwerty');

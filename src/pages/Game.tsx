@@ -16,11 +16,12 @@ import type { DictionaryType } from '../data/words';
 import GameSidebar from '../components/game/GameSidebar';
 import { secureStorage } from '../utils/secureStorage';
 import { useIsMobile } from '../hooks/useIsMobile';
-import { PanelLeftOpen, Keyboard as KeyboardIcon } from 'lucide-react';
+import { PanelLeftOpen, Keyboard as KeyboardIcon, SlidersHorizontal, X } from 'lucide-react';
 
 export default function Game() {
   const [searchParams] = useSearchParams();
   const isMobile = useIsMobile();
+  const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
   const [mode, setMode] = useLocalStorage<GameMode>('typlix_game_mode', 'lesson');
   const [maxUnlockedLevel] = useLocalStorage<number>('typingGameLevel', 1);
   const [currentLevel, setCurrentLevel] = useLocalStorage<number>('typlix_active_level', 1);
@@ -318,6 +319,18 @@ export default function Game() {
           handleSelectTimedDuration={handleSelectTimedDuration}
           dictionary={dictionary}
           handleDictionaryChange={handleDictionaryChange}
+          hasPunctuation={hasPunctuation}
+          onTogglePunctuation={() => {
+            const next = !hasPunctuation;
+            setHasPunctuation(next);
+            resetGame();
+          }}
+          hasNumbers={hasNumbers}
+          onToggleNumbers={() => {
+            const next = !hasNumbers;
+            setHasNumbers(next);
+            resetGame();
+          }}
           quoteCategory={quoteCategory}
           handleQuoteCategoryChange={handleQuoteCategoryChange}
           quoteDifficulty={quoteDifficulty}
@@ -336,7 +349,7 @@ export default function Game() {
       {/* ═══════════════════ RIGHT MAIN AREA ═══════════════════ */}
       <section className="flex-1 min-w-0 flex flex-col justify-between gap-2.5 h-full overflow-hidden">
         {/* Live Stats Bar + Sidebar Toggle */}
-        <div className="shrink-0 flex items-center gap-2">
+        <div className="shrink-0 flex items-center gap-1.5 sm:gap-2">
           {!isMobile && !isSidebarOpen && (
             <button
               type="button"
@@ -350,7 +363,21 @@ export default function Game() {
             </button>
           )}
 
-          <div className="flex-1 min-w-0 bg-white dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 rounded-xl px-4 py-1 shadow-2xs">
+          {/* Mobile Practice Controls Toggle Button */}
+          {isMobile && (
+            <button
+              type="button"
+              onClick={() => setIsMobileDrawerOpen(true)}
+              aria-label="Open controls drawer"
+              className="shrink-0 flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-2xs hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-semibold text-neutral-800 dark:text-neutral-200 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+              title="Show controls and options"
+            >
+              <SlidersHorizontal className="w-3.5 h-3.5" aria-hidden="true" />
+              <span className="text-[11px] font-semibold">Controls</span>
+            </button>
+          )}
+
+          <div className="flex-1 min-w-0 bg-white dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 rounded-xl px-2.5 sm:px-4 py-1 shadow-2xs">
             <GameStats
               timeRemaining={timeRemaining}
               wpm={wpm}
@@ -383,6 +410,7 @@ export default function Game() {
               }}
               dictionary={dictionary}
               onSelectDictionary={handleDictionaryChange}
+              isMobile={isMobile}
             />
           </div>
         </div>
@@ -425,27 +453,124 @@ export default function Game() {
           )}
         </div>
 
-        {/* Virtual Keyboard */}
+        {/* Virtual Keyboard (Strictly desktop/laptop only; hidden on mobile) */}
         {!isMobile && (
-          showVirtualKeyboard ? (
-            <div className="shrink-0 mt-2 sm:mt-3 pb-1 sm:pb-2 animate-fade-in w-full">
-              <VirtualKeyboard nextChar={nextChar} />
-            </div>
-          ) : (
-            <div className="shrink-0 flex items-center justify-center py-1">
-              <button
-                type="button"
-                onClick={() => setShowVirtualKeyboard(true)}
-                aria-label="Show on-screen virtual keyboard"
-                className="text-xs text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 flex items-center gap-1.5 px-3 py-1 rounded-full border border-dashed border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
-              >
-                <KeyboardIcon className="w-3.5 h-3.5" aria-hidden="true" />
-                <span>Show Virtual Keyboard</span>
-              </button>
-            </div>
-          )
+          <div className="hidden sm:block w-full">
+            {showVirtualKeyboard ? (
+              <div className="shrink-0 mt-2 sm:mt-3 pb-1 sm:pb-2 animate-fade-in w-full">
+                <VirtualKeyboard nextChar={nextChar} />
+              </div>
+            ) : (
+              <div className="shrink-0 flex items-center justify-center py-1">
+                <button
+                  type="button"
+                  onClick={() => setShowVirtualKeyboard(true)}
+                  aria-label="Show on-screen virtual keyboard"
+                  className="text-xs text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 flex items-center gap-1.5 px-3 py-1 rounded-full border border-dashed border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+                >
+                  <KeyboardIcon className="w-3.5 h-3.5" aria-hidden="true" />
+                  <span>Show Virtual Keyboard</span>
+                </button>
+              </div>
+            )}
+          </div>
         )}
       </section>
+
+      {/* ═══════════════════ MOBILE SLIDE-OVER DRAWER ═══════════════════ */}
+      {isMobile && isMobileDrawerOpen && (
+        <div className="fixed inset-0 z-50 flex" role="dialog" aria-modal="true" aria-label="Practice options menu">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-xs animate-fade-in"
+            onClick={() => setIsMobileDrawerOpen(false)}
+            aria-hidden="true"
+          />
+          {/* Drawer Content */}
+          <div className="relative z-10 w-[86vw] max-w-xs sm:max-w-sm h-full bg-white dark:bg-neutral-900 border-r border-neutral-200 dark:border-neutral-800 p-3 sm:p-4 shadow-2xl flex flex-col overflow-y-auto animate-slide-in-left">
+            <div className="flex items-center justify-between pb-2 mb-2 border-b border-neutral-200 dark:border-neutral-800 shrink-0">
+              <span className="text-xs font-bold uppercase tracking-wider text-neutral-900 dark:text-neutral-100 flex items-center gap-1.5">
+                <SlidersHorizontal className="w-3.5 h-3.5" />
+                <span>Options & Levels</span>
+              </span>
+              <button
+                type="button"
+                onClick={() => setIsMobileDrawerOpen(false)}
+                aria-label="Close options menu"
+                className="p-1 rounded-lg text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto min-h-0">
+              <GameSidebar
+                mode={mode}
+                setIsSidebarOpen={(open) => setIsMobileDrawerOpen(open)}
+                currentLevel={effectiveLevel}
+                maxUnlockedLevel={maxUnlockedLevel}
+                levelConfig={levelConfig}
+                handleSelectLevel={(lvl) => {
+                  handleSelectLevel(lvl);
+                  setIsMobileDrawerOpen(false);
+                }}
+                handlePrevLevel={handlePrevLevel}
+                handleNextLevel={handleNextLevel}
+                handleRetry={handleRetry}
+                showVirtualKeyboard={false}
+                setShowVirtualKeyboard={setShowVirtualKeyboard}
+                timedDuration={timedDuration}
+                handleSelectTimedDuration={(dur) => {
+                  handleSelectTimedDuration(dur);
+                }}
+                dictionary={dictionary}
+                handleDictionaryChange={(dict) => {
+                  handleDictionaryChange(dict);
+                }}
+                hasPunctuation={hasPunctuation}
+                onTogglePunctuation={() => {
+                  const next = !hasPunctuation;
+                  setHasPunctuation(next);
+                  resetGame();
+                }}
+                hasNumbers={hasNumbers}
+                onToggleNumbers={() => {
+                  const next = !hasNumbers;
+                  setHasNumbers(next);
+                  resetGame();
+                }}
+                quoteCategory={quoteCategory}
+                handleQuoteCategoryChange={(cat) => {
+                  handleQuoteCategoryChange(cat);
+                  setIsMobileDrawerOpen(false);
+                }}
+                quoteDifficulty={quoteDifficulty}
+                handleQuoteDifficultyChange={(diff) => {
+                  handleQuoteDifficultyChange(diff);
+                  setIsMobileDrawerOpen(false);
+                }}
+                codeLanguage={codeLanguage}
+                handleCodeLanguageChange={(lang) => {
+                  handleCodeLanguageChange(lang);
+                  setIsMobileDrawerOpen(false);
+                }}
+                codeDifficulty={codeDifficulty}
+                handleCodeDifficultyChange={(diff) => {
+                  handleCodeDifficultyChange(diff);
+                  setIsMobileDrawerOpen(false);
+                }}
+                currentSnippetInfo={currentSnippetInfo}
+                customText={customText}
+                customTimeLimit={customTimeLimit}
+                setIsCustomModalOpen={(open) => {
+                  setIsCustomModalOpen(open);
+                  setIsMobileDrawerOpen(false);
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Results Modal */}
       {(status === 'passed' || status === 'failed' || status === 'finished') && (

@@ -73,3 +73,11 @@ coverage/
 ehthumbs.db
 Thumbs.db
 desktop.ini
+
+# AI tools & agent cache
+.agents/
+.gemini/
+.copilot/
+
+# Local-only utility scripts (not needed in repo)
+run-dev.bat

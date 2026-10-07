@@ -6,6 +6,7 @@
  */
 
 import { secureStorage } from './secureStorage';
+import { checkIsPhone } from '../hooks/useIsMobile';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -206,7 +207,7 @@ let masterGain: GainNode | null = null;
 let cachedNoiseBuffer: AudioBuffer | null = null;
 
 // In-memory cache of user audio settings to eliminate synchronous localStorage reads on keystroke
-let cachedSoundEnabled = true;
+let cachedSoundEnabled = typeof window !== 'undefined' ? !checkIsPhone() : true;
 let cachedProfileId: SoundProfileId = 'cherry-mx-blue';
 let cachedSoundVolume = 70;
 let settingsInitialized = false;
@@ -215,7 +216,8 @@ function initCachedSettings(): void {
   if (typeof window === 'undefined' || settingsInitialized) return;
   settingsInitialized = true;
   try {
-    cachedSoundEnabled = secureStorage.getItem<boolean>('sound', true);
+    const defaultSound = !checkIsPhone();
+    cachedSoundEnabled = secureStorage.getItem<boolean>('sound', defaultSound);
     cachedProfileId = secureStorage.getItem<SoundProfileId>('soundProfile', 'cherry-mx-blue');
     cachedSoundVolume = secureStorage.getItem<number>('soundVolume', 70);
 

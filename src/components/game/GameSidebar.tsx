@@ -52,6 +52,10 @@ interface GameSidebarProps {
   handleSelectTimedDuration: (dur: number) => void;
   dictionary?: DictionaryType;
   handleDictionaryChange?: (dict: DictionaryType) => void;
+  hasPunctuation?: boolean;
+  onTogglePunctuation?: () => void;
+  hasNumbers?: boolean;
+  onToggleNumbers?: () => void;
   quoteCategory: QuoteCategory | null;
   handleQuoteCategoryChange: (cat: QuoteCategory | null) => void;
   quoteDifficulty: Difficulty | null;
@@ -82,6 +86,10 @@ function GameSidebarComponent({
   handleSelectTimedDuration,
   dictionary = 'english-1k',
   handleDictionaryChange,
+  hasPunctuation = false,
+  onTogglePunctuation,
+  hasNumbers = false,
+  onToggleNumbers,
   quoteCategory,
   handleQuoteCategoryChange,
   quoteDifficulty,
@@ -327,31 +335,75 @@ function GameSidebarComponent({
                   </div>
                 </div>
 
-                {/* Word Bank Dictionary Options */}
+                {/* Text Options (@ punctuation & # numbers) */}
+                {(onTogglePunctuation || onToggleNumbers) && (
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider block">
+                      Text Options
+                    </label>
+                    <div className="grid grid-cols-2 gap-2" role="group" aria-label="Text modifiers">
+                      {onTogglePunctuation && (
+                        <button
+                          type="button"
+                          aria-pressed={hasPunctuation}
+                          onClick={onTogglePunctuation}
+                          className={`py-2 px-2.5 text-xs font-mono font-medium rounded-lg border transition-all cursor-pointer text-center flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white ${
+                            hasPunctuation
+                              ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 border-neutral-900 dark:border-neutral-100 shadow-xs font-semibold'
+                              : 'border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300'
+                          }`}
+                        >
+                          <span className="font-bold">@</span>
+                          <span>punctuation</span>
+                        </button>
+                      )}
+                      {onToggleNumbers && (
+                        <button
+                          type="button"
+                          aria-pressed={hasNumbers}
+                          onClick={onToggleNumbers}
+                          className={`py-2 px-2.5 text-xs font-mono font-medium rounded-lg border transition-all cursor-pointer text-center flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white ${
+                            hasNumbers
+                              ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 border-neutral-900 dark:border-neutral-100 shadow-xs font-semibold'
+                              : 'border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300'
+                          }`}
+                        >
+                          <span className="font-bold">#</span>
+                          <span>numbers</span>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Word Bank Dictionary Options (1k, 5k, 200) */}
                 {handleDictionaryChange && (
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider block">
                       Word Bank Dictionary
                     </label>
                     <div className="grid grid-cols-3 gap-1.5" role="radiogroup" aria-label="Word bank dictionary selection">
-                      {DICTIONARY_LIST.map((dict) => {
-                        const isChecked = dictionary === dict.id;
+                      {(['english-1k', 'english-5k', 'english-200'] as const).map((dictId) => {
+                        const dict = DICTIONARY_LIST.find((d) => d.id === dictId);
+                        const isChecked = dictionary === dictId;
+                        const label = dictId === 'english-1k' ? '1k' : dictId === 'english-5k' ? '5k' : '200';
+                        const wordCount = dict?.wordCount ?? (dictId === 'english-1k' ? 1000 : dictId === 'english-5k' ? 5000 : 200);
                         return (
                           <button
-                            key={dict.id}
+                            key={dictId}
                             type="button"
                             role="radio"
                             aria-checked={isChecked}
-                            aria-label={`${dict.name} (${dict.wordCount} words)`}
-                            onClick={() => handleDictionaryChange(dict.id)}
+                            aria-label={`${dict?.name ?? label} (${wordCount} words)`}
+                            onClick={() => handleDictionaryChange(dictId)}
                             className={`py-1.5 px-1 text-xs rounded-lg border transition-all cursor-pointer text-center flex flex-col items-center justify-center gap-0.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white ${
                               isChecked
                                 ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 border-neutral-900 dark:border-neutral-100 shadow-xs font-semibold'
                                 : 'border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300'
                             }`}
                           >
-                            <span className="font-mono font-bold text-xs">{dict.badge}</span>
-                            <span className="text-[10px] opacity-75">{dict.wordCount}</span>
+                            <span className="font-mono font-bold text-xs">{label}</span>
+                            <span className="text-[10px] opacity-75">{wordCount}</span>
                           </button>
                         );
                       })}

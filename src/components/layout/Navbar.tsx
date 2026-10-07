@@ -175,6 +175,7 @@ export default function Navbar() {
                     <Link
                       key={path}
                       to={path}
+                      onClick={() => setIsMobileMenuOpen(false)}
                       aria-current={isActive ? 'page' : undefined}
                       className={`px-4 py-3 text-sm font-medium rounded-lg transition-all ${
                         isActive
@@ -193,6 +194,7 @@ export default function Navbar() {
                 {user ? (
                   <Link
                     to="/profile"
+                    onClick={() => setIsMobileMenuOpen(false)}
                     className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-all"
                   >
                     <UserAvatar

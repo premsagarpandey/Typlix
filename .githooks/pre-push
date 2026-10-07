@@ -1,0 +1,56 @@
+#!/bin/sh
+# =============================================================================
+# Typlix Pre-Push Hook — Final Secret Gate Before Remote
+# =============================================================================
+# This hook runs before 'git push'. It does a FULL scan of all tracked files
+# for secret patterns. Even if something slipped past the pre-commit hook,
+# this will catch it before it reaches GitHub.
+# =============================================================================
+
+echo "🛡️  Typlix Security: Final scan before push to remote..."
+
+# ── Define dangerous patterns ──
+PATTERNS=(
+  'AIzaSy[0-9A-Za-z_-]{33}'
+  'ya29\.[0-9A-Za-z_-]+'
+  'AAAA[A-Za-z0-9_-]{7}:[A-Za-z0-9_-]{140}'
+  '-----BEGIN (RSA |EC |DSA )?PRIVATE KEY-----'
+  'sk_live_[0-9a-zA-Z]{24,}'
+  'ghp_[0-9a-zA-Z]{36}'
+  'github_pat_[0-9a-zA-Z_]{82}'
+  'xox[bpors]-[0-9]{10,13}-[0-9a-zA-Z-]+'
+)
+
+# ── Files to skip ──
+SKIP_PATTERN='\.env\.example$|package-lock\.json$|yarn\.lock$|pnpm-lock\.yaml$|\.ico$|\.png$|\.jpg$|\.jpeg$|\.gif$|\.svg$|\.woff|\.ttf|\.eot$|\.mp3$|\.wav$|\.mp4$|\.webm$|\.webp$|node_modules/'
+
+FOUND_SECRETS=0
+
+for PATTERN in "${PATTERNS[@]}"; do
+  # Search all tracked files for the pattern
+  RESULTS=$(git grep -lE "$PATTERN" HEAD -- 2>/dev/null | grep -vE "$SKIP_PATTERN" 2>/dev/null)
+  if [ -n "$RESULTS" ]; then
+    echo ""
+    echo "❌ SECRET PATTERN FOUND!"
+    echo "   Pattern: $PATTERN"
+    echo "   Files:"
+    echo "$RESULTS" | while read -r file; do
+      echo "     → $file"
+    done
+    FOUND_SECRETS=1
+  fi
+done
+
+if [ "$FOUND_SECRETS" -ne 0 ]; then
+  echo ""
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo "🚫 PUSH BLOCKED: Secrets detected in tracked files!"
+  echo ""
+  echo "   Remove the secrets, commit the fix, then push again."
+  echo "   Emergency bypass: git push --no-verify"
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  exit 1
+fi
+
+echo "✅ All clear. Push is safe!"
+exit 0

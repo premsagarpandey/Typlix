@@ -59,11 +59,12 @@ export default function CustomTextModal({
     };
   }, [isOpen, onClose]);
 
+  const safetyReport = useMemo(() => (isOpen ? validateTextSafety(text) : { isSafe: true, issues: [] }), [isOpen, text]);
+
   if (!isOpen) return null;
 
   const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0;
   const charCount = text.length;
-  const safetyReport = useMemo(() => validateTextSafety(text), [text]);
 
   const handleSelectPreset = (preset: CustomPreset) => {
     setText(preset.text);

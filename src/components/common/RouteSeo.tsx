@@ -9,13 +9,13 @@ interface RouteMetadata {
 
 const ROUTE_SEO_MAP: Record<string, RouteMetadata> = {
   '/': {
-    title: 'Typlix — #1 Free Typing Game & Touch Typing Speed Test (WPM)',
-    description: 'Typlix (also known as Typelix) is the #1 free minimalist online typing game and touch typing speed test. Practice 50 progressive lessons, developer code mode, and timed tests to reach 100+ WPM.',
+    title: 'Typlix (Typelix) — #1 Typing Game, Typing Speed Test & Code Typing',
+    description: 'Typlix (also searched as Typelix) is the #1 free online typing game and typing speed test. Accelerate your typing speed, practice developer code typing, and master 50 lessons.',
     canonical: 'https://typlix.web.app/'
   },
   '/game': {
-    title: 'Typing Arena & Speed Test — Typlix',
-    description: 'Practice touch typing with real-time WPM, mechanical switch audio, 50 lessons, code syntax, and custom text modes on Typlix.',
+    title: 'Typing Game & Typing Speed Test Arena — Typlix',
+    description: 'Play the Typlix typing game. Test typing speed, practice developer code typing in 9 languages, and master 50 progressive lessons.',
     canonical: 'https://typlix.web.app/game'
   },
   '/stats': {

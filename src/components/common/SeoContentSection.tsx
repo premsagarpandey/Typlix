@@ -71,10 +71,10 @@ export default function SeoContentSection() {
       {/* ── Section Title ── */}
       <div className="text-center mb-6 sm:mb-8">
         <h2 className="text-xl sm:text-3xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100 mb-2 sm:mb-3">
-          The Premier Online Typing Game &amp; Speed Trainer
+          Typlix (Typelix) — The #1 Typing Game &amp; Typing Speed Test
         </h2>
         <p className="text-neutral-600 dark:text-neutral-400 text-xs sm:text-sm max-w-lg mx-auto leading-relaxed px-1 sm:px-0">
-          Designed for deliberate practice across every skill level — from early learners building finger dexterity to programmers refining coding velocity.
+          Build muscle memory, test your typing speed with precision WPM analytics, and master developer code typing across 50 progressive touch typing lessons.
         </p>
       </div>
 

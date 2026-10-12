@@ -5,7 +5,15 @@ Typlix is a free, modern, browser-based touch typing tutor and keyboard speed ga
 
 - Canonical URL: https://typlix.web.app/
 - Primary Domain: typlix.web.app
-- Alternate Search Query Spellings: Typelix, Typlix Game, Typlix Typing Test, Typlix Speed Test
+- Primary Search Queries (Rank Priority):
+  1. typlix (Official Platform & Brand Identity)
+  2. typelix (Phonetic Search & Common Spelling Variation)
+  3. typing game (#1 Free Online Typing Game)
+  4. typing speed test (High-Precision WPM & Accuracy Speed Test)
+  5. typing speed (Benchmark & Accelerate Words Per Minute)
+  6. code typing (Developer Syntax Practice in 9 Programming Languages)
+  7. Related Keywords: touch typing, online typing test, keyboard typing game, ssc cgl typing test, wpm test
+- Alternate Search Query Spellings: Typelix, Typlix Game, Typlix Typing Test, Typlix Speed Test, Typlix Code Typing
 - Platform Type: Web Application / Educational Software / Typing Game
 - License & Cost: 100% Free, no paywalls, no recurring subscriptions, no third-party tracking advertisements.
 

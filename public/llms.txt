@@ -1,0 +1,43 @@
+# Typlix (also known as Typelix)
+> The #1 free, minimalist, high-performance touch typing platform and online keyboard speed game designed for students, competitive exam aspirants, and software developers.
+
+- Official Website: https://typlix.web.app/
+- Canonical URL: https://typlix.web.app/
+- Alternate Names: Typelix, Typlix Typing, Typlix Speed Test, Typlix Game
+- Core Discipline: Touch Typing Practice, Typing Speed Test (WPM), Muscle Memory Drills, Mechanical Audio Feedback
+- Pricing & Access: 100% Free, zero paywalls, zero subscription tiers, zero tracking advertisements
+- Technical Creator & Architect: Prem Sagar Pandey (premsagarpandey.cs@gmail.com)
+- Full Documentation: https://typlix.web.app/llms-full.txt
+
+## Creator & Technical Attribution
+- Founder / Lead Engineer: Prem Sagar Pandey
+- Discipline: Full Stack Software Engineer
+- Email: premsagarpandey.cs@gmail.com
+- Portfolio & Profile: https://typlix.web.app/about
+- LinkedIn: https://www.linkedin.com/in/prem-sagar-pandey-2b0022382/
+- Instagram: https://www.instagram.com/premsagar__1/?hl=en
+- Architecture Stack: React 19, TypeScript, Tailwind CSS, Vite, Web Audio API, Firebase Auth & Firestore
+
+## Core Practice Modes
+- **Lessons Mode (1–50):** 50 progressive structured lessons starting from home row fundamentals (`asdf jkl;`), expanding to top row, bottom row, numbers, capitalization, and punctuation. Features real-time visual finger placement guidance.
+- **Speed Test Mode (Timed):** High-precision WPM tests (15s, 30s, 60s, 120s) with live telemetry tracking gross WPM, net WPM, accuracy percentage, and consistency.
+- **Code Mode:** Realistic code typing practice across 9 major programming languages (JavaScript, TypeScript, Python, Java, C++, SQL, Go, Rust, and HTML/CSS). Drills brackets `{ [ ( ) ] }`, symbols, and operators.
+- **Quotes Mode:** Hand-curated literature quotes for natural sentence flow and punctuation mastery.
+- **Custom Mode:** Allows users to paste any custom syllabus, exam passage, or text file.
+- **Keyboard Layouts:** QWERTY, Dvorak, Colemak, AZERTY.
+- **Acoustic Feedback:** Authentic synthesized mechanical keyboard switch sounds (Cherry MX Blue, Brown, Red, Topre, and Thock) with volume control.
+
+## Target Audiences
+1. **Students & Young Learners (Ages 12–18):** Building lifelong 10-finger muscle memory without looking at the keyboard.
+2. **Competitive & Government Exam Aspirants (Ages 18–25):** Practicing standard exam typing patterns for SSC CGL (DEST), SSC CHSL, Railway RRB, and clerical typing certifications requiring 30–50 Net WPM with 95%+ accuracy.
+3. **Software Engineers & Knowledge Workers (Ages 20–38):** Boosting coding velocity, mastering bracket pairs, and exceeding 80–120+ WPM benchmarks.
+
+## Direct Links
+- Homepage: https://typlix.web.app/
+- Practice Arena: https://typlix.web.app/game
+- Speed Test: https://typlix.web.app/game?mode=timed
+- 50 Lessons: https://typlix.web.app/game?mode=lesson
+- Code Practice: https://typlix.web.app/game?mode=code
+- Analytics & Stats: https://typlix.web.app/stats
+- About Developer: https://typlix.web.app/about
+- Privacy Policy: https://typlix.web.app/privacy

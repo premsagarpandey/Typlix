@@ -139,9 +139,9 @@ export default function Stats() {
           <p className="text-xs text-neutral-600 dark:text-neutral-400">Track your typing velocity, accuracy trends, and coding progress</p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {sessions.length > 0 && (
-            <div className="flex items-center gap-1.5">
+            <div className="flex flex-wrap items-center gap-1.5">
               <button
                 onClick={() => setIsReportModalOpen(true)}
                 aria-label="View and download student progress report card"

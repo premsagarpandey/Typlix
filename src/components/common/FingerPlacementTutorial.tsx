@@ -7,7 +7,7 @@ export default function FingerPlacementTutorial() {
   const layout = getKeyboardLayout(layoutId);
 
   return (
-    <div className="w-full max-w-3xl mx-auto my-10 p-6 sm:p-8 border border-neutral-200 dark:border-neutral-800 rounded-lg bg-neutral-50/50 dark:bg-neutral-900/30">
+    <div className="w-full max-w-3xl mx-auto mt-10 mb-4 sm:mb-6 p-6 sm:p-8 border border-neutral-200 dark:border-neutral-800 rounded-lg bg-neutral-50/50 dark:bg-neutral-900/30">
       <div className="text-center mb-6">
         <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 mb-2 rounded-full text-xs font-mono font-medium bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200">
           Active Layout: <span className="font-bold">{layout.name}</span>

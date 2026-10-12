@@ -10,6 +10,7 @@ import { initSecurityShield } from './utils/securityShield';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
 import { useIsMobile } from './hooks/useIsMobile';
+import RouteSeo from './components/common/RouteSeo';
 
 const Game = lazy(() => import('./pages/Game'));
 const Stats = lazy(() => import('./pages/Stats'));
@@ -19,6 +20,7 @@ const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const TermsOfService = lazy(() => import('./pages/TermsOfService'));
 const CookiesPolicy = lazy(() => import('./pages/CookiesPolicy'));
 const RefundPolicy = lazy(() => import('./pages/RefundPolicy'));
+const AboutDeveloper = lazy(() => import('./pages/AboutDeveloper'));
 
 function PageFallback() {
   return (
@@ -39,6 +41,7 @@ function AppLayout() {
 
   return (
     <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 flex flex-col transition-colors duration-200">
+      <RouteSeo />
       {/* Accessible Skip to Content Link (WCAG 2.4.1) */}
       <a
         href="#main-content"
@@ -51,7 +54,7 @@ function AppLayout() {
         id="main-content"
         tabIndex={-1}
         role="main"
-        className={`flex-1 w-full focus:outline-none ${isGamePage ? 'px-2 sm:px-4 py-1 sm:py-2 h-[calc(100dvh-48px)] overflow-hidden' : 'px-4 sm:px-6 md:px-8 py-4'}`}
+        className={`flex-1 w-full focus:outline-none ${isGamePage ? 'px-2 sm:px-4 py-1 sm:py-2 h-[calc(100dvh-48px)] overflow-hidden' : 'px-3 sm:px-6 md:px-8 py-3 sm:py-4'}`}
       >
         <Suspense fallback={<PageFallback />}>
           <Routes>
@@ -60,6 +63,7 @@ function AppLayout() {
             <Route path="/stats" element={<Stats />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/about" element={<AboutDeveloper />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/terms" element={<TermsOfService />} />
             <Route path="/cookies" element={<CookiesPolicy />} />
@@ -69,7 +73,7 @@ function AppLayout() {
         </Suspense>
       </main>
       {!isGamePage && (
-        <footer className={`w-full py-6 text-xs text-neutral-600 dark:text-neutral-400 border-t border-neutral-200 dark:border-neutral-800/80 max-w-4xl mx-auto px-4 sm:px-6 md:px-8 ${isMobile ? 'space-y-0' : 'space-y-4'}`}>
+        <footer className={`w-full py-5 sm:py-6 pb-[calc(1.25rem+env(safe-area-inset-bottom,0px))] text-xs text-neutral-600 dark:text-neutral-400 border-t border-neutral-200 dark:border-neutral-800/80 max-w-4xl mx-auto px-3 sm:px-6 md:px-8 ${isMobile ? 'space-y-0' : 'space-y-4'}`}>
           {!isMobile && (
             <div className="hidden sm:flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
               <div className="flex items-center gap-2 flex-wrap justify-center sm:justify-start">
@@ -82,13 +86,16 @@ function AppLayout() {
                 </span>
               </div>
               <p className="text-neutral-600 dark:text-neutral-400 text-[11px]">
-                Operated by Typlix Interactive (Prem Sagar Pandey) · Minimalist touch typing training.
+                Operated by Typlix Interactive (<Link to="/about" className="hover:text-neutral-900 dark:hover:text-neutral-200 underline underline-offset-2">Prem Sagar Pandey</Link>) · Minimalist touch typing training.
               </p>
             </div>
           )}
 
           <div className={`flex flex-wrap items-center justify-center sm:justify-between gap-3 ${!isMobile ? 'pt-2 border-t border-neutral-200/60 dark:border-neutral-800/50' : ''}`}>
             <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-[11px]">
+              <Link to="/about" className="font-medium text-neutral-800 dark:text-neutral-200 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors">
+                About Developer
+              </Link>
               <Link to="/privacy" className="hover:text-neutral-900 dark:hover:text-neutral-200 transition-colors">
                 Privacy Policy
               </Link>

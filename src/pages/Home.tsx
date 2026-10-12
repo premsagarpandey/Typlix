@@ -2,6 +2,7 @@ import { useState, lazy, Suspense } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Keyboard, Timer, BarChart2, BookOpen, Quote, Code, Pencil } from 'lucide-react';
 import FingerPlacementTutorial from '../components/common/FingerPlacementTutorial';
+import SeoContentSection from '../components/common/SeoContentSection';
 import { useUserProgress } from '../hooks/useUserProgress';
 import { useIsMobile } from '../hooks/useIsMobile';
 
@@ -33,17 +34,17 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center text-center max-w-2xl mx-auto py-16 sm:py-24 animate-fade-in">
-      <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-neutral-900 dark:text-neutral-100 mb-4 leading-tight">
+    <div className="flex flex-col items-center justify-center text-center max-w-2xl mx-auto pt-8 sm:pt-16 pb-4 sm:pb-6 animate-fade-in px-1 sm:px-0">
+      <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-neutral-900 dark:text-neutral-100 mb-3 sm:mb-4 leading-tight">
         Master Touch Typing
       </h1>
-      <p className="text-neutral-600 dark:text-neutral-400 text-base sm:text-lg mb-10 max-w-lg leading-relaxed">
+      <p className="text-neutral-600 dark:text-neutral-400 text-sm sm:text-lg mb-6 sm:mb-10 max-w-lg leading-relaxed px-1 sm:px-0">
         50 progressive lessons, timed speed tests, and custom practice.
         Build real muscle memory with precise metrics.
       </p>
 
       {/* ─── Mobile View (< sm): Clean Symmetrical Monochromatic Layout ─── */}
-      <div className="flex flex-col gap-2.5 w-full max-w-sm mx-auto sm:hidden mb-16 px-1">
+      <div className="flex flex-col gap-2.5 w-full max-w-sm mx-auto sm:hidden mb-8 sm:mb-16 px-1">
         {/* Row 1: The Two Flagship Black CTAs (Equal 50/50 columns) */}
         <div className="grid grid-cols-2 gap-2.5 w-full">
           <button
@@ -204,21 +205,21 @@ export default function Home() {
       )}
 
       {/* Feature Highlights Grid */}
-      <div className="w-full grid grid-cols-1 sm:grid-cols-3 gap-px bg-neutral-200 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-800 rounded-lg overflow-hidden">
-        <div className="p-5 bg-neutral-50 dark:bg-neutral-950 text-left">
-          <Keyboard className="w-4 h-4 text-neutral-600 dark:text-neutral-400 mb-3" strokeWidth={1.5} aria-hidden="true" />
+      <div className="w-full grid grid-cols-1 sm:grid-cols-3 gap-px bg-neutral-200 dark:border-neutral-800 bg-neutral-200 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-800 rounded-lg overflow-hidden shadow-2xs">
+        <div className="p-4 sm:p-5 bg-neutral-50 dark:bg-neutral-950 text-left">
+          <Keyboard className="w-4 h-4 text-neutral-600 dark:text-neutral-400 mb-2 sm:mb-3" strokeWidth={1.5} aria-hidden="true" />
           <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 text-sm mb-1">Finger Guides</h3>
           <p className="text-neutral-600 dark:text-neutral-400 text-xs leading-relaxed">Real-time hints for every keypress position.</p>
         </div>
 
-        <div className="p-5 bg-neutral-50 dark:bg-neutral-950 text-left">
-          <Timer className="w-4 h-4 text-neutral-600 dark:text-neutral-400 mb-3" strokeWidth={1.5} aria-hidden="true" />
+        <div className="p-4 sm:p-5 bg-neutral-50 dark:bg-neutral-950 text-left">
+          <Timer className="w-4 h-4 text-neutral-600 dark:text-neutral-400 mb-2 sm:mb-3" strokeWidth={1.5} aria-hidden="true" />
           <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 text-sm mb-1">Multiple Modes</h3>
           <p className="text-neutral-600 dark:text-neutral-400 text-xs leading-relaxed">Lessons, speed tests, quotes, code, and custom text.</p>
         </div>
 
-        <div className="p-5 bg-neutral-50 dark:bg-neutral-950 text-left">
-          <BarChart2 className="w-4 h-4 text-neutral-600 dark:text-neutral-400 mb-3" strokeWidth={1.5} aria-hidden="true" />
+        <div className="p-4 sm:p-5 bg-neutral-50 dark:bg-neutral-950 text-left">
+          <BarChart2 className="w-4 h-4 text-neutral-600 dark:text-neutral-400 mb-2 sm:mb-3" strokeWidth={1.5} aria-hidden="true" />
           <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 text-sm mb-1">Detailed Analytics</h3>
           <p className="text-neutral-600 dark:text-neutral-400 text-xs leading-relaxed">Track your WPM, accuracy, and keystroke progression.</p>
         </div>
@@ -226,6 +227,9 @@ export default function Home() {
 
       {/* Finger Placement Tutorial (hidden on mobile — not relevant for phone typing) */}
       {!isMobile && <FingerPlacementTutorial />}
+
+      {/* SEO & Knowledge Section for Search Engines & AI Overviews */}
+      <SeoContentSection />
     </div>
   );
 }

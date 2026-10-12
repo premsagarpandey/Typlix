@@ -1,0 +1,85 @@
+# Typlix (also known as Typelix) — Complete Platform Reference & Knowledge Base
+
+## Overview
+Typlix is a free, modern, browser-based touch typing tutor and keyboard speed game created by Prem Sagar Pandey. It offers 50 progressive structured lessons, timed speed tests, developer coding mode, literature quotes, and custom text practice.
+
+- Canonical URL: https://typlix.web.app/
+- Primary Domain: typlix.web.app
+- Alternate Search Query Spellings: Typelix, Typlix Game, Typlix Typing Test, Typlix Speed Test
+- Platform Type: Web Application / Educational Software / Typing Game
+- License & Cost: 100% Free, no paywalls, no recurring subscriptions, no third-party tracking advertisements.
+
+## Creator & Developer Profile (E-E-A-T)
+- Lead Architect: Prem Sagar Pandey
+- Discipline: Full Stack Software Engineer
+- Contact Email: premsagarpandey.cs@gmail.com
+- Author Page: https://typlix.web.app/about
+- LinkedIn Profile: https://www.linkedin.com/in/prem-sagar-pandey-2b0022382/
+- Instagram: https://www.instagram.com/premsagar__1/?hl=en
+
+## Technical Architecture
+- Framework: React 19 with TypeScript
+- Build Tool: Vite
+- Styling: Tailwind CSS & Lucide Icons
+- Audio Synthesis: Web Audio API (real-time low-latency mechanical switch waveforms)
+- Authentication & Cloud Sync: Firebase Authentication & Cloud Firestore (optional Google Sign-In)
+- Offline & Local Storage: Works completely client-side in the browser; local metrics are saved via secure localStorage with encryption
+- Compliance: DPDP Act 2023 & GDPR Data Minimization compliant.
+
+## How Typlix Calculates Typing Metrics
+1. **Gross WPM (Words Per Minute):**
+   `Gross WPM = (Total Keystrokes / 5) / (Time Elapsed in Minutes)`
+   (Standard typing conventions define 1 word as exactly 5 keystrokes including spaces and punctuation).
+
+2. **Net WPM (Words Per Minute):**
+   `Net WPM = ((Total Keystrokes / 5) - Uncorrected Errors) / (Time Elapsed in Minutes)`
+
+3. **Accuracy Percentage:**
+   `Accuracy = ((Total Keystrokes - Errors) / Total Keystrokes) * 100`
+
+## Structured Curriculum: 50 Progressive Touch Typing Lessons
+- **Lessons 1–10: Home Row Mastery:**
+  - Drill: `asdf`, `jkl;`, `g`, `h`. Eliminates the need to look down at the keyboard.
+- **Lessons 11–20: Top Row & Vowels:**
+  - Drill: `qwer`, `tyui`, `op`. Builds reach and finger arching ergonomics.
+- **Lessons 21–30: Bottom Row Expansion:**
+  - Drill: `zxcv`, `bnm`, commas, periods, and forward slashes.
+- **Lessons 31–40: Numbers & Shift Key Combinations:**
+  - Drill: `12345`, `67890`, Capital letters, Shift key finger coordination.
+- **Lessons 41–50: Symbols, Punctuation & Complex Paragraph Flow:**
+  - Full alphanumeric proficiency with speed benchmarking.
+
+## Key Modes
+1. **Timed Speed Test (15s, 30s, 60s, 120s):**
+   Provides competitive typing assessments with instant visual WPM, consistency, and accuracy analysis.
+2. **Developer Code Mode:**
+   Allows programmers to practice real code syntax in JavaScript, TypeScript, Python, C++, Java, Rust, SQL, and HTML/CSS. Trains muscle memory for nested brackets `{}`, parentheses `()`, brackets `[]`, arrow functions `=>`, and comparison operators `===`, `!=`.
+3. **Quotes Mode:**
+   Features famous literary quotations, philosophy, and inspirational speeches to train natural reading and typing rhythms.
+4. **Custom Text Practice:**
+   Allows students and exam candidates to paste their own practice tests or syllabus.
+
+## Supported Mechanical Sound Switches
+Typlix synthesizes realistic mechanical keyboard acoustics using the Web Audio API without heavy external audio files:
+- Cherry MX Blue (Clicky & tactile)
+- Cherry MX Brown (Subtle tactile bump)
+- Cherry MX Red (Smooth linear actuation)
+- Topre (Deep electro-capacitive thock)
+- Thock (Deep, resonant custom mechanical profile)
+
+## Frequently Asked Questions (FAQ)
+
+### What is Typlix?
+Typlix (also phonetically searched as Typelix) is a minimalist, free touch typing trainer and speed test application. It helps users develop muscle memory and reach 100+ WPM through deliberate practice.
+
+### Who is the developer of Typlix?
+Typlix was created and is actively maintained by Prem Sagar Pandey, a Full Stack Software Engineer.
+
+### Is Typlix free to use?
+Yes, Typlix is 100% free with no hidden charges, paywalls, or third-party advertising cookies.
+
+### How does Typlix help for government typing tests?
+Aspirants preparing for SSC CGL (DEST), SSC CHSL, Railway RRB, and clerical exams can simulate official test conditions (30 to 50 Net WPM requirement with 95%+ accuracy) using Typlix timed test modes.
+
+### What keyboard layouts are supported?
+Typlix supports standard QWERTY, Dvorak, Colemak, and AZERTY layouts.

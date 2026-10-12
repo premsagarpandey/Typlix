@@ -130,7 +130,7 @@ export default function Settings() {
         </div>
       )}
 
-      <div className="border border-neutral-200 dark:border-neutral-800 rounded-lg p-6 space-y-6 bg-neutral-50/50 dark:bg-neutral-900/20">
+      <div className="border border-neutral-200 dark:border-neutral-800 rounded-lg p-4 sm:p-6 space-y-6 bg-neutral-50/50 dark:bg-neutral-900/20">
         {/* Appearance Setting */}
         <div className="flex items-center justify-between">
           <div>

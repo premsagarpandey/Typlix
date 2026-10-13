@@ -166,10 +166,10 @@ function TypingAreaComponent({
       const isLandscape = window.innerWidth > window.innerHeight && window.innerHeight <= 550;
       setFontSize(
         isLandscape ? 20
-        : window.innerWidth >= 1024 ? 30
-        : window.innerWidth >= 640 ? 26
-        : window.innerWidth >= 400 ? 18
-        : 16
+          : window.innerWidth >= 1024 ? 30
+            : window.innerWidth >= 640 ? 26
+              : window.innerWidth >= 400 ? 18
+                : 16
       );
     };
 
@@ -537,7 +537,7 @@ function TypingAreaComponent({
   const handleContainerClick = useCallback(() => {
     isFocusReleasedRef.current = false;
     setIsFocusReleased(false);
-    inputRef.current?.focus();
+    inputRef.current?.focus({ preventScroll: true });
     if (inputRef.current) {
       const len = inputRef.current.value.length;
       inputRef.current.setSelectionRange(len, len);
@@ -550,7 +550,7 @@ function TypingAreaComponent({
     isFocusReleasedRef.current = false;
     setIsFocusReleased(false);
     // Direct synchronous focus ensures iOS Safari and Android Chrome reliably open the on-screen keyboard
-    inputRef.current?.focus();
+    inputRef.current?.focus({ preventScroll: true });
     if (inputRef.current) {
       const len = inputRef.current.value.length;
       inputRef.current.setSelectionRange(len, len);
@@ -631,9 +631,8 @@ function TypingAreaComponent({
         ref={containerRef}
         role="region"
         aria-label="Touch typing practice area"
-        className={`typing-area-container relative ${isLandscapePhone ? 'p-3 sm:p-4' : 'p-5 sm:p-7'} rounded-2xl border border-neutral-200/90 dark:border-neutral-800 font-mono select-none transition-all duration-200 bg-white dark:bg-neutral-900/60 shadow-xs backdrop-blur-xs cursor-text ${
-          isShaking ? 'animate-shake' : ''
-        } ${isMobile && !isInputFocused && status === 'idle' && typedText.length === 0 ? 'mobile-tap-cue' : ''}`}
+        className={`typing-area-container relative ${isLandscapePhone ? 'p-3 sm:p-4' : 'p-5 sm:p-7'} rounded-2xl border border-neutral-200/90 dark:border-neutral-800 font-mono select-none transition-all duration-200 bg-white dark:bg-neutral-900/60 shadow-xs backdrop-blur-xs cursor-text ${isShaking ? 'animate-shake' : ''
+          } ${isMobile && !isInputFocused && status === 'idle' && typedText.length === 0 ? 'mobile-tap-cue' : ''}`}
         style={{
           height: `${lineHeightPx * VISIBLE_LINES + (isLandscapePhone ? 32 : fontSize >= 28 ? 52 : 44)}px`,
           overflow: 'hidden',
@@ -644,7 +643,7 @@ function TypingAreaComponent({
             e.preventDefault();
             isFocusReleasedRef.current = false;
             setIsFocusReleased(false);
-            inputRef.current?.focus();
+            inputRef.current?.focus({ preventScroll: true });
             if (inputRef.current) {
               const len = inputRef.current.value.length;
               inputRef.current.setSelectionRange(len, len);
@@ -727,10 +726,10 @@ function TypingAreaComponent({
                     distFromActive < 0
                       ? 0 // already typed lines – hidden
                       : distFromActive === 0
-                      ? 1
-                      : distFromActive === 1
-                      ? 0.5
-                      : 0.25,
+                        ? 1
+                        : distFromActive === 1
+                          ? 0.5
+                          : 0.25,
                   transition: 'opacity 0.28s ease',
                   filter: distFromActive < 0 ? 'blur(2px)' : 'none',
                 }}
@@ -769,27 +768,26 @@ function TypingAreaComponent({
                           return (
                             <span key={index} className="relative inline-block">
                               <span
-                                className={`${
-                                  isError
-                                    ? isSpace
-                                      ? 'bg-red-500/25 border-b-2 border-red-500 text-red-500 dark:text-red-400 font-bold px-0.5 rounded-xs'
-                                      : 'text-red-500 dark:text-red-400 bg-red-500/15 line-through rounded-xs font-bold px-0.5'
-                                    : isCorrect
+                                className={`${isError
+                                  ? isSpace
+                                    ? 'bg-red-500/25 border-b-2 border-red-500 text-red-500 dark:text-red-400 font-bold px-0.5 rounded-xs'
+                                    : 'text-red-500 dark:text-red-400 bg-red-500/15 line-through rounded-xs font-bold px-0.5'
+                                  : isCorrect
                                     ? 'text-neutral-900 dark:text-neutral-100 font-medium'
                                     : isCurrent
-                                    ? isSpace
-                                      ? 'inline-block animate-target-char font-extrabold text-neutral-950 dark:text-white bg-neutral-200/90 dark:bg-neutral-700/80 rounded-xs px-1 border-b-2 border-neutral-900 dark:border-neutral-100'
-                                      : 'inline-block animate-target-char font-extrabold text-neutral-950 dark:text-white bg-neutral-200/90 dark:bg-neutral-700/80 rounded-xs px-0.5'
-                                    : isSpace && !isTyped
-                                    ? 'opacity-35 font-semibold text-neutral-400 dark:text-neutral-500'
-                                    : isCurrentWord
-                                    ? 'text-neutral-900 dark:text-neutral-100 font-semibold'
-                                    : distFromActive === 0
-                                    ? 'text-neutral-600 dark:text-neutral-400 font-normal'
-                                    : distFromActive === 1
-                                    ? 'text-neutral-400 dark:text-neutral-500 font-normal'
-                                    : 'text-neutral-300 dark:text-neutral-600 font-normal'
-                                }`}
+                                      ? isSpace
+                                        ? 'inline-block animate-target-char font-extrabold text-neutral-950 dark:text-white bg-neutral-200/90 dark:bg-neutral-700/80 rounded-xs px-1 border-b-2 border-neutral-900 dark:border-neutral-100'
+                                        : 'inline-block animate-target-char font-extrabold text-neutral-950 dark:text-white bg-neutral-200/90 dark:bg-neutral-700/80 rounded-xs px-0.5'
+                                      : isSpace && !isTyped
+                                        ? 'opacity-35 font-semibold text-neutral-400 dark:text-neutral-500'
+                                        : isCurrentWord
+                                          ? 'text-neutral-900 dark:text-neutral-100 font-semibold'
+                                          : distFromActive === 0
+                                            ? 'text-neutral-600 dark:text-neutral-400 font-normal'
+                                            : distFromActive === 1
+                                              ? 'text-neutral-400 dark:text-neutral-500 font-normal'
+                                              : 'text-neutral-300 dark:text-neutral-600 font-normal'
+                                  }`}
                               >
                                 {displayChar}
                               </span>

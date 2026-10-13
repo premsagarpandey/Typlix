@@ -11,6 +11,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
 import { useIsMobile } from './hooks/useIsMobile';
 import RouteSeo from './components/common/RouteSeo';
+import ScrollToTop from './components/common/ScrollToTop';
 
 const Game = lazy(() => import('./pages/Game'));
 const Stats = lazy(() => import('./pages/Stats'));
@@ -41,6 +42,7 @@ function AppLayout() {
 
   return (
     <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 flex flex-col transition-colors duration-200">
+      <ScrollToTop />
       <RouteSeo />
       {/* Accessible Skip to Content Link (WCAG 2.4.1) */}
       <a

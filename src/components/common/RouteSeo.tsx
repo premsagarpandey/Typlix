@@ -9,8 +9,8 @@ interface RouteMetadata {
 
 const ROUTE_SEO_MAP: Record<string, RouteMetadata> = {
   '/': {
-    title: 'Typlix (Typelix) — #1 Typing Game, Typing Speed Test & Code Typing',
-    description: 'Typlix (also searched as Typelix) is the #1 free online typing game and typing speed test. Accelerate your typing speed, practice developer code typing, and master 50 lessons.',
+    title: 'Typlix Typing — Touch Typing Speed Test & Practice Game',
+    description: 'Typlix Typing is the modern free online touch typing trainer and speed test platform. Accelerate your typing speed, practice developer code typing in 9 languages, and master 50 lessons.',
     canonical: 'https://typlix.web.app/'
   },
   '/game': {

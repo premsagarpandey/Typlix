@@ -10,19 +10,31 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="format-detection" content="telephone=no" />
-    <meta name="description" content="Typlix (also searched as Typelix) is the #1 free online typing game and typing speed test. Accelerate your typing speed, practice developer code typing, and master 50 lessons." />
-    <meta name="keywords" content="typlix, typelix, typing game, typing speed test, typing speed, code typing, typlx, typelx, touch typing, online typing test, free typing speed test, keyboard typing game, developer code typing, wpm speed test, ssc typing test, typing master online, best typing game" />
+    <meta name="application-name" content="Typlix Typing" />
+    <meta name="apple-mobile-web-app-title" content="Typlix Typing" />
+    <meta name="description" content="Typlix Typing is the modern free online touch typing trainer and typing speed test platform. Accelerate your typing speed, practice developer code typing in 9 languages, and master 50 lessons." />
+    <meta name="keywords" content="typlix typing, typlix, typelix typing, typlix typing game, typing speed test, typing speed, code typing, touch typing, online typing test, free typing speed test, keyboard typing game, developer code typing, wpm speed test, typing master online" />
     <meta name="author" content="Prem Sagar Pandey" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <link rel="canonical" href="https://typlix.web.app/" />
     <link rel="manifest" href="/manifest.json" />
+    <link rel="help" type="text/plain" href="/llms.txt" title="LLM Documentation" />
+
+    <!-- Favicon & Touch Icons (Google Search & Multi-device compliant) -->
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/logo192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="shortcut icon" href="/favicon.ico" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://typlix.web.app/" />
-    <meta property="og:site_name" content="Typlix" />
-    <meta property="og:title" content="Typlix (Typelix) — #1 Typing Game, Typing Speed Test &amp; Code Typing" />
-    <meta property="og:description" content="Play Typlix (Typelix) — the ultimate typing game and typing speed test. Practice typing speed, developer code typing, and 50 lessons with mechanical keyboard audio." />
+    <meta property="og:site_name" content="Typlix Typing" />
+    <meta property="og:title" content="Typlix Typing — Touch Typing Speed Test &amp; Practice Game" />
+    <meta property="og:description" content="Typlix Typing is the modern free online touch typing trainer and speed test platform. Measure WPM, practice developer code typing in 9 languages, and master 50 lessons." />
     <meta property="og:image" content="https://typlix.web.app/logo.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -34,12 +46,34 @@
     <meta name="twitter:site" content="@premsagar__1" />
     <meta name="twitter:creator" content="@premsagar__1" />
     <meta name="twitter:url" content="https://typlix.web.app/" />
-    <meta name="twitter:title" content="Typlix (Typelix) — #1 Typing Game, Typing Speed Test &amp; Code Typing" />
-    <meta name="twitter:description" content="Play Typlix (Typelix) — the ultimate typing game and typing speed test. Practice typing speed, developer code typing, and 50 lessons with mechanical keyboard audio." />
+    <meta name="twitter:title" content="Typlix Typing — Touch Typing Speed Test &amp; Practice Game" />
+    <meta name="twitter:description" content="Typlix Typing is the modern free online touch typing trainer and speed test platform. Measure WPM, practice developer code typing in 9 languages, and master 50 lessons." />
     <meta name="twitter:image" content="https://typlix.web.app/logo.png" />
 
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+
+    <!-- Google Search Official Site Name Structured Data (Google Documentation Standard) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Typlix Typing",
+        "alternateName": [
+          "Typlix",
+          "Typlix Typing Game",
+          "Typlix Speed Test",
+          "Typelix",
+          "Typelix Typing"
+        ],
+        "url": "https://typlix.web.app/",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://typlix.web.app/game?mode={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
 
     <!-- Schema.org JSON-LD Structured Data (Google E-E-A-T & AI Search / SGE Optimized) -->
     <script type="application/ld+json">
@@ -49,19 +83,17 @@
           {
             "@type": "WebApplication",
             "@id": "https://typlix.web.app/#webapp",
-            "name": "Typlix",
+            "name": "Typlix Typing",
             "alternateName": [
+              "Typlix",
               "Typelix",
-              "Typing Game",
-              "Typing Speed Test",
-              "Typing Speed",
-              "Code Typing",
               "Typlix Typing Game",
+              "Typlix Speed Test",
               "Typelix Typing",
-              "Typlx",
-              "Typelx"
+              "Typing Game",
+              "Typing Speed Test"
             ],
-            "keywords": "typlix, typelix, typing game, typing speed test, typing speed, code typing, touch typing, online typing test",
+            "keywords": "typlix typing, typlix, typelix typing, typing game, typing speed test, typing speed, code typing, touch typing, online typing test",
             "url": "https://typlix.web.app/",
             "applicationCategory": "EducationalApplication, GameApplication, UtilitiesApplication",
             "operatingSystem": "All modern browsers (Windows, macOS, Linux, Android, iOS, ChromeOS)",
@@ -69,7 +101,7 @@
             "softwareVersion": "1.0.0",
             "isAccessibleForFree": true,
             "inLanguage": "en-US",
-            "description": "Typlix is a free, modern touch typing platform and keyboard speed game with 50 progressive lessons, real-time WPM metrics, developer code typing mode, and synthesized mechanical keyboard audio.",
+            "description": "Typlix Typing is a free, modern web-based touch typing platform, keyboard speed test, and developer code game with 50 progressive lessons, real-time WPM metrics, developer code typing in 9 languages, and synthesized mechanical switch audio.",
             "aggregateRating": {
               "@type": "AggregateRating",
               "ratingValue": "4.9",
@@ -96,7 +128,7 @@
             },
             "publisher": {
               "@type": "Organization",
-              "name": "Typlix",
+              "name": "Typlix Typing",
               "url": "https://typlix.web.app/",
               "logo": {
                 "@type": "ImageObject",
@@ -118,9 +150,9 @@
             "@type": "WebSite",
             "@id": "https://typlix.web.app/#website",
             "url": "https://typlix.web.app/",
-            "name": "Typlix",
-            "alternateName": ["Typelix", "Typlix Typing"],
-            "description": "Free touch typing practice, online typing game, and speed test trainer.",
+            "name": "Typlix Typing",
+            "alternateName": ["Typlix", "Typelix", "Typlix Typing Game", "Typelix Typing"],
+            "description": "Free touch typing practice, online typing game, and speed test trainer at typlix.web.app.",
             "inLanguage": "en-US",
             "publisher": {
               "@type": "Organization",
@@ -287,8 +319,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="icon" type="image/png" href="/logo.png" />
-    <title>Typlix (Typelix) — #1 Typing Game, Typing Speed Test &amp; Code Typing</title>
+    <title>Typlix Typing — Touch Typing Speed Test &amp; Practice Game</title>
   </head>
   <body class="bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 antialiased" oncontextmenu="return false;" ondragstart="return false;">
     <div id="root">

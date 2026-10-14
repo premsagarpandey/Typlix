@@ -36,10 +36,10 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center text-center max-w-2xl mx-auto pt-8 sm:pt-16 pb-4 sm:pb-6 animate-fade-in px-1 sm:px-0">
       <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-neutral-900 dark:text-neutral-100 mb-3 sm:mb-4 leading-tight">
-        Typlix: The #1 Typing Game &amp; Speed Test
+        Typlix Typing: Modern Typing Speed Test &amp; Practice Game
       </h1>
       <p className="text-neutral-600 dark:text-neutral-400 text-sm sm:text-lg mb-6 sm:mb-10 max-w-xl leading-relaxed px-1 sm:px-0">
-        Accelerate your typing speed with 50 progressive touch typing lessons, developer code typing, and precision speed tests. Also known as Typelix — 100% free with real-time WPM metrics.
+        Welcome to Typlix Typing — accelerate your typing speed with 50 progressive touch typing lessons, developer code typing, and precision speed tests. Also searched as Typelix Typing — 100% free with real-time WPM metrics.
       </p>
 
       {/* ─── Mobile View (< sm): Clean Symmetrical Monochromatic Layout ─── */}

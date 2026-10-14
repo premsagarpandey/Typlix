@@ -59,7 +59,7 @@
         ]
       },
       {
-        "source": "/(robots.txt|sitemap.xml|llms.txt|llms-full.txt|manifest.json)",
+        "source": "/(robots.txt|sitemap.xml|llms.txt|llms-full.txt|manifest.json|favicon.ico|favicon.svg|favicon*.png|apple-touch-icon.png|logo*.png)",
         "headers": [
           {
             "key": "Cache-Control",

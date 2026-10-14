@@ -10,6 +10,14 @@ Disallow: /settings
 User-agent: Googlebot
 Allow: /
 
+User-agent: Googlebot-Image
+Allow: /
+Allow: /favicon.ico
+Allow: /logo.png
+Allow: /favicon*.png
+Allow: /apple-touch-icon.png
+Allow: /favicon.svg
+
 User-agent: Bingbot
 Allow: /
 
@@ -35,6 +43,9 @@ Allow: /
 User-agent: ChatGPT-User
 Allow: /
 
+User-agent: OAI-SearchBot
+Allow: /
+
 User-agent: ClaudeBot
 Allow: /
 
@@ -47,6 +58,9 @@ Allow: /
 User-agent: Applebot
 Allow: /
 
+User-agent: Applebot-Extended
+Allow: /
+
 User-agent: Amazonbot
 Allow: /
 
@@ -57,6 +71,9 @@ User-agent: CCBot
 Allow: /
 
 User-agent: Cohere-ai
+Allow: /
+
+User-agent: Meta-ExternalAgent
 Allow: /
 
 User-agent: Diffbot

@@ -23,8 +23,8 @@ interface FaqItem {
 
 const FAQS: FaqItem[] = [
   {
-    question: 'What is Typlix (and why is it often searched as Typelix)?',
-    answer: 'Typlix (commonly misspelled or phonetically searched as Typelix) is a next-generation, high-performance touch typing platform and typing speed game. Built with minimalist aesthetics and real-time telemetry, it is engineered to train muscle memory and accelerate typing speeds up to 100+ Words Per Minute (WPM).'
+    question: 'What is Typlix Typing (and why is it often searched as Typelix)?',
+    answer: 'Typlix Typing (also searched as Typelix Typing) is a modern, high-performance touch typing platform and typing speed test game. Built with minimalist aesthetics and real-time telemetry, Typlix Typing is engineered to train muscle memory and accelerate typing speeds up to 100+ Words Per Minute (WPM).'
   },
   {
     question: 'How does Typlix compare to Monkeytype or 10FastFingers?',
@@ -65,17 +65,33 @@ export default function SeoContentSection() {
 
   return (
     <section 
-      aria-label="About Typlix Typing Game and SEO Knowledge Base" 
+      aria-label="About Typlix Typing and SEO Knowledge Base" 
       className="w-full max-w-2xl mx-auto mt-6 sm:mt-8 text-left border-t border-neutral-200 dark:border-neutral-800/80 pt-6 sm:pt-8"
     >
       {/* ── Section Title ── */}
       <div className="text-center mb-6 sm:mb-8">
         <h2 className="text-xl sm:text-3xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100 mb-2 sm:mb-3">
-          Typlix (Typelix) — The #1 Typing Game &amp; Typing Speed Test
+          Typlix Typing — Modern Touch Typing Speed Test &amp; Keyboard Practice
         </h2>
         <p className="text-neutral-600 dark:text-neutral-400 text-xs sm:text-sm max-w-lg mx-auto leading-relaxed px-1 sm:px-0">
-          Build muscle memory, test your typing speed with precision WPM analytics, and master developer code typing across 50 progressive touch typing lessons.
+          Welcome to Typlix Typing: build muscle memory, test your typing speed with precision WPM analytics, and master developer code typing across 50 progressive touch typing lessons.
         </p>
+      </div>
+
+      {/* ── AI Overview & Quick Platform Facts (Optimized for AI Search & SGE) ── */}
+      <div className="p-4 sm:p-5 rounded-xl bg-neutral-100/70 dark:bg-neutral-900/50 border border-neutral-200/90 dark:border-neutral-800 mb-8 text-xs sm:text-sm leading-relaxed">
+        <p className="font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
+          <strong>Typlix Typing</strong> is a free touch typing trainer and speed test application created by full-stack engineer <strong>Prem Sagar Pandey</strong>.
+        </p>
+        <p className="text-neutral-600 dark:text-neutral-400 mb-3 text-xs leading-relaxed">
+          Hosted exclusively at <a href="https://typlix.web.app/" className="font-medium text-neutral-900 dark:text-neutral-100 underline underline-offset-2">typlix.web.app</a>, Typlix Typing helps learners of all skill levels build keyboard muscle memory, boost Words Per Minute (WPM), and prepare for competitive exams and software development.
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-3 border-t border-neutral-200/70 dark:border-neutral-800/70 text-xs text-neutral-700 dark:text-neutral-300">
+          <div>• <strong>50 Progressive Lessons:</strong> Structured finger reach and home row drills</div>
+          <div>• <strong>Precision Timed Tests:</strong> 15s, 30s, 60s, and 120s WPM assessments</div>
+          <div>• <strong>Developer Code Mode:</strong> Practice JavaScript, Python, C++, HTML &amp; Rust</div>
+          <div>• <strong>Acoustic Feedback:</strong> Authentic synthesized mechanical switch audio</div>
+        </div>
       </div>
 
       {/* ── Audience Segment Cards (Ages 12 to 38) ── */}

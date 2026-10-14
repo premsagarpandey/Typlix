@@ -88,7 +88,7 @@ function AppLayout() {
                 </span>
               </div>
               <p className="text-neutral-600 dark:text-neutral-400 text-[11px]">
-                Operated by Typlix Interactive (<Link to="/about" className="hover:text-neutral-900 dark:hover:text-neutral-200 underline underline-offset-2">Prem Sagar Pandey</Link>) · Minimalist touch typing training.
+                Operated by Typlix Typing (<Link to="/about" className="hover:text-neutral-900 dark:hover:text-neutral-200 underline underline-offset-2">Prem Sagar Pandey</Link>) · Free online touch typing training &amp; speed test.
               </p>
             </div>
           )}

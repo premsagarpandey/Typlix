@@ -1,6 +1,10 @@
-# Typlix — Touch Typing Mastery Platform
+# Typlix — Touch Typing Mastery Platform & Speed Test
 
-Typlix is a high-performance, minimalist touch typing training web application built with **React 19**, **TypeScript**, and **Vite**. Designed with an uncompromising focus on ergonomics, distraction-free aesthetics, sub-millisecond typing feedback, and strict data privacy.
+[![Live Web Application](https://img.shields.io/badge/Live_App-typlix.web.app-blue?style=for-the-badge)](https://typlix.web.app)
+[![License: MIT](https://img.shields.io/badge/License-MIT-black.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+
+> **Official Live App:** [https://typlix.web.app](https://typlix.web.app)  
+> **Typlix Typing** is a modern, high-performance touch typing training web application, keyboard speed test game, and developer code typing platform built with **React 19**, **TypeScript**, and **Vite**. Engineered for students, competitive exam aspirants, and developers.
 
 ---
 

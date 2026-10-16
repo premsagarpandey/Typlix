@@ -295,7 +295,8 @@ function getOrCreateNoiseBuffer(ctx: AudioContext): AudioBuffer {
  */
 function synthesize(
   config: SoundProfileConfig['keydown'],
-  volumeMultiplier: number
+  volumeMultiplier: number,
+  char?: string
 ): void {
   const audio = getAudioContext();
   if (!audio) return;
@@ -303,11 +304,17 @@ function synthesize(
   const { ctx, master } = audio;
   const now = ctx.currentTime;
 
-  // Master volume
-  master.gain.setValueAtTime(volumeMultiplier, now);
+  // Spacebar stabilizer thock modifier: deeper acoustic thock for spacebar
+  const isSpace = char === ' ';
+  const pitchMult = isSpace ? 0.82 : 1.0;
+  const durMult = isSpace ? 1.18 : 1.0;
+  const gainBoost = isSpace ? 1.08 : 1.0;
 
-  // Add slight random variation for realism
-  const freqVariation = 1 + (Math.random() - 0.5) * 0.04; // ±2%
+  // Master volume
+  master.gain.setValueAtTime(Math.min(1.0, volumeMultiplier * gainBoost), now);
+
+  // Add slight random variation for realism (with spacebar stabilizer acoustic shift)
+  const freqVariation = (1 + (Math.random() - 0.5) * 0.04) * pitchMult; // ±2% + pitchMult
   const gainVariation = 1 + (Math.random() - 0.5) * 0.1;  // ±5%
 
   // --- Oscillator layers ---
@@ -321,7 +328,7 @@ function synthesize(
     if (layer.freqEnd) {
       osc.frequency.exponentialRampToValueAtTime(
         Math.max(layer.freqEnd * freqVariation, 20),
-        now + layer.duration
+        now + layer.duration * durMult
       );
     }
     if (layer.detune) {
@@ -391,7 +398,7 @@ function synthesize(
 /**
  * Play a keystroke sound with zero-allocation, zero-blocking in-memory preferences.
  */
-export function playKeystrokeSound(type: 'correct' | 'error'): void {
+export function playKeystrokeSound(type: 'correct' | 'error', char?: string): void {
   if (typeof window === 'undefined') return;
 
   if (!settingsInitialized) {
@@ -407,7 +414,7 @@ export function playKeystrokeSound(type: 'correct' | 'error'): void {
   if (volumeMultiplier <= 0) return;
 
   const soundConfig = type === 'correct' ? config.keydown : config.error;
-  synthesize(soundConfig, volumeMultiplier);
+  synthesize(soundConfig, volumeMultiplier, char);
 }
 
 /**

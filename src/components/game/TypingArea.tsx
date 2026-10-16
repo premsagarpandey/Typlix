@@ -631,7 +631,7 @@ function TypingAreaComponent({
         ref={containerRef}
         role="region"
         aria-label="Touch typing practice area"
-        className={`typing-area-container relative ${isLandscapePhone ? 'p-3 sm:p-4' : 'p-5 sm:p-7'} rounded-2xl border border-neutral-200/90 dark:border-neutral-800 font-mono select-none transition-all duration-200 bg-white dark:bg-neutral-900/60 shadow-xs backdrop-blur-xs cursor-text ${isShaking ? 'animate-shake' : ''
+        className={`typing-area-container relative ${isLandscapePhone ? 'p-3 sm:p-4' : 'p-5 sm:p-7'} rounded-2xl border border-neutral-200/80 dark:border-neutral-800/80 font-mono select-none transition-all duration-200 bg-white/95 dark:bg-neutral-900/70 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_30px_-4px_rgba(0,0,0,0.3)] backdrop-blur-md cursor-text ${isShaking ? 'animate-shake' : ''
           } ${isMobile && !isInputFocused && status === 'idle' && typedText.length === 0 ? 'mobile-tap-cue' : ''}`}
         style={{
           height: `${lineHeightPx * VISIBLE_LINES + (isLandscapePhone ? 32 : fontSize >= 28 ? 52 : 44)}px`,
@@ -776,8 +776,8 @@ function TypingAreaComponent({
                                     ? 'text-neutral-900 dark:text-neutral-100 font-medium'
                                     : isCurrent
                                       ? isSpace
-                                        ? 'inline-block animate-target-char font-extrabold text-neutral-950 dark:text-white bg-neutral-200/90 dark:bg-neutral-700/80 rounded-xs px-1 border-b-2 border-neutral-900 dark:border-neutral-100'
-                                        : 'inline-block animate-target-char font-extrabold text-neutral-950 dark:text-white bg-neutral-200/90 dark:bg-neutral-700/80 rounded-xs px-0.5'
+                                        ? 'inline-block animate-target-char font-extrabold text-neutral-950 dark:text-white bg-neutral-300/80 dark:bg-neutral-700/90 rounded-[3px] px-1 border-b-2 border-neutral-900 dark:border-neutral-100 shadow-2xs'
+                                        : 'inline-block animate-target-char font-extrabold text-neutral-950 dark:text-white bg-neutral-200/95 dark:bg-neutral-750/90 rounded-[3px] px-0.5 shadow-2xs'
                                       : isSpace && !isTyped
                                         ? 'opacity-35 font-semibold text-neutral-400 dark:text-neutral-500'
                                         : isCurrentWord
@@ -814,6 +814,18 @@ function TypingAreaComponent({
             transition: 'opacity 0.3s ease',
           }}
         />
+
+        {/* Desktop Unfocused Overlay: Subtle frosted glass with click-to-focus prompt */}
+        {!isMobile && !isInputFocused && (status === 'playing' || (status === 'idle' && typedText.length > 0)) && !isFocusReleased && (
+          <div
+            onClick={handleContainerClick}
+            className="absolute inset-0 z-20 flex items-center justify-center bg-white/60 dark:bg-neutral-950/60 backdrop-blur-xs transition-all cursor-pointer animate-fade-in rounded-2xl select-none"
+          >
+            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-neutral-900/90 dark:bg-neutral-100/90 text-white dark:text-neutral-900 text-xs font-semibold shadow-md active:scale-95 transition-transform">
+              <span>Click to focus &amp; resume typing</span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Tab Quick Restart Notification Pill */}

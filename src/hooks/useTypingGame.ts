@@ -297,7 +297,7 @@ export function useTypingGame(
         totalCharsTypedRef.current = newTotalTyped;
         setTotalCharsTyped(newTotalTyped);
         if (isCorrect) {
-          playSound('correct');
+          playSound('correct', value[lastCharIndex]);
           setCombo((prev) => {
             const newCombo = prev + 1;
             if (newCombo > maxComboRef.current) {
@@ -307,7 +307,7 @@ export function useTypingGame(
             return newCombo;
           });
         } else {
-          playSound('error');
+          playSound('error', value[lastCharIndex]);
           setShakeTrigger((prev) => prev + 1);
           setCombo(0);
         }

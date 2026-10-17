@@ -13,15 +13,16 @@ import { useIsMobile } from './hooks/useIsMobile';
 import RouteSeo from './components/common/RouteSeo';
 import ScrollToTop from './components/common/ScrollToTop';
 
-const Game = lazy(() => import('./pages/Game'));
-const Stats = lazy(() => import('./pages/Stats'));
-const Settings = lazy(() => import('./pages/Settings'));
-const Profile = lazy(() => import('./pages/Profile'));
+import Game from './pages/Game';
+import Stats from './pages/Stats';
+import Settings from './pages/Settings';
+import Profile from './pages/Profile';
+import AboutDeveloper from './pages/AboutDeveloper';
+
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const TermsOfService = lazy(() => import('./pages/TermsOfService'));
 const CookiesPolicy = lazy(() => import('./pages/CookiesPolicy'));
 const RefundPolicy = lazy(() => import('./pages/RefundPolicy'));
-const AboutDeveloper = lazy(() => import('./pages/AboutDeveloper'));
 
 function PageFallback() {
   return (

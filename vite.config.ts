@@ -15,6 +15,20 @@ export default defineConfig({
     port: 5173,
     open: true,
   },
+  optimizeDeps: {
+    include: [
+      'react',
+      'react/jsx-runtime',
+      'react-dom',
+      'react-dom/client',
+      'react-router-dom',
+      'framer-motion',
+      'lucide-react',
+      'firebase/app',
+      'firebase/auth',
+      'firebase/firestore',
+    ],
+  },
   build: {
     cssMinify: true,
     sourcemap: false,

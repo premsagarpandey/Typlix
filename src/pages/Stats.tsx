@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { exportStatsAsCSV, exportDataAsJSON } from '../utils/dataBackup';
 import WpmProgressChart, { type ChartFilter } from '../components/stats/WpmProgressChart';
 import { useUserProgress } from '../hooks/useUserProgress';
@@ -195,47 +196,68 @@ export default function Stats() {
       )}
 
       {/* Category Filter Tabs: All vs General vs Coding */}
-      <div className="flex items-center gap-1 p-1 rounded-lg bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-xs">
+      <div className="flex items-center gap-1 p-1 rounded-lg bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-xs relative">
         <button
           type="button"
           onClick={() => setActiveCategory('all')}
-          className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-md font-medium transition-all cursor-pointer ${
+          className={`relative flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-md font-medium transition-colors cursor-pointer ${
             activeCategory === 'all'
-              ? 'bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 shadow-xs'
+              ? 'text-neutral-900 dark:text-neutral-100 font-semibold'
               : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100'
           }`}
         >
-          <Layers className="w-3.5 h-3.5" />
-          <span>All Practice</span>
-          <span className="text-[11px] opacity-70 font-mono">({sessions.length})</span>
+          {activeCategory === 'all' && (
+            <motion.div
+              layoutId="active-stats-category"
+              className="absolute inset-0 bg-white dark:bg-neutral-800 rounded-md shadow-xs -z-10"
+              transition={{ type: 'spring', stiffness: 450, damping: 35 }}
+            />
+          )}
+          <Layers className="w-3.5 h-3.5 relative z-10" />
+          <span className="relative z-10">All Practice</span>
+          <span className="text-[11px] opacity-70 font-mono relative z-10">({sessions.length})</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveCategory('general')}
-          className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-md font-medium transition-all cursor-pointer ${
+          className={`relative flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-md font-medium transition-colors cursor-pointer ${
             activeCategory === 'general'
-              ? 'bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 shadow-xs'
+              ? 'text-neutral-900 dark:text-neutral-100 font-semibold'
               : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100'
           }`}
         >
-          <BookOpen className="w-3.5 h-3.5" />
-          <span>General Typing</span>
-          <span className="text-[11px] opacity-70 font-mono">({generalCount})</span>
+          {activeCategory === 'general' && (
+            <motion.div
+              layoutId="active-stats-category"
+              className="absolute inset-0 bg-white dark:bg-neutral-800 rounded-md shadow-xs -z-10"
+              transition={{ type: 'spring', stiffness: 450, damping: 35 }}
+            />
+          )}
+          <BookOpen className="w-3.5 h-3.5 relative z-10" />
+          <span className="relative z-10">General Typing</span>
+          <span className="text-[11px] opacity-70 font-mono relative z-10">({generalCount})</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveCategory('code')}
-          className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-md font-medium transition-all cursor-pointer ${
+          className={`relative flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-md font-medium transition-colors cursor-pointer ${
             activeCategory === 'code'
-              ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 shadow-xs font-semibold'
+              ? 'text-neutral-900 dark:text-neutral-100 font-semibold'
               : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100'
           }`}
         >
-          <Code className="w-3.5 h-3.5" />
-          <span>Coding Typing</span>
-          <span className="text-[11px] opacity-70 font-mono">({codeCount})</span>
+          {activeCategory === 'code' && (
+            <motion.div
+              layoutId="active-stats-category"
+              className="absolute inset-0 bg-white dark:bg-neutral-800 rounded-md shadow-xs -z-10"
+              transition={{ type: 'spring', stiffness: 450, damping: 35 }}
+            />
+          )}
+          <Code className="w-3.5 h-3.5 relative z-10" />
+          <span className="relative z-10">Coding Typing</span>
+          <span className="text-[11px] opacity-70 font-mono relative z-10">({codeCount})</span>
         </button>
       </div>
 

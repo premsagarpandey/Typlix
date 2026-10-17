@@ -105,6 +105,20 @@ html.light body {
   will-change: transform;
 }
 
+/* Spring micro-interaction button utility */
+.btn-spring {
+  transition: transform 0.16s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.16s ease, background-color 0.16s ease;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.btn-spring:hover {
+  transform: translate3d(0, -1.5px, 0);
+}
+.btn-spring:active {
+  transform: translate3d(0, 0.5px, 0) scale(0.98);
+}
+
 /* Monospace utility */
 .font-mono {
   font-family: 'JetBrains Mono', 'Fira Code', monospace;

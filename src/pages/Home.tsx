@@ -50,7 +50,7 @@ export default function Home() {
             type="button"
             onClick={handleStartLesson}
             aria-label={currentLevel > 1 ? `Continue typing practice at Lesson ${currentLevel}` : 'Start touch typing Lesson 1'}
-            className="flex items-center justify-center gap-1.5 px-3 py-3 bg-neutral-900 dark:bg-neutral-100 hover:bg-neutral-800 dark:hover:bg-neutral-200 active:scale-[0.98] transition-all text-white dark:text-neutral-900 text-xs sm:text-sm font-semibold rounded-lg cursor-pointer shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white min-w-0"
+            className="flex items-center justify-center gap-1.5 px-3 py-3 bg-neutral-900 dark:bg-neutral-100 hover:bg-neutral-800 dark:hover:bg-neutral-200 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] transition-all duration-150 text-white dark:text-neutral-900 text-xs sm:text-sm font-semibold rounded-lg cursor-pointer shadow-xs hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white min-w-0"
           >
             <BookOpen className="w-4 h-4 shrink-0" aria-hidden="true" />
             <span className="truncate">{currentLevel > 1 ? `Continue Lesson ${currentLevel}` : 'Start Lesson 1'}</span>
@@ -64,7 +64,7 @@ export default function Home() {
                 localStorage.setItem('typlix_game_mode', JSON.stringify('timed'));
               } catch {}
             }}
-            className="flex items-center justify-center gap-1.5 px-3 py-3 bg-neutral-900 dark:bg-neutral-100 hover:bg-neutral-800 dark:hover:bg-neutral-200 active:scale-[0.98] transition-all text-white dark:text-neutral-900 text-xs sm:text-sm font-semibold rounded-lg cursor-pointer shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white min-w-0"
+            className="flex items-center justify-center gap-1.5 px-3 py-3 bg-neutral-900 dark:bg-neutral-100 hover:bg-neutral-800 dark:hover:bg-neutral-200 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] transition-all duration-150 text-white dark:text-neutral-900 text-xs sm:text-sm font-semibold rounded-lg cursor-pointer shadow-xs hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white min-w-0"
           >
             <Timer className="w-4 h-4 shrink-0" aria-hidden="true" />
             <span className="truncate">Speed Test</span>
@@ -81,7 +81,7 @@ export default function Home() {
                 localStorage.setItem('typlix_game_mode', JSON.stringify('code'));
               } catch {}
             }}
-            className="flex items-center justify-center gap-1.5 px-2 py-2.5 border border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100/70 dark:hover:bg-neutral-900/70 text-neutral-700 dark:text-neutral-300 text-xs font-medium rounded-lg transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white min-w-0"
+            className="flex items-center justify-center gap-1.5 px-2 py-2.5 border border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100/70 dark:hover:bg-neutral-900/70 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] text-neutral-700 dark:text-neutral-300 text-xs font-medium rounded-lg transition-all duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white min-w-0"
           >
             <Code className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
             <span className="truncate">Code</span>
@@ -95,7 +95,7 @@ export default function Home() {
                 localStorage.setItem('typlix_game_mode', JSON.stringify('quotes'));
               } catch {}
             }}
-            className="flex items-center justify-center gap-1.5 px-2 py-2.5 border border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100/70 dark:hover:bg-neutral-900/70 text-neutral-700 dark:text-neutral-300 text-xs font-medium rounded-lg transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white min-w-0"
+            className="flex items-center justify-center gap-1.5 px-2 py-2.5 border border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100/70 dark:hover:bg-neutral-900/70 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] text-neutral-700 dark:text-neutral-300 text-xs font-medium rounded-lg transition-all duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white min-w-0"
           >
             <Quote className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
             <span className="truncate">Quotes</span>
@@ -109,7 +109,7 @@ export default function Home() {
                 localStorage.setItem('typlix_game_mode', JSON.stringify('custom'));
               } catch {}
             }}
-            className="flex items-center justify-center gap-1.5 px-2 py-2.5 border border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100/70 dark:hover:bg-neutral-900/70 text-neutral-700 dark:text-neutral-300 text-xs font-medium rounded-lg transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white min-w-0"
+            className="flex items-center justify-center gap-1.5 px-2 py-2.5 border border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100/70 dark:hover:bg-neutral-900/70 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] text-neutral-700 dark:text-neutral-300 text-xs font-medium rounded-lg transition-all duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white min-w-0"
           >
             <Pencil className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
             <span className="truncate">Custom</span>
@@ -117,14 +117,14 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ─── Desktop & Laptop View (>= sm): EXACT Unchanged Layout ─── */}
+      {/* ─── Desktop & Laptop View (>= sm): Symmetrical Monochromatic Layout ─── */}
       <div className="hidden sm:flex sm:flex-wrap sm:gap-3 sm:max-w-2xl sm:items-center sm:justify-center mb-16 mx-auto">
         {/* 1. Lessons Mode */}
         <button
           type="button"
           onClick={handleStartLesson}
           aria-label={currentLevel > 1 ? `Continue typing practice at Lesson ${currentLevel}` : 'Start touch typing Lesson 1'}
-          className="inline-flex min-w-[170px] px-5 sm:px-6 py-3 bg-neutral-900 dark:bg-neutral-100 hover:bg-neutral-800 dark:hover:bg-neutral-200 active:scale-[0.98] transition-all text-white dark:text-neutral-900 text-sm font-semibold rounded-lg cursor-pointer items-center justify-center gap-2 shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+          className="inline-flex min-w-[170px] px-5 sm:px-6 py-3 bg-neutral-900 dark:bg-neutral-100 hover:bg-neutral-800 dark:hover:bg-neutral-200 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-150 ease-out text-white dark:text-neutral-900 text-sm font-semibold rounded-lg cursor-pointer items-center justify-center gap-2 shadow-xs hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
         >
           <BookOpen className="w-4 h-4 shrink-0" aria-hidden="true" />
           <span>{currentLevel > 1 ? `Continue Lesson ${currentLevel}` : 'Start Lesson 1'}</span>
@@ -139,7 +139,7 @@ export default function Home() {
               localStorage.setItem('typlix_game_mode', JSON.stringify('code'));
             } catch {}
           }}
-          className="px-4 sm:px-5 py-3 border border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100/70 dark:hover:bg-neutral-900/70 text-neutral-700 dark:text-neutral-300 text-sm font-medium rounded-lg transition-all cursor-pointer flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+          className="px-4 sm:px-5 py-3 border border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100/70 dark:hover:bg-neutral-900/70 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] text-neutral-700 dark:text-neutral-300 text-sm font-medium rounded-lg transition-all duration-150 cursor-pointer flex items-center justify-center gap-2 hover:shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
         >
           <Code className="w-4 h-4 shrink-0" aria-hidden="true" />
           <span>Code</span>
@@ -154,7 +154,7 @@ export default function Home() {
               localStorage.setItem('typlix_game_mode', JSON.stringify('quotes'));
             } catch {}
           }}
-          className="px-4 sm:px-5 py-3 border border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100/70 dark:hover:bg-neutral-900/70 text-neutral-700 dark:text-neutral-300 text-sm font-medium rounded-lg transition-all cursor-pointer flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+          className="px-4 sm:px-5 py-3 border border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100/70 dark:hover:bg-neutral-900/70 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] text-neutral-700 dark:text-neutral-300 text-sm font-medium rounded-lg transition-all duration-150 cursor-pointer flex items-center justify-center gap-2 hover:shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
         >
           <Quote className="w-4 h-4 shrink-0" aria-hidden="true" />
           <span>Quotes</span>
@@ -169,7 +169,7 @@ export default function Home() {
               localStorage.setItem('typlix_game_mode', JSON.stringify('timed'));
             } catch {}
           }}
-          className="inline-flex min-w-[170px] px-5 sm:px-6 py-3 bg-neutral-900 dark:bg-neutral-100 hover:bg-neutral-800 dark:hover:bg-neutral-200 active:scale-[0.98] transition-all text-white dark:text-neutral-900 text-sm font-semibold rounded-lg cursor-pointer items-center justify-center gap-2 shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+          className="inline-flex min-w-[170px] px-5 sm:px-6 py-3 bg-neutral-900 dark:bg-neutral-100 hover:bg-neutral-800 dark:hover:bg-neutral-200 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-150 ease-out text-white dark:text-neutral-900 text-sm font-semibold rounded-lg cursor-pointer items-center justify-center gap-2 shadow-xs hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
         >
           <Timer className="w-4 h-4 shrink-0" aria-hidden="true" />
           <span>Speed Test</span>
@@ -184,7 +184,7 @@ export default function Home() {
               localStorage.setItem('typlix_game_mode', JSON.stringify('custom'));
             } catch {}
           }}
-          className="px-4 sm:px-5 py-3 border border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100/70 dark:hover:bg-neutral-900/70 text-neutral-700 dark:text-neutral-300 text-sm font-medium rounded-lg transition-all cursor-pointer flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+          className="px-4 sm:px-5 py-3 border border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-100/70 dark:hover:bg-neutral-900/70 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] text-neutral-700 dark:text-neutral-300 text-sm font-medium rounded-lg transition-all duration-150 cursor-pointer flex items-center justify-center gap-2 hover:shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
         >
           <Pencil className="w-4 h-4 shrink-0" aria-hidden="true" />
           <span>Custom</span>
@@ -204,21 +204,21 @@ export default function Home() {
       )}
 
       {/* Feature Highlights Grid */}
-      <div className="w-full grid grid-cols-1 sm:grid-cols-3 gap-px bg-neutral-200 dark:border-neutral-800 bg-neutral-200 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-800 rounded-lg overflow-hidden shadow-2xs">
-        <div className="p-4 sm:p-5 bg-neutral-50 dark:bg-neutral-950 text-left">
-          <Keyboard className="w-4 h-4 text-neutral-600 dark:text-neutral-400 mb-2 sm:mb-3" strokeWidth={1.5} aria-hidden="true" />
+      <div className="w-full grid grid-cols-1 sm:grid-cols-3 gap-px bg-neutral-200 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-800 rounded-lg overflow-hidden shadow-2xs">
+        <div className="group p-4 sm:p-5 bg-neutral-50 dark:bg-neutral-950 text-left hover:bg-neutral-100/60 dark:hover:bg-neutral-900/60 transition-colors duration-150">
+          <Keyboard className="w-4 h-4 text-neutral-600 dark:text-neutral-400 mb-2 sm:mb-3 group-hover:scale-110 transition-transform duration-200 ease-out" strokeWidth={1.5} aria-hidden="true" />
           <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 text-sm mb-1">Finger Guides</h3>
           <p className="text-neutral-600 dark:text-neutral-400 text-xs leading-relaxed">Real-time hints for every keypress position.</p>
         </div>
 
-        <div className="p-4 sm:p-5 bg-neutral-50 dark:bg-neutral-950 text-left">
-          <Timer className="w-4 h-4 text-neutral-600 dark:text-neutral-400 mb-2 sm:mb-3" strokeWidth={1.5} aria-hidden="true" />
+        <div className="group p-4 sm:p-5 bg-neutral-50 dark:bg-neutral-950 text-left hover:bg-neutral-100/60 dark:hover:bg-neutral-900/60 transition-colors duration-150">
+          <Timer className="w-4 h-4 text-neutral-600 dark:text-neutral-400 mb-2 sm:mb-3 group-hover:scale-110 transition-transform duration-200 ease-out" strokeWidth={1.5} aria-hidden="true" />
           <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 text-sm mb-1">Multiple Modes</h3>
           <p className="text-neutral-600 dark:text-neutral-400 text-xs leading-relaxed">Lessons, speed tests, quotes, code, and custom text.</p>
         </div>
 
-        <div className="p-4 sm:p-5 bg-neutral-50 dark:bg-neutral-950 text-left">
-          <BarChart2 className="w-4 h-4 text-neutral-600 dark:text-neutral-400 mb-2 sm:mb-3" strokeWidth={1.5} aria-hidden="true" />
+        <div className="group p-4 sm:p-5 bg-neutral-50 dark:bg-neutral-950 text-left hover:bg-neutral-100/60 dark:hover:bg-neutral-900/60 transition-colors duration-150">
+          <BarChart2 className="w-4 h-4 text-neutral-600 dark:text-neutral-400 mb-2 sm:mb-3 group-hover:scale-110 transition-transform duration-200 ease-out" strokeWidth={1.5} aria-hidden="true" />
           <h3 className="font-semibold text-neutral-900 dark:text-neutral-100 text-sm mb-1">Detailed Analytics</h3>
           <p className="text-neutral-600 dark:text-neutral-400 text-xs leading-relaxed">Track your WPM, accuracy, and keystroke progression.</p>
         </div>

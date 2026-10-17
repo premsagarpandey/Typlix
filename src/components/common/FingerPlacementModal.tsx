@@ -87,7 +87,7 @@ export default function FingerPlacementModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="placement-modal-title"
-        className="relative w-full max-w-[540px] max-h-[92vh] overflow-y-auto bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-6 sm:p-7 shadow-2xl flex flex-col text-center animate-scale-in"
+        className="relative w-full max-w-[540px] max-h-[92vh] overflow-y-auto bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-6 sm:p-7 shadow-2xl flex flex-col text-center animate-spring-modal"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}

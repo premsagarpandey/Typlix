@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import ThemeToggle from '../common/ThemeToggle';
 import { useAuth } from '../../hooks/useAuth';
 import { useIsMobile } from '../../hooks/useIsMobile';
@@ -92,13 +93,20 @@ export default function Navbar() {
                   key={path}
                   to={path}
                   aria-current={isActive ? 'page' : undefined}
-                  className={`px-2.5 sm:px-3 py-1.5 text-xs sm:text-sm font-medium rounded-md transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-neutral-100 ${
+                  className={`relative px-2.5 sm:px-3 py-1.5 text-xs sm:text-sm font-medium rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-neutral-100 ${
                     isActive
-                      ? 'bg-neutral-200/80 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 shadow-xs'
-                      : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-900/60'
+                      ? 'text-neutral-900 dark:text-neutral-100 font-semibold'
+                      : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 hover:bg-neutral-100/70 dark:hover:bg-neutral-800/40'
                   }`}
                 >
-                  {label}
+                  {isActive && (
+                    <motion.div
+                      layoutId="active-nav-pill"
+                      className="absolute inset-0 bg-neutral-200/90 dark:bg-neutral-800 rounded-md shadow-2xs -z-10"
+                      transition={{ type: 'spring', stiffness: 450, damping: 35 }}
+                    />
+                  )}
+                  <span className="relative z-10">{label}</span>
                 </Link>
               );
             })}
@@ -108,7 +116,7 @@ export default function Navbar() {
             {user ? (
               <Link
                 to="/profile"
-                className="flex items-center gap-2 group cursor-pointer rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-neutral-100"
+                className="flex items-center gap-2 group cursor-pointer rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-neutral-100 active:scale-95 transition-transform"
                 aria-label={`View profile for ${user.displayName || user.email || 'user'}`}
               >
                 <UserAvatar
@@ -123,7 +131,7 @@ export default function Navbar() {
               <button
                 type="button"
                 onClick={() => setIsAuthModalOpen(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 shadow-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-neutral-100 cursor-pointer"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 active:scale-[0.97] shadow-xs transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-neutral-100 cursor-pointer"
               >
                 <LogIn className="w-4 h-4" aria-hidden="true" />
                 <span>Sign In</span>
@@ -164,73 +172,87 @@ export default function Navbar() {
         </div>
 
         {/* Mobile Dropdown Menu (Solid Opaque, Scrollable, No Transparency/Blur Bleed) */}
-        {isMobileMenuOpen && (
-          <div className={`absolute top-full left-0 right-0 bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 shadow-2xl ${isMobile ? 'block' : 'md:hidden'} animate-fade-in z-50 max-h-[80vh] overflow-y-auto`}>
-            <div className="flex flex-col py-2 px-4 divide-y divide-neutral-100 dark:divide-neutral-800/60">
-              <div className="flex flex-col gap-1 pb-2">
-                {NAV_LINKS.map(({ path, label }) => {
-                  const isActive = location.pathname === path;
-                  return (
-                    <Link
-                      key={path}
-                      to={path}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      aria-current={isActive ? 'page' : undefined}
-                      className={`px-4 py-3 text-sm font-medium rounded-lg transition-all ${
-                        isActive
-                          ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 font-semibold'
-                          : 'text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800/50'
-                      }`}
-                    >
-                      {label}
-                    </Link>
-                  );
-                })}
-              </div>
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -8, scale: 0.99 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -6, scale: 0.99 }}
+              transition={{ duration: 0.16, ease: [0.16, 1, 0.3, 1] }}
+              className={`absolute top-full left-0 right-0 bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 shadow-2xl ${isMobile ? 'block' : 'md:hidden'} z-50 max-h-[80vh] overflow-y-auto`}
+            >
+              <div className="flex flex-col py-2 px-4 divide-y divide-neutral-100 dark:divide-neutral-800/60">
+                <div className="flex flex-col gap-1 pb-2">
+                  {NAV_LINKS.map(({ path, label }) => {
+                    const isActive = location.pathname === path;
+                    return (
+                      <Link
+                        key={path}
+                        to={path}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        aria-current={isActive ? 'page' : undefined}
+                        className={`px-4 py-3 text-sm font-medium rounded-lg transition-all ${
+                          isActive
+                            ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 font-semibold'
+                            : 'text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-800/50'
+                        }`}
+                      >
+                        {label}
+                      </Link>
+                    );
+                  })}
+                </div>
 
-              {/* Auth in mobile menu */}
-              <div className="pt-3 pb-1">
-                {user ? (
-                  <Link
-                    to="/profile"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-all"
-                  >
-                    <UserAvatar
-                      photoURL={user.photoURL}
-                      name={user.displayName}
-                      email={user.email}
-                      size="sm"
-                    />
-                    <span>{user.displayName || user.email?.split('@')[0] || 'Profile'}</span>
-                  </Link>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsMobileMenuOpen(false);
-                      setIsAuthModalOpen(true);
-                    }}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-medium bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 active:scale-[0.99] transition-all cursor-pointer shadow-xs"
-                  >
-                    <LogIn className="w-4 h-4" aria-hidden="true" />
-                    <span>Sign In</span>
-                  </button>
-                )}
+                {/* Auth in mobile menu */}
+                <div className="pt-3 pb-1">
+                  {user ? (
+                    <Link
+                      to="/profile"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-all"
+                    >
+                      <UserAvatar
+                        photoURL={user.photoURL}
+                        name={user.displayName}
+                        email={user.email}
+                        size="sm"
+                      />
+                      <span>{user.displayName || user.email?.split('@')[0] || 'Profile'}</span>
+                    </Link>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        setIsAuthModalOpen(true);
+                      }}
+                      className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-medium bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 active:scale-[0.98] transition-all cursor-pointer shadow-xs"
+                    >
+                      <LogIn className="w-4 h-4" aria-hidden="true" />
+                      <span>Sign In</span>
+                    </button>
+                  )}
+                </div>
               </div>
-            </div>
-          </div>
-        )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
 
       {/* Backdrop overlay when mobile menu is open */}
-      {isMobileMenuOpen && (
-        <div
-          className={`fixed inset-0 bg-black/40 z-40 ${isMobile ? 'block' : 'md:hidden'} animate-fade-in transition-opacity`}
-          onClick={() => setIsMobileMenuOpen(false)}
-          aria-hidden="true"
-        />
-      )}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            className={`fixed inset-0 bg-black/40 z-40 ${isMobile ? 'block' : 'md:hidden'}`}
+            onClick={() => setIsMobileMenuOpen(false)}
+            aria-hidden="true"
+          />
+        )}
+      </AnimatePresence>
 
       <AuthModal 
         isOpen={isAuthModalOpen} 

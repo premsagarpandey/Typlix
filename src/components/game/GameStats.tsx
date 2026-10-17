@@ -70,7 +70,7 @@ function GameStatsComponent({
                 onClick={onPrevLevel}
                 disabled={!hasPrevLevel}
                 aria-label={`Go to previous lesson (Level ${level - 1})`}
-                className="px-2 py-0.5 text-xs font-semibold rounded-md border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-25 disabled:pointer-events-none cursor-pointer text-neutral-700 dark:text-neutral-300 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white shrink-0"
+                className="px-2 py-0.5 text-xs font-semibold rounded-md border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 active:scale-95 disabled:opacity-25 disabled:pointer-events-none cursor-pointer text-neutral-700 dark:text-neutral-300 transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white shrink-0"
                 title="Previous Level"
               >
                 <span aria-hidden="true">◀</span>
@@ -97,7 +97,7 @@ function GameStatsComponent({
                 onClick={onNextLevel}
                 disabled={!hasNextLevel}
                 aria-label={`Go to next lesson (Level ${level + 1})`}
-                className="px-2 py-0.5 text-xs font-semibold rounded-md border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-25 disabled:pointer-events-none cursor-pointer text-neutral-700 dark:text-neutral-300 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white shrink-0"
+                className="px-2 py-0.5 text-xs font-semibold rounded-md border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 active:scale-95 disabled:opacity-25 disabled:pointer-events-none cursor-pointer text-neutral-700 dark:text-neutral-300 transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white shrink-0"
                 title="Next Level"
               >
                 <span aria-hidden="true">▶</span>
@@ -113,7 +113,7 @@ function GameStatsComponent({
                   type="button"
                   onClick={onTogglePunctuation}
                   aria-pressed={punctuation}
-                  className={`px-2 py-0.5 text-[11px] font-mono rounded-md transition-all cursor-pointer ${
+                  className={`px-2 py-0.5 text-[11px] font-mono rounded-md active:scale-95 transition-all cursor-pointer ${
                     punctuation
                       ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-bold shadow-2xs'
                       : 'text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100'
@@ -126,7 +126,7 @@ function GameStatsComponent({
                   type="button"
                   onClick={onToggleNumbers}
                   aria-pressed={numbers}
-                  className={`px-2 py-0.5 text-[11px] font-mono rounded-md transition-all cursor-pointer ${
+                  className={`px-2 py-0.5 text-[11px] font-mono rounded-md active:scale-95 transition-all cursor-pointer ${
                     numbers
                       ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-bold shadow-2xs'
                       : 'text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100'
@@ -151,7 +151,7 @@ function GameStatsComponent({
                       type="button"
                       onClick={() => onSelectDictionary(dictId)}
                       aria-pressed={isSelected}
-                      className={`px-2 py-0.5 text-[11px] font-mono rounded-md transition-all cursor-pointer ${
+                      className={`px-2 py-0.5 text-[11px] font-mono rounded-md active:scale-95 transition-all cursor-pointer ${
                         isSelected
                           ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-bold shadow-2xs'
                           : 'text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100'
@@ -175,7 +175,7 @@ function GameStatsComponent({
                     type="button"
                     onClick={() => onSelectDuration?.(dur)}
                     aria-label={`${dur} seconds speed test duration`}
-                    className={`px-2.5 py-0.5 text-xs font-mono font-medium rounded-md transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white ${
+                    className={`px-2.5 py-0.5 text-xs font-mono font-medium rounded-md active:scale-95 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white ${
                       isSelected
                         ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 shadow-2xs font-semibold'
                         : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-200/60 dark:hover:bg-neutral-700/50'
@@ -279,7 +279,15 @@ function GameStatsComponent({
           <span className="text-[10px] sm:text-xs text-neutral-500 uppercase tracking-wider font-semibold">
             Combo
           </span>
-          <span className="font-semibold text-neutral-900 dark:text-neutral-100">
+          <span
+            className={`font-semibold transition-all duration-150 inline-block font-mono ${
+              combo >= 25
+                ? 'text-neutral-950 dark:text-white font-extrabold scale-110 drop-shadow-xs'
+                : combo >= 10
+                ? 'text-neutral-900 dark:text-neutral-100 font-bold scale-105'
+                : 'text-neutral-900 dark:text-neutral-100'
+            }`}
+          >
             {combo}x
           </span>
         </div>

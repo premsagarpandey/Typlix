@@ -315,7 +315,7 @@ Verified on Typlix Touch Typing Platform (https://typlix.web.app)
       aria-labelledby="report-modal-title"
       className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs overflow-y-auto animate-fade-in"
     >
-      <div className="relative w-full max-w-2xl bg-white dark:bg-neutral-950 rounded-xl border border-neutral-300 dark:border-neutral-800 shadow-2xl overflow-hidden my-auto max-h-[92vh] flex flex-col">
+      <div className="relative w-full max-w-2xl bg-white dark:bg-neutral-950 rounded-2xl border border-neutral-300 dark:border-neutral-800 shadow-2xl overflow-hidden my-auto max-h-[92vh] flex flex-col animate-spring-modal">
         {/* Modal Top Bar (Hidden in Print) */}
         <div className="no-print p-4 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between gap-2 bg-neutral-50 dark:bg-neutral-900/50 shrink-0">
           <div className="flex items-center gap-2">

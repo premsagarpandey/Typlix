@@ -57,29 +57,52 @@ html.light body {
   background: rgba(115, 115, 115, 0.5);
 }
 
+/* ═══════════════════ Hardware-Accelerated Micro-Animations (120 FPS) ═══════════════════ */
+
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(4px);
+    transform: translate3d(0, 5px, 0);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.2s ease-out forwards;
+  animation: fadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
 }
 
+/* Apple-grade spring modal entry */
+@keyframes appleSpringUp {
+  0% {
+    opacity: 0;
+    transform: scale(0.96) translate3d(0, 8px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+}
+
+.animate-spring-modal {
+  animation: appleSpringUp 0.26s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+/* Micro-dampened 120 FPS shake on typing error */
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  20%, 60% { transform: translateX(-5px); }
-  40%, 80% { transform: translateX(5px); }
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  15%, 45%, 75% { transform: translate3d(-3.5px, 0, 0); }
+  30%, 60% { transform: translate3d(3.5px, 0, 0); }
+  90% { transform: translate3d(-1px, 0, 0); }
 }
 
 .animate-shake {
-  animation: shake 0.22s ease-in-out;
+  animation: shake 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
 }
 
 /* Monospace utility */
@@ -236,6 +259,7 @@ html.light body {
   .animate-target-char,
   .animate-fade-in,
   .animate-shake,
+  .animate-spring-modal,
   .typing-caret {
     animation: none !important;
     transition: none !important;

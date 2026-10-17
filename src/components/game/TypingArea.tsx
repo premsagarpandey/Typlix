@@ -705,7 +705,7 @@ function TypingAreaComponent({
           className="typing-lines-track pointer-events-none select-none"
           style={{
             transform: `translateY(-${scrollLineIndex * lineHeightPx}px)`,
-            transition: 'transform 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+            transition: 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
             willChange: 'transform',
           }}
         >

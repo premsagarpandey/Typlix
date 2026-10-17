@@ -71,7 +71,7 @@ export default function ResultsModal({
       aria-labelledby="results-modal-title"
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in"
     >
-      <div className="w-full max-w-lg mx-auto p-5 sm:p-6 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl text-center shadow-2xl transition-colors max-h-[90vh] overflow-y-auto">
+      <div className="w-full max-w-lg mx-auto p-5 sm:p-6 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl text-center shadow-2xl transition-colors max-h-[90vh] overflow-y-auto animate-spring-modal">
         <h2 id="results-modal-title" className="text-xl sm:text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-1">
           {getTitle()}
         </h2>

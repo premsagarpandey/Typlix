@@ -89,7 +89,7 @@ export default function CustomTextModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="custom-text-title"
-        className="w-full max-w-xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg p-5 sm:p-6 space-y-4 shadow-2xl"
+        className="w-full max-w-xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-5 sm:p-6 space-y-4 shadow-2xl animate-spring-modal"
       >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-neutral-200 dark:border-neutral-800 pb-3">

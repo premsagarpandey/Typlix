@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import ThemeToggle from '../components/common/ThemeToggle';
@@ -11,6 +11,7 @@ import { resetLevelProgress, clearStatsHistory } from '../services/cloudProgress
 import { openCookieConsentModal, resetCookieConsent, isGlobalPrivacyControlActive } from '../utils/cookieConsent';
 import { ShieldCheck, EyeOff, Lock, Check, Download, Upload, FileSpreadsheet, Cookie, X, Play, Volume2 } from 'lucide-react';
 import { checkIsPhone } from '../hooks/useIsMobile';
+import { isHapticsEnabled, setHapticsEnabled, triggerHaptic } from '../utils/haptics';
 
 export default function Settings() {
   const [soundEnabled, setSoundEnabled] = useLocalStorage('sound', !checkIsPhone());
@@ -18,6 +19,39 @@ export default function Settings() {
   const [soundVolume, setSoundVolume] = useLocalStorage<number>('soundVolume', 70);
   const [keyboardLayout, setKeyboardLayout] = useLocalStorage<KeyboardLayoutId>('keyboardLayout', 'qwerty');
   const { theme } = useTheme();
+
+  // High-performance smooth volume state: runs at 120 FPS without synchronous disk I/O
+  const [localVolume, setLocalVolume] = useState<number>(soundVolume);
+  const volumeDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Mobile haptic vibration state
+  const [hapticsActive, setHapticsActive] = useState<boolean>(() => isHapticsEnabled());
+
+  useEffect(() => {
+    setLocalVolume(soundVolume);
+  }, [soundVolume]);
+
+  const handleVolumeChange = useCallback((newVol: number) => {
+    setLocalVolume(newVol);
+    // Instant zero-allocation in-memory cache update
+    updateSoundSettings({ soundVolume: newVol });
+
+    // Debounce the persistent storage commit
+    if (volumeDebounceRef.current) {
+      clearTimeout(volumeDebounceRef.current);
+    }
+    volumeDebounceRef.current = setTimeout(() => {
+      setSoundVolume(newVol);
+    }, 150);
+  }, [setSoundVolume]);
+
+  const handleVolumeCommit = useCallback(() => {
+    if (volumeDebounceRef.current) {
+      clearTimeout(volumeDebounceRef.current);
+      volumeDebounceRef.current = null;
+    }
+    setSoundVolume(localVolume);
+  }, [localVolume, setSoundVolume]);
 
   const [confirmReset, setConfirmReset] = useState(false);
   const [confirmClear, setConfirmClear] = useState(false);
@@ -241,7 +275,7 @@ export default function Settings() {
                 <div
                   key={profile.id}
                   className={`
-                    group relative flex items-center justify-between p-3 rounded-lg border transition-all duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white
+                    group relative flex items-center justify-between p-3 rounded-lg border transition-all duration-150 cursor-pointer touch-manipulation select-none active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white min-h-[52px]
                     ${isActive
                       ? 'border-neutral-900 dark:border-neutral-200 bg-neutral-900/[0.04] dark:bg-neutral-100/[0.06]'
                       : 'border-neutral-200 dark:border-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-600 hover:bg-neutral-50 dark:hover:bg-neutral-900'
@@ -251,6 +285,7 @@ export default function Settings() {
                     setSoundProfile(profile.id);
                     updateSoundSettings({ soundProfile: profile.id });
                     handlePreview(profile.id);
+                    triggerHaptic('tap');
                   }}
                   role="radio"
                   aria-checked={isActive}
@@ -259,7 +294,9 @@ export default function Settings() {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
                       setSoundProfile(profile.id);
+                      updateSoundSettings({ soundProfile: profile.id });
                       handlePreview(profile.id);
+                      triggerHaptic('tap');
                     }
                   }}
                 >
@@ -288,9 +325,10 @@ export default function Settings() {
                     onClick={(e) => {
                       e.stopPropagation();
                       handlePreview(profile.id);
+                      triggerHaptic('tap');
                     }}
                     className={`
-                      flex-shrink-0 ml-2 px-2.5 py-1 text-[11px] font-medium rounded-md border transition-all duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white
+                      flex-shrink-0 ml-2 px-2.5 py-1.5 text-[11px] font-medium rounded-md border transition-all duration-150 cursor-pointer touch-manipulation min-w-[36px] min-h-[36px] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white
                       ${isPreviewing
                         ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 border-transparent scale-95'
                         : 'border-neutral-300 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 hover:border-neutral-400 dark:hover:border-neutral-500'
@@ -299,9 +337,9 @@ export default function Settings() {
                     aria-label={isPreviewing ? `Playing ${profile.name} sound effect` : `Preview ${profile.name} sound effect`}
                   >
                     {isPreviewing ? (
-                      <Volume2 className="w-3 h-3" aria-hidden="true" />
+                      <Volume2 className="w-3.5 h-3.5" aria-hidden="true" />
                     ) : (
-                      <Play className="w-3 h-3" aria-hidden="true" />
+                      <Play className="w-3.5 h-3.5" aria-hidden="true" />
                     )}
                   </button>
                 </div>
@@ -310,7 +348,7 @@ export default function Settings() {
           </div>
         </div>
 
-        {/* Volume Slider */}
+        {/* Volume Slider (Smooth 120 FPS Dragging, Zero Disk Lag) */}
         <div className={`space-y-3 transition-opacity duration-200 ${!soundEnabled ? 'opacity-40 pointer-events-none' : ''}`}>
           <div className="flex items-center justify-between">
             <div>
@@ -320,7 +358,7 @@ export default function Settings() {
               <p className="text-xs text-neutral-600 dark:text-neutral-400">Adjust keystroke volume</p>
             </div>
             <span className="text-xs font-mono font-medium text-neutral-700 dark:text-neutral-300 tabular-nums w-8 text-right">
-              {soundVolume}%
+              {localVolume}%
             </span>
           </div>
           <div className="relative group">
@@ -329,18 +367,17 @@ export default function Settings() {
               min="0"
               max="100"
               step="1"
-              value={soundVolume}
-              onChange={(e) => {
-                const vol = Number(e.target.value);
-                setSoundVolume(vol);
-                updateSoundSettings({ soundVolume: vol });
-              }}
-              className="volume-slider w-full cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white rounded"
+              value={localVolume}
+              onChange={(e) => handleVolumeChange(Number(e.target.value))}
+              onPointerUp={handleVolumeCommit}
+              onKeyUp={handleVolumeCommit}
+              onTouchEnd={handleVolumeCommit}
+              className="volume-slider w-full cursor-pointer touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white rounded"
               aria-label="Keystroke audio volume level"
               aria-valuemin={0}
               aria-valuemax={100}
-              aria-valuenow={soundVolume}
-              aria-valuetext={`${soundVolume} percent`}
+              aria-valuenow={localVolume}
+              aria-valuetext={`${localVolume} percent`}
               id="volume-slider"
             />
           </div>
@@ -348,6 +385,42 @@ export default function Settings() {
             <span>Mute</span>
             <span>Max</span>
           </div>
+        </div>
+
+        {/* Mobile Tactile Haptic Feedback */}
+        <div className="pt-4 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
+          <div>
+            <label htmlFor="haptics-toggle" className="font-medium text-neutral-900 dark:text-neutral-100 text-sm block cursor-pointer">
+              Haptic Feedback (Vibration)
+            </label>
+            <p className="text-xs text-neutral-600 dark:text-neutral-400">
+              Tactile physical vibration on phone touch typing
+            </p>
+          </div>
+          <button
+            id="haptics-toggle"
+            type="button"
+            role="switch"
+            aria-checked={hapticsActive}
+            aria-label={hapticsActive ? 'Disable haptic vibration' : 'Enable haptic vibration'}
+            onClick={() => {
+              const next = !hapticsActive;
+              setHapticsActive(next);
+              setHapticsEnabled(next);
+              if (next) triggerHaptic('tap');
+            }}
+            className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors cursor-pointer touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white ${
+              hapticsActive ? 'bg-neutral-900 dark:bg-neutral-100' : 'bg-neutral-300 dark:bg-neutral-700'
+            }`}
+          >
+            <span
+              className={`inline-block h-3.5 w-3.5 transform rounded-full transition-transform shadow-sm ${
+                hapticsActive
+                  ? 'translate-x-[18px] bg-white dark:bg-neutral-900'
+                  : 'translate-x-[3px] bg-white dark:bg-neutral-400'
+              }`}
+            />
+          </button>
         </div>
 
         {/* Data Backup & Export Section */}

@@ -689,6 +689,10 @@ function TypingAreaComponent({
           autoCorrect="off"
           autoCapitalize="none"
           spellCheck={false}
+          data-gramm="false"
+          data-gramm_editor="false"
+          data-enable-grammarly="false"
+          data-lpignore="true"
           aria-label="Typing input field"
           aria-describedby="typing-instructions"
           className="absolute inset-0 w-full h-full opacity-0 cursor-text z-10 p-0 m-0 select-none"

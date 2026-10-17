@@ -34,16 +34,18 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
     const handleSettingsChanged = (e: Event) => {
       const customEvent = e as CustomEvent<{ key: string; value: T }>;
       if (customEvent.detail && customEvent.detail.key === key) {
-        setStoredValue(customEvent.detail.value);
+        setStoredValue((prev) => (prev === customEvent.detail.value ? prev : customEvent.detail.value));
       }
     };
 
     const handleProgressUpdated = (e: Event) => {
       const customEvent = e as CustomEvent<{ key?: string; value?: unknown; typingGameLevel?: number }>;
       if (key === 'typingGameLevel' && typeof customEvent.detail?.typingGameLevel === 'number') {
-        setStoredValue(customEvent.detail.typingGameLevel as T);
+        const next = customEvent.detail.typingGameLevel as T;
+        setStoredValue((prev) => (prev === next ? prev : next));
       } else if (customEvent.detail?.key === key) {
-        setStoredValue(customEvent.detail.value as T);
+        const next = customEvent.detail.value as T;
+        setStoredValue((prev) => (prev === next ? prev : next));
       }
     };
 

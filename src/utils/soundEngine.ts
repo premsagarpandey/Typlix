@@ -211,31 +211,60 @@ let cachedSoundEnabled = typeof window !== 'undefined' ? !checkIsPhone() : true;
 let cachedProfileId: SoundProfileId = 'cherry-mx-blue';
 let cachedSoundVolume = 70;
 let settingsInitialized = false;
+let listenersAttached = false;
 
-function initCachedSettings(): void {
-  if (typeof window === 'undefined' || settingsInitialized) return;
-  settingsInitialized = true;
-  try {
-    const defaultSound = !checkIsPhone();
-    cachedSoundEnabled = secureStorage.getItem<boolean>('sound', defaultSound);
-    cachedProfileId = secureStorage.getItem<SoundProfileId>('soundProfile', 'cherry-mx-blue');
-    cachedSoundVolume = secureStorage.getItem<number>('soundVolume', 70);
+export function initCachedSettings(): void {
+  if (typeof window === 'undefined') return;
 
-    // Sync on external storage changes (or across tabs)
-    window.addEventListener('storage', (e) => {
-      if (e.key === 'sound' || e.key === 'soundProfile' || e.key === 'soundVolume') {
-        settingsInitialized = false;
-        initCachedSettings();
+  if (!settingsInitialized) {
+    settingsInitialized = true;
+    try {
+      const defaultSound = !checkIsPhone();
+      cachedSoundEnabled = secureStorage.getItem<boolean>('sound', defaultSound);
+      cachedProfileId = secureStorage.getItem<SoundProfileId>('soundProfile', 'cherry-mx-blue');
+      cachedSoundVolume = secureStorage.getItem<number>('soundVolume', 70);
+    } catch {
+      // fallback to defaults
+    }
+  }
+
+  // Strictly attach event listeners ONCE to prevent exponential leak ($2^N$ listeners on setting changes)
+  if (!listenersAttached) {
+    listenersAttached = true;
+
+    // Direct in-memory event listener: updates memory cache instantly without touching disk or crypto
+    window.addEventListener('typlix_settings_changed', ((e: CustomEvent<{ key?: string; value?: unknown }>) => {
+      if (!e.detail) return;
+      const { key, value } = e.detail;
+      if (key === 'sound' && typeof value === 'boolean') {
+        cachedSoundEnabled = value;
+      } else if (key === 'soundProfile' && typeof value === 'string') {
+        cachedProfileId = value as SoundProfileId;
+      } else if (key === 'soundVolume' && typeof value === 'number') {
+        cachedSoundVolume = value;
+      }
+    }) as EventListener);
+
+    // Cross-tab synchronization only
+    window.addEventListener('storage', (e: StorageEvent) => {
+      try {
+        if (e.key === 'sound') {
+          cachedSoundEnabled = secureStorage.getItem<boolean>('sound', !checkIsPhone());
+        } else if (e.key === 'soundProfile') {
+          cachedProfileId = secureStorage.getItem<SoundProfileId>('soundProfile', 'cherry-mx-blue');
+        } else if (e.key === 'soundVolume') {
+          cachedSoundVolume = secureStorage.getItem<number>('soundVolume', 70);
+        }
+      } catch {
+        // ignore
       }
     });
-
-    window.addEventListener('typlix_settings_changed', () => {
-      settingsInitialized = false;
-      initCachedSettings();
-    });
-  } catch {
-    // fallback to defaults
   }
+}
+
+// Warm up cached settings immediately on script evaluation
+if (typeof window !== 'undefined') {
+  initCachedSettings();
 }
 
 /**
@@ -310,8 +339,12 @@ function synthesize(
   const durMult = isSpace ? 1.18 : 1.0;
   const gainBoost = isSpace ? 1.08 : 1.0;
 
-  // Master volume
-  master.gain.setValueAtTime(Math.min(1.0, volumeMultiplier * gainBoost), now);
+  // Isolated per-voice gain node to isolate volume multiplier and prevent clicks/cross-talk
+  const voiceGain = ctx.createGain();
+  voiceGain.gain.setValueAtTime(Math.min(1.0, volumeMultiplier * gainBoost), now);
+  voiceGain.connect(master);
+
+  let maxVoiceDuration = 0.08;
 
   // Add slight random variation for realism (with spacebar stabilizer acoustic shift)
   const freqVariation = (1 + (Math.random() - 0.5) * 0.04) * pitchMult; // ±2% + pitchMult
@@ -320,6 +353,9 @@ function synthesize(
   // --- Oscillator layers ---
   for (let i = 0; i < config.oscillators.length; i++) {
     const layer = config.oscillators[i];
+    const layerDuration = layer.duration * durMult;
+    if (layerDuration > maxVoiceDuration) maxVoiceDuration = layerDuration;
+
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
 
@@ -328,7 +364,7 @@ function synthesize(
     if (layer.freqEnd) {
       osc.frequency.exponentialRampToValueAtTime(
         Math.max(layer.freqEnd * freqVariation, 20),
-        now + layer.duration * durMult
+        now + layerDuration
       );
     }
     if (layer.detune) {
@@ -348,15 +384,17 @@ function synthesize(
     };
 
     osc.connect(gain);
-    gain.connect(master);
+    gain.connect(voiceGain);
 
     osc.start(now);
-    osc.stop(now + layer.duration + 0.01);
+    osc.stop(now + layerDuration + 0.01);
   }
 
   // --- Noise layer (reusing pre-cached buffer) ---
   if (config.noise) {
     const nl = config.noise;
+    if (nl.duration > maxVoiceDuration) maxVoiceDuration = nl.duration;
+
     const noiseBuffer = getOrCreateNoiseBuffer(ctx);
     const source = ctx.createBufferSource();
     source.buffer = noiseBuffer;
@@ -376,7 +414,7 @@ function synthesize(
 
     source.connect(noiseFilter);
     noiseFilter.connect(noiseGain);
-    noiseGain.connect(master);
+    noiseGain.connect(voiceGain);
 
     source.onended = () => {
       try {
@@ -391,6 +429,13 @@ function synthesize(
     source.start(now, offset);
     source.stop(now + nl.duration + 0.01);
   }
+
+  // Cleanly disconnect voiceGain after audio decays to prevent node leaks
+  setTimeout(() => {
+    try {
+      voiceGain.disconnect();
+    } catch {}
+  }, (maxVoiceDuration + 0.05) * 1000);
 }
 
 // ─── Public API ──────────────────────────────────────────────────────────────

@@ -10,6 +10,7 @@ import type { CodeLanguage } from '../data/codeSnippets';
 import { secureStorage, type TypingSessionRecord } from '../utils/secureStorage';
 import { saveTypingSession, saveLevelProgress } from '../services/cloudProgress';
 import { playKeystrokeSound as playSound } from '../utils/soundEngine';
+import { triggerHaptic } from '../utils/haptics';
 import { sanitizeCustomText } from '../utils/textUtils';
 
 export type GameStatus = 'idle' | 'playing' | 'finished' | 'passed' | 'failed';
@@ -198,6 +199,10 @@ export function useTypingGame(
             durationSeconds: Math.max(1, finalElapsed),
           };
 
+          if (record.passed) {
+            triggerHaptic('success');
+          }
+
           // Save session locally and to cloud Firestore if signed in
           saveTypingSession(record).catch(() => {});
 
@@ -298,6 +303,7 @@ export function useTypingGame(
         setTotalCharsTyped(newTotalTyped);
         if (isCorrect) {
           playSound('correct', value[lastCharIndex]);
+          triggerHaptic('correct');
           setCombo((prev) => {
             const newCombo = prev + 1;
             if (newCombo > maxComboRef.current) {
@@ -308,6 +314,7 @@ export function useTypingGame(
           });
         } else {
           playSound('error', value[lastCharIndex]);
+          triggerHaptic('error');
           setShakeTrigger((prev) => prev + 1);
           setCombo(0);
         }

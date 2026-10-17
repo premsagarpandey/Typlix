@@ -244,6 +244,22 @@ html.light body {
   background: linear-gradient(to right, #525252, #d4d4d4);
 }
 
+/* Touch Device Optimization: larger thumb and touch area on mobile screens */
+@media (pointer: coarse), (max-width: 640px) {
+  .volume-slider {
+    height: 8px;
+    touch-action: manipulation;
+  }
+  .volume-slider::-webkit-slider-thumb {
+    width: 22px;
+    height: 22px;
+  }
+  .volume-slider::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+  }
+}
+
 /* ═══════════════════ Accessibility Enhancements (WCAG 2.1) ═══════════════════ */
 
 /* High-contrast focus indicators for keyboard navigation (WCAG 2.4.7) */

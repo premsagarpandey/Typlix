@@ -1,6 +1,5 @@
 import { Suspense, lazy, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from './components/layout/Navbar';
 import Home from './pages/Home';
 import ErrorBoundary from './components/common/ErrorBoundary';
@@ -60,32 +59,23 @@ function AppLayout() {
         role="main"
         className={`flex-1 w-full focus:outline-none ${isGamePage ? 'px-2 sm:px-4 py-1 sm:py-2 h-[calc(100dvh-48px)] overflow-hidden' : 'px-3 sm:px-6 md:px-8 py-3 sm:py-4'}`}
       >
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.div
-            key={location.pathname}
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.16, ease: [0.16, 1, 0.3, 1] }}
-            className={`w-full ${isGamePage ? 'h-full' : 'min-h-full'}`}
-          >
-            <Suspense fallback={<PageFallback />}>
-              <Routes location={location}>
-                <Route path="/" element={<Home />} />
-                <Route path="/game" element={<Game />} />
-                <Route path="/stats" element={<Stats />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/about" element={<AboutDeveloper />} />
-                <Route path="/privacy" element={<PrivacyPolicy />} />
-                <Route path="/terms" element={<TermsOfService />} />
-                <Route path="/cookies" element={<CookiesPolicy />} />
-                <Route path="/refund" element={<RefundPolicy />} />
-                <Route path="*" element={<Navigate to="/" replace />} />
-              </Routes>
-            </Suspense>
-          </motion.div>
-        </AnimatePresence>
+        <div key={location.pathname} className={`w-full animate-fade-in ${isGamePage ? 'h-full' : 'min-h-full'}`}>
+          <Suspense fallback={<PageFallback />}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/game" element={<Game />} />
+              <Route path="/stats" element={<Stats />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/about" element={<AboutDeveloper />} />
+              <Route path="/privacy" element={<PrivacyPolicy />} />
+              <Route path="/terms" element={<TermsOfService />} />
+              <Route path="/cookies" element={<CookiesPolicy />} />
+              <Route path="/refund" element={<RefundPolicy />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </Suspense>
+        </div>
       </main>
       {!isGamePage && (
         <footer className={`w-full py-5 sm:py-6 pb-[calc(1.25rem+env(safe-area-inset-bottom,0px))] text-xs text-neutral-600 dark:text-neutral-400 border-t border-neutral-200 dark:border-neutral-800/80 max-w-4xl mx-auto px-3 sm:px-6 md:px-8 ${isMobile ? 'space-y-0' : 'space-y-4'}`}>

@@ -102,8 +102,8 @@ export default function Navbar() {
                   {isActive && (
                     <motion.div
                       layoutId="active-nav-pill"
-                      className="absolute inset-0 bg-neutral-200/90 dark:bg-neutral-800 rounded-md shadow-2xs -z-10"
-                      transition={{ type: 'spring', stiffness: 450, damping: 35 }}
+                      className="absolute inset-0 bg-neutral-200/90 dark:bg-neutral-800 rounded-md shadow-2xs pointer-events-none"
+                      transition={{ type: 'spring', stiffness: 500, damping: 40 }}
                     />
                   )}
                   <span className="relative z-10">{label}</span>
@@ -175,10 +175,10 @@ export default function Navbar() {
         <AnimatePresence>
           {isMobileMenuOpen && (
             <motion.div
-              initial={{ opacity: 0, y: -8, scale: 0.99 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -6, scale: 0.99 }}
-              transition={{ duration: 0.16, ease: [0.16, 1, 0.3, 1] }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.12, ease: "easeOut" }}
               className={`absolute top-full left-0 right-0 bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 shadow-2xl ${isMobile ? 'block' : 'md:hidden'} z-50 max-h-[80vh] overflow-y-auto`}
             >
               <div className="flex flex-col py-2 px-4 divide-y divide-neutral-100 dark:divide-neutral-800/60">

@@ -631,7 +631,7 @@ function TypingAreaComponent({
         ref={containerRef}
         role="region"
         aria-label="Touch typing practice area"
-        className={`typing-area-container relative ${isLandscapePhone ? 'p-3 sm:p-4' : 'p-5 sm:p-7'} rounded-2xl border border-neutral-200/80 dark:border-neutral-800/80 font-mono select-none transition-all duration-200 bg-white/95 dark:bg-neutral-900/70 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_30px_-4px_rgba(0,0,0,0.3)] backdrop-blur-md cursor-text ${isShaking ? 'animate-shake' : ''
+        className={`typing-area-container relative ${isLandscapePhone ? 'p-3 sm:p-4' : 'p-5 sm:p-7'} rounded-2xl border border-neutral-200/80 dark:border-neutral-800/80 font-mono select-none transition-colors duration-150 bg-white/95 dark:bg-neutral-900/70 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_30px_-4px_rgba(0,0,0,0.3)] backdrop-blur-md cursor-text ${isShaking ? 'animate-shake' : ''
           } ${isMobile && !isInputFocused && status === 'idle' && typedText.length === 0 ? 'mobile-tap-cue' : ''}`}
         style={{
           height: `${lineHeightPx * VISIBLE_LINES + (isLandscapePhone ? 32 : fontSize >= 28 ? 52 : 44)}px`,

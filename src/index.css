@@ -62,33 +62,31 @@ html.light body {
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translate3d(0, 5px, 0);
   }
   to {
     opacity: 1;
-    transform: translate3d(0, 0, 0);
   }
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  will-change: transform, opacity;
+  animation: fadeIn 0.12s ease-out forwards;
+  will-change: opacity;
 }
 
 /* Apple-grade spring modal entry */
 @keyframes appleSpringUp {
   0% {
     opacity: 0;
-    transform: scale(0.96) translate3d(0, 8px, 0);
+    transform: scale(0.97);
   }
   100% {
     opacity: 1;
-    transform: scale(1) translate3d(0, 0, 0);
+    transform: scale(1);
   }
 }
 
 .animate-spring-modal {
-  animation: appleSpringUp 0.26s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: appleSpringUp 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   will-change: transform, opacity;
 }
 
@@ -105,18 +103,15 @@ html.light body {
   will-change: transform;
 }
 
-/* Spring micro-interaction button utility */
+/* Tactile micro-interaction button utility */
 .btn-spring {
-  transition: transform 0.16s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.16s ease, background-color 0.16s ease;
+  transition: opacity 0.12s ease, background-color 0.12s ease, transform 0.1s ease;
   will-change: transform;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
-.btn-spring:hover {
-  transform: translate3d(0, -1.5px, 0);
-}
 .btn-spring:active {
-  transform: translate3d(0, 0.5px, 0) scale(0.98);
+  transform: scale(0.98);
 }
 
 /* Monospace utility */
@@ -148,21 +143,19 @@ html.light body {
   animation: caretBlink 1s ease-in-out infinite;
 }
 
-/* Sleek, jitter-free target character focus animation */
+/* Sleek, jitter-free target character focus animation (pure GPU opacity, 0 repaint) */
 @keyframes targetCharApplePulse {
   0%, 100% {
     opacity: 1;
-    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.12));
   }
   50% {
-    opacity: 0.72;
-    filter: drop-shadow(0 0 0px transparent);
+    opacity: 0.65;
   }
 }
 
 .animate-target-char {
   display: inline-block !important;
-  animation: targetCharApplePulse 0.9s cubic-bezier(0.4, 0, 0.2, 1) infinite !important;
+  animation: targetCharApplePulse 0.9s ease-in-out infinite !important;
   transform-origin: center center !important;
   will-change: opacity !important;
 }

@@ -209,8 +209,8 @@ export default function Stats() {
           {activeCategory === 'all' && (
             <motion.div
               layoutId="active-stats-category"
-              className="absolute inset-0 bg-white dark:bg-neutral-800 rounded-md shadow-xs -z-10"
-              transition={{ type: 'spring', stiffness: 450, damping: 35 }}
+              className="absolute inset-0 bg-white dark:bg-neutral-800 rounded-md shadow-xs pointer-events-none"
+              transition={{ type: 'spring', stiffness: 500, damping: 40 }}
             />
           )}
           <Layers className="w-3.5 h-3.5 relative z-10" />
@@ -230,8 +230,8 @@ export default function Stats() {
           {activeCategory === 'general' && (
             <motion.div
               layoutId="active-stats-category"
-              className="absolute inset-0 bg-white dark:bg-neutral-800 rounded-md shadow-xs -z-10"
-              transition={{ type: 'spring', stiffness: 450, damping: 35 }}
+              className="absolute inset-0 bg-white dark:bg-neutral-800 rounded-md shadow-xs pointer-events-none"
+              transition={{ type: 'spring', stiffness: 500, damping: 40 }}
             />
           )}
           <BookOpen className="w-3.5 h-3.5 relative z-10" />
@@ -251,8 +251,8 @@ export default function Stats() {
           {activeCategory === 'code' && (
             <motion.div
               layoutId="active-stats-category"
-              className="absolute inset-0 bg-white dark:bg-neutral-800 rounded-md shadow-xs -z-10"
-              transition={{ type: 'spring', stiffness: 450, damping: 35 }}
+              className="absolute inset-0 bg-white dark:bg-neutral-800 rounded-md shadow-xs pointer-events-none"
+              transition={{ type: 'spring', stiffness: 500, damping: 40 }}
             />
           )}
           <Code className="w-3.5 h-3.5 relative z-10" />

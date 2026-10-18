@@ -21,67 +21,6 @@ export interface LevelConfig {
   readonly wordBank: readonly string[];
 }
 
-const MONO_FINGER_STYLE = 'text-neutral-800 dark:text-neutral-200 bg-neutral-200/50 dark:bg-neutral-800/50 border-neutral-300 dark:border-neutral-700';
-
-export const FINGER_MAP: Record<string, { hand: 'Left' | 'Right'; finger: 'Pinky' | 'Ring' | 'Middle' | 'Index' | 'Thumb'; color: string }> = {
-  // Left Hand
-  q: { hand: 'Left', finger: 'Pinky', color: MONO_FINGER_STYLE },
-  a: { hand: 'Left', finger: 'Pinky', color: MONO_FINGER_STYLE },
-  z: { hand: 'Left', finger: 'Pinky', color: MONO_FINGER_STYLE },
-  '1': { hand: 'Left', finger: 'Pinky', color: MONO_FINGER_STYLE },
-
-  w: { hand: 'Left', finger: 'Ring', color: MONO_FINGER_STYLE },
-  s: { hand: 'Left', finger: 'Ring', color: MONO_FINGER_STYLE },
-  x: { hand: 'Left', finger: 'Ring', color: MONO_FINGER_STYLE },
-  '2': { hand: 'Left', finger: 'Ring', color: MONO_FINGER_STYLE },
-
-  e: { hand: 'Left', finger: 'Middle', color: MONO_FINGER_STYLE },
-  d: { hand: 'Left', finger: 'Middle', color: MONO_FINGER_STYLE },
-  c: { hand: 'Left', finger: 'Middle', color: MONO_FINGER_STYLE },
-  '3': { hand: 'Left', finger: 'Middle', color: MONO_FINGER_STYLE },
-
-  r: { hand: 'Left', finger: 'Index', color: MONO_FINGER_STYLE },
-  f: { hand: 'Left', finger: 'Index', color: MONO_FINGER_STYLE },
-  v: { hand: 'Left', finger: 'Index', color: MONO_FINGER_STYLE },
-  t: { hand: 'Left', finger: 'Index', color: MONO_FINGER_STYLE },
-  g: { hand: 'Left', finger: 'Index', color: MONO_FINGER_STYLE },
-  b: { hand: 'Left', finger: 'Index', color: MONO_FINGER_STYLE },
-  '4': { hand: 'Left', finger: 'Index', color: MONO_FINGER_STYLE },
-  '5': { hand: 'Left', finger: 'Index', color: MONO_FINGER_STYLE },
-
-  // Right Hand
-  y: { hand: 'Right', finger: 'Index', color: MONO_FINGER_STYLE },
-  u: { hand: 'Right', finger: 'Index', color: MONO_FINGER_STYLE },
-  h: { hand: 'Right', finger: 'Index', color: MONO_FINGER_STYLE },
-  j: { hand: 'Right', finger: 'Index', color: MONO_FINGER_STYLE },
-  n: { hand: 'Right', finger: 'Index', color: MONO_FINGER_STYLE },
-  m: { hand: 'Right', finger: 'Index', color: MONO_FINGER_STYLE },
-  '6': { hand: 'Right', finger: 'Index', color: MONO_FINGER_STYLE },
-  '7': { hand: 'Right', finger: 'Index', color: MONO_FINGER_STYLE },
-
-  i: { hand: 'Right', finger: 'Middle', color: MONO_FINGER_STYLE },
-  k: { hand: 'Right', finger: 'Middle', color: MONO_FINGER_STYLE },
-  ',': { hand: 'Right', finger: 'Middle', color: MONO_FINGER_STYLE },
-  '8': { hand: 'Right', finger: 'Middle', color: MONO_FINGER_STYLE },
-
-  o: { hand: 'Right', finger: 'Ring', color: MONO_FINGER_STYLE },
-  l: { hand: 'Right', finger: 'Ring', color: MONO_FINGER_STYLE },
-  '.': { hand: 'Right', finger: 'Ring', color: MONO_FINGER_STYLE },
-  '9': { hand: 'Right', finger: 'Ring', color: MONO_FINGER_STYLE },
-
-  p: { hand: 'Right', finger: 'Pinky', color: MONO_FINGER_STYLE },
-  ';': { hand: 'Right', finger: 'Pinky', color: MONO_FINGER_STYLE },
-  '/': { hand: 'Right', finger: 'Pinky', color: MONO_FINGER_STYLE },
-  '0': { hand: 'Right', finger: 'Pinky', color: MONO_FINGER_STYLE },
-
-  ' ': { hand: 'Right', finger: 'Thumb', color: MONO_FINGER_STYLE },
-};
-
-export function getFingerInfo(char: string) {
-  const lower = char.toLowerCase();
-  return FINGER_MAP[lower] || { hand: 'Right', finger: 'Thumb', color: MONO_FINGER_STYLE };
-}
-
 const LEVEL_DEFINITIONS: readonly LevelInfo[] = [
   // --- PHASE 1: HOME ROW BASICS (Levels 1 - 10) ---
   {

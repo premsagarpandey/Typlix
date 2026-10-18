@@ -12,6 +12,7 @@ import {
   Layers,
 } from 'lucide-react';
 import type { TypingSessionRecord } from '../../utils/secureStorage';
+import { formatDuration } from '../../utils/calculations';
 
 interface StudentReportModalProps {
   isOpen: boolean;
@@ -29,16 +30,6 @@ interface StudentReportModalProps {
     avgAccuracy: number;
     totalTests: number;
   };
-}
-
-function formatDuration(totalSeconds: number): string {
-  if (!totalSeconds || totalSeconds <= 0) return '0m';
-  const hours = Math.floor(totalSeconds / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  if (hours > 0) {
-    return `${hours}h ${minutes}m`;
-  }
-  return `${Math.max(1, minutes)}m`;
 }
 
 export default function StudentReportModal({

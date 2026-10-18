@@ -88,10 +88,6 @@ export function useIsMobile(): boolean {
   return isMobile;
 }
 
-/**
- * Hook to detect if device is specifically a smartphone.
- */
-export const useIsPhone = useIsMobile;
 
 /**
  * Hook to detect if device is specifically a phone in landscape orientation.

@@ -2,19 +2,10 @@ import { useState, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useUserProgress } from '../hooks/useUserProgress';
+import { formatDuration } from '../utils/calculations';
 import { LogOut, User, Mail, Calendar, Shield, Activity, TrendingUp, Trophy, RefreshCw, CheckCircle2, X, Code, ArrowRight, FileText } from 'lucide-react';
 import UserAvatar from '../components/common/UserAvatar';
 import StudentReportModal from '../components/common/StudentReportModal';
-
-function formatDuration(totalSeconds: number): string {
-  if (!totalSeconds || totalSeconds <= 0) return '0m';
-  const hours = Math.floor(totalSeconds / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  if (hours > 0) {
-    return `${hours}h ${minutes}m`;
-  }
-  return `${Math.max(1, minutes)}m`;
-}
 
 export default function Profile() {
   const { user, logout } = useAuth();

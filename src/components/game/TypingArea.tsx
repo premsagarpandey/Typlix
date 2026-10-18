@@ -12,12 +12,6 @@ export interface TypingAreaProps {
   shakeTrigger: number;
   onInput: (value: string) => void;
   onQuickRestart?: () => void;
-  // Compatibility props
-  words?: unknown;
-  currentWordIndex?: number;
-  currentInput?: string;
-  typedWords?: string[];
-  onKeyStroke?: (key: string, ctrl?: boolean) => void;
 }
 
 /** How many visible lines to show at once */

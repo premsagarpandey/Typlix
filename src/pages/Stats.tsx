@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { exportStatsAsCSV, exportDataAsJSON } from '../utils/dataBackup';
+import { formatDuration } from '../utils/calculations';
 import WpmProgressChart, { type ChartFilter } from '../components/stats/WpmProgressChart';
 import { useUserProgress } from '../hooks/useUserProgress';
 import { useAuth } from '../hooks/useAuth';
@@ -9,16 +10,6 @@ import StudentReportModal from '../components/common/StudentReportModal';
 import { X, FileSpreadsheet, Download, Code, Layers, BookOpen, Clock, ArrowRight, FileText } from 'lucide-react';
 
 type StatsCategory = 'all' | 'general' | 'code';
-
-function formatDuration(totalSeconds: number): string {
-  if (!totalSeconds || totalSeconds <= 0) return '0m';
-  const hours = Math.floor(totalSeconds / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  if (hours > 0) {
-    return `${hours}h ${minutes}m`;
-  }
-  return `${Math.max(1, minutes)}m`;
-}
 
 export default function Stats() {
   const { user } = useAuth();

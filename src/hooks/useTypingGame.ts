@@ -23,11 +23,6 @@ export interface SessionHistoryPoint {
   errors: number;
 }
 
-export interface TargetWord {
-  id: number;
-  text: string;
-  hasNewlineAfter?: boolean;
-}
 
 export interface GameOptions {
   mode?: GameMode;
@@ -422,20 +417,6 @@ export function useTypingGame(
     }
   }, [capitals, punctuation, numbers, dictionary]);
 
-  // Backward-compatibility tokenized words for external consumers
-  const words = useMemo<TargetWord[]>(() => {
-    if (!targetText) return [{ id: 0, text: '' }];
-    return targetText.split(/\s+/).filter(Boolean).map((w, idx) => ({ id: idx, text: w }));
-  }, [targetText]);
-
-  const handleKeyStroke = useCallback((key: string) => {
-    if (key === 'Backspace') {
-      handleInput(typedTextRef.current.slice(0, -1));
-    } else if (key.length === 1) {
-      handleInput(typedTextRef.current + key);
-    }
-  }, [handleInput]);
-
   return {
     status,
     timeRemaining,
@@ -450,13 +431,7 @@ export function useTypingGame(
     history,
     shakeTrigger,
     handleInput,
-    handleKeyStroke,
     resetGame,
     setTargetText,
-    // Compatibility properties
-    words,
-    currentWordIndex: 0,
-    currentInput: '',
-    typedWords: [],
   };
 }

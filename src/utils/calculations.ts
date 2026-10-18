@@ -28,3 +28,16 @@ export function calculateConsistency(history: { wpm: number }[]): number {
   const coefficientOfVariation = (stdDev / mean) * 100;
   return Math.min(100, Math.max(0, Math.round(100 - coefficientOfVariation)));
 }
+
+/**
+ * Formats seconds into human-readable duration string (e.g., '1h 24m' or '45m')
+ */
+export function formatDuration(totalSeconds: number): string {
+  if (!totalSeconds || totalSeconds <= 0) return '0m';
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  if (hours > 0) {
+    return `${hours}h ${minutes}m`;
+  }
+  return `${Math.max(1, minutes)}m`;
+}

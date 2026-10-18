@@ -3,7 +3,7 @@ import { calculateWPM, calculateRawWPM, calculateAccuracy, calculateConsistency 
 import { generateLevelText } from '../data/levels';
 import type { LevelConfig } from '../data/levels';
 import { generateTimedWords, type DictionaryType } from '../data/words';
-import { getRandomQuote } from '../data/quotes';
+import { getRandomQuote, formatQuoteText, type Quote } from '../data/quotes';
 import type { QuoteCategory, Difficulty } from '../data/quotes';
 import { getRandomSnippet } from '../data/codeSnippets';
 import type { CodeLanguage } from '../data/codeSnippets';
@@ -37,6 +37,7 @@ export interface GameOptions {
   quoteDifficulty?: Difficulty | null;
   codeLanguage?: CodeLanguage | null;
   codeDifficulty?: Difficulty | null;
+  capitals?: boolean;
   punctuation?: boolean;
   numbers?: boolean;
   dictionary?: DictionaryType;
@@ -54,9 +55,16 @@ export function useTypingGame(
   const quoteDifficulty = options?.quoteDifficulty;
   const codeLanguage = options?.codeLanguage;
   const codeDifficulty = options?.codeDifficulty;
+  const capitals = options?.capitals ?? false;
   const punctuation = options?.punctuation ?? false;
   const numbers = options?.numbers ?? false;
   const dictionary = options?.dictionary ?? 'english-1k';
+
+  const initialQuote = useMemo(() => {
+    return currentMode === 'quotes' ? getRandomQuote(quoteCategory, quoteDifficulty) : null;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const currentQuoteRef = useRef<Quote | null>(initialQuote);
 
   const actualInitialTime = useMemo(() => {
     if (currentMode === 'lesson') {
@@ -74,11 +82,12 @@ export function useTypingGame(
     } else if (currentMode === 'custom') {
       return sanitizeCustomText(customText) || 'Type something here...';
     } else if (currentMode === 'quotes') {
-      return getRandomQuote(quoteCategory, quoteDifficulty).text;
+      const q = initialQuote || getRandomQuote(quoteCategory, quoteDifficulty);
+      return formatQuoteText(q.text, { capitals, punctuation });
     } else if (currentMode === 'code') {
       return getRandomSnippet(codeLanguage, codeDifficulty).code;
     } else {
-      return generateTimedWords(60, { punctuation, numbers, dictionary });
+      return generateTimedWords(60, { capitals, punctuation, numbers, dictionary });
     }
   });
 
@@ -298,12 +307,20 @@ export function useTypingGame(
       const addedChars = value.length - prevTyped.length;
 
       if (addedChars > 0) {
+        // Dispatch keystroke audio immediately for zero-latency auditory feedback
+        const typedChar = value[lastCharIndex];
+        if (isCorrect) {
+          playSound('correct', typedChar);
+          triggerHaptic('correct');
+        } else {
+          playSound('error', typedChar);
+          triggerHaptic('error');
+        }
+
         newTotalTyped = totalCharsTypedRef.current + addedChars;
         totalCharsTypedRef.current = newTotalTyped;
         setTotalCharsTyped(newTotalTyped);
         if (isCorrect) {
-          playSound('correct', value[lastCharIndex]);
-          triggerHaptic('correct');
           setCombo((prev) => {
             const newCombo = prev + 1;
             if (newCombo > maxComboRef.current) {
@@ -313,8 +330,6 @@ export function useTypingGame(
             return newCombo;
           });
         } else {
-          playSound('error', value[lastCharIndex]);
-          triggerHaptic('error');
           setShakeTrigger((prev) => prev + 1);
           setCombo(0);
         }
@@ -329,7 +344,7 @@ export function useTypingGame(
 
       // In timed mode: automatically append more words when approaching the end
       if (modeRef.current === 'timed' && value.length >= currentTarget.length - 20) {
-        const additional = ' ' + generateTimedWords(30, { punctuation, numbers, dictionary });
+        const additional = ' ' + generateTimedWords(30, { capitals, punctuation, numbers, dictionary });
         targetTextRef.current = currentTarget + additional;
         setTargetText((prev) => prev + additional);
       }
@@ -342,7 +357,7 @@ export function useTypingGame(
         completeSession(elapsedSeconds, currentCorrect, newTotalTyped);
       }
     },
-    [completeSession, punctuation, numbers, dictionary]
+    [completeSession, capitals, punctuation, numbers, dictionary]
   );
 
   const resetGame = useCallback(
@@ -378,17 +393,34 @@ export function useTypingGame(
         const textToUse = newCustomText !== undefined ? newCustomText : customText;
         newTarget = sanitizeCustomText(textToUse) || 'Type something here...';
       } else if (mode === 'quotes') {
-        newTarget = getRandomQuote(quoteCategory, quoteDifficulty).text;
+        const q = getRandomQuote(quoteCategory, quoteDifficulty, currentQuoteRef.current?.id);
+        currentQuoteRef.current = q;
+        newTarget = formatQuoteText(q.text, { capitals, punctuation });
       } else if (mode === 'code') {
         newTarget = getRandomSnippet(codeLanguage, codeDifficulty).code;
       } else {
-        newTarget = generateTimedWords(60, { punctuation, numbers, dictionary });
+        newTarget = generateTimedWords(60, { capitals, punctuation, numbers, dictionary });
       }
       targetTextRef.current = newTarget;
       setTargetText(newTarget);
     },
-    [customText, quoteCategory, quoteDifficulty, codeLanguage, codeDifficulty, punctuation, numbers, dictionary]
+    [customText, quoteCategory, quoteDifficulty, codeLanguage, codeDifficulty, capitals, punctuation, numbers, dictionary]
   );
+
+  // Live update targetText when text modifier toggles change before typing has started
+  useEffect(() => {
+    if (statusRef.current === 'idle' && typedTextRef.current === '') {
+      if (modeRef.current === 'quotes' && currentQuoteRef.current) {
+        const formatted = formatQuoteText(currentQuoteRef.current.text, { capitals, punctuation });
+        targetTextRef.current = formatted;
+        setTargetText(formatted);
+      } else if (modeRef.current === 'timed') {
+        const newWords = generateTimedWords(60, { capitals, punctuation, numbers, dictionary });
+        targetTextRef.current = newWords;
+        setTargetText(newWords);
+      }
+    }
+  }, [capitals, punctuation, numbers, dictionary]);
 
   // Backward-compatibility tokenized words for external consumers
   const words = useMemo<TargetWord[]>(() => {

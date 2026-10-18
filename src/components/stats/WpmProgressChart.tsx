@@ -136,13 +136,13 @@ export default function WpmProgressChart({ sessions, activeFilter, onFilterChang
   const isDark = theme === 'dark';
   const colors = isDark ? COLORS.dark : COLORS.light;
 
+  const [prevActiveFilter, setPrevActiveFilter] = useState(activeFilter);
   const [filter, setFilter] = useState<ChartFilter>(activeFilter || 'all');
 
-  useEffect(() => {
-    if (activeFilter) {
-      setFilter(activeFilter);
-    }
-  }, [activeFilter]);
+  if (activeFilter && prevActiveFilter !== activeFilter) {
+    setPrevActiveFilter(activeFilter);
+    setFilter(activeFilter);
+  }
   const [showAccuracy, setShowAccuracy] = useState(true);
   const [tooltip, setTooltip] = useState<TooltipData | null>(null);
   const svgRef = useRef<SVGSVGElement>(null);

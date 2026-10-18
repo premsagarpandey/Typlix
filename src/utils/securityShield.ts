@@ -134,6 +134,11 @@ export function initSecurityShield(): () => void {
   };
 
   // 6. Safe Clipboard Paste Sanitization (Trojan Source & null byte removal)
+  // eslint-disable-next-line no-control-regex
+  const CLIPBOARD_CONTROL_REGEX = /[\x00\u202A-\u202E\u2066-\u2069]/;
+  // eslint-disable-next-line no-control-regex
+  const CLIPBOARD_CLEAN_REGEX = /[\x00\u202A-\u202E\u2066-\u2069]/g;
+
   const handlePaste = (e: ClipboardEvent) => {
     try {
       const clipboardData = e.clipboardData;
@@ -141,9 +146,9 @@ export function initSecurityShield(): () => void {
 
       const pastedText = clipboardData.getData('text/plain');
       // If text contains null bytes or malicious Unicode directional override characters
-      if (/[\x00\u202A-\u202E\u2066-\u2069]/.test(pastedText)) {
+      if (CLIPBOARD_CONTROL_REGEX.test(pastedText)) {
         e.preventDefault();
-        const cleaned = pastedText.replace(/[\x00\u202A-\u202E\u2066-\u2069]/g, '');
+        const cleaned = pastedText.replace(CLIPBOARD_CLEAN_REGEX, '');
         const target = e.target as HTMLInputElement | HTMLTextAreaElement | null;
         if (target && 'value' in target && typeof target.selectionStart === 'number') {
           const start = target.selectionStart || 0;

@@ -52,6 +52,8 @@ interface GameSidebarProps {
   handleSelectTimedDuration: (dur: number) => void;
   dictionary?: DictionaryType;
   handleDictionaryChange?: (dict: DictionaryType) => void;
+  hasCapitals?: boolean;
+  onToggleCapitals?: () => void;
   hasPunctuation?: boolean;
   onTogglePunctuation?: () => void;
   hasNumbers?: boolean;
@@ -68,6 +70,8 @@ interface GameSidebarProps {
   customText: string;
   customTimeLimit: number;
   setIsCustomModalOpen: (open: boolean) => void;
+  onRestoreDefaults?: () => void;
+  isDefaultSettings?: boolean;
 }
 
 function GameSidebarComponent({
@@ -86,6 +90,8 @@ function GameSidebarComponent({
   handleSelectTimedDuration,
   dictionary = 'english-1k',
   handleDictionaryChange,
+  hasCapitals = false,
+  onToggleCapitals,
   hasPunctuation = false,
   onTogglePunctuation,
   hasNumbers = false,
@@ -102,6 +108,8 @@ function GameSidebarComponent({
   customText,
   customTimeLimit,
   setIsCustomModalOpen,
+  onRestoreDefaults,
+  isDefaultSettings = true,
 }: GameSidebarProps) {
   return (
         <aside className="w-full md:w-72 lg:w-80 xl:w-84 shrink-0 flex flex-col justify-between bg-white dark:bg-neutral-900/70 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-4 sm:p-4.5 shadow-xs overflow-y-auto animate-fade-in">
@@ -335,19 +343,34 @@ function GameSidebarComponent({
                   </div>
                 </div>
 
-                {/* Text Options (@ punctuation & # numbers) */}
-                {(onTogglePunctuation || onToggleNumbers) && (
+                {/* Text Options (capitals, punctuation, numbers & default) */}
+                {(onToggleCapitals || onTogglePunctuation || onToggleNumbers || onRestoreDefaults) && (
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider block">
                       Text Options
                     </label>
                     <div className="grid grid-cols-2 gap-2" role="group" aria-label="Text modifiers">
+                      {onToggleCapitals && (
+                        <button
+                          type="button"
+                          aria-pressed={hasCapitals}
+                          onClick={onToggleCapitals}
+                          className={`py-2 px-2 text-xs font-mono font-medium rounded-lg border transition-all cursor-pointer text-center flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white ${
+                            hasCapitals
+                              ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 border-neutral-900 dark:border-neutral-100 shadow-xs font-semibold'
+                              : 'border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300'
+                          }`}
+                        >
+                          <span className="font-bold">Aa</span>
+                          <span>capitals</span>
+                        </button>
+                      )}
                       {onTogglePunctuation && (
                         <button
                           type="button"
                           aria-pressed={hasPunctuation}
                           onClick={onTogglePunctuation}
-                          className={`py-2 px-2.5 text-xs font-mono font-medium rounded-lg border transition-all cursor-pointer text-center flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white ${
+                          className={`py-2 px-2 text-xs font-mono font-medium rounded-lg border transition-all cursor-pointer text-center flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white ${
                             hasPunctuation
                               ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 border-neutral-900 dark:border-neutral-100 shadow-xs font-semibold'
                               : 'border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300'
@@ -362,7 +385,7 @@ function GameSidebarComponent({
                           type="button"
                           aria-pressed={hasNumbers}
                           onClick={onToggleNumbers}
-                          className={`py-2 px-2.5 text-xs font-mono font-medium rounded-lg border transition-all cursor-pointer text-center flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white ${
+                          className={`py-2 px-2 text-xs font-mono font-medium rounded-lg border transition-all cursor-pointer text-center flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white ${
                             hasNumbers
                               ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 border-neutral-900 dark:border-neutral-100 shadow-xs font-semibold'
                               : 'border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300'
@@ -370,6 +393,24 @@ function GameSidebarComponent({
                         >
                           <span className="font-bold">#</span>
                           <span>numbers</span>
+                        </button>
+                      )}
+                      {onRestoreDefaults && (
+                        <button
+                          type="button"
+                          onClick={onRestoreDefaults}
+                          className={`py-2 px-2 text-xs font-mono font-medium rounded-lg border transition-all cursor-pointer text-center flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white group ${
+                            !isDefaultSettings
+                              ? 'border-amber-300 dark:border-amber-800/80 bg-amber-50/80 dark:bg-amber-950/40 text-amber-900 dark:text-amber-200 font-semibold'
+                              : 'border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300'
+                          }`}
+                          title="Restore default text settings (small letters, no punctuation, 1k, 30s)"
+                        >
+                          <RotateCcw className="w-3 h-3 transition-transform duration-300 group-hover:-rotate-90 group-active:rotate-180" />
+                          <span>default</span>
+                          {!isDefaultSettings && (
+                            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse ml-0.5" />
+                          )}
                         </button>
                       )}
                     </div>
@@ -480,6 +521,65 @@ function GameSidebarComponent({
                     Type inspiring passages from great thinkers, authors, and movies.
                   </p>
                 </div>
+
+                {/* Text Options (Capitals, Punctuation & Default) */}
+                {(onToggleCapitals || onTogglePunctuation || onRestoreDefaults) && (
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider block">
+                      Text Options
+                    </label>
+                    <div className="grid grid-cols-3 gap-1.5" role="group" aria-label="Quote text modifiers">
+                      {onToggleCapitals && (
+                        <button
+                          type="button"
+                          aria-pressed={hasCapitals}
+                          onClick={onToggleCapitals}
+                          className={`py-2 px-1 text-xs font-mono font-medium rounded-lg border transition-all cursor-pointer text-center flex items-center justify-center gap-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white ${
+                            hasCapitals
+                              ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 border-neutral-900 dark:border-neutral-100 shadow-xs font-semibold'
+                              : 'border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300'
+                          }`}
+                        >
+                          <span className="font-bold">Aa</span>
+                          <span>capitals</span>
+                        </button>
+                      )}
+                      {onTogglePunctuation && (
+                        <button
+                          type="button"
+                          aria-pressed={hasPunctuation}
+                          onClick={onTogglePunctuation}
+                          className={`py-2 px-1 text-xs font-mono font-medium rounded-lg border transition-all cursor-pointer text-center flex items-center justify-center gap-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white ${
+                            hasPunctuation
+                              ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 border-neutral-900 dark:border-neutral-100 shadow-xs font-semibold'
+                              : 'border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300'
+                          }`}
+                        >
+                          <span className="font-bold">@</span>
+                          <span>punct</span>
+                        </button>
+                      )}
+                      {onRestoreDefaults && (
+                        <button
+                          type="button"
+                          onClick={onRestoreDefaults}
+                          className={`py-2 px-1 text-xs font-mono font-medium rounded-lg border transition-all cursor-pointer text-center flex items-center justify-center gap-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white group ${
+                            !isDefaultSettings
+                              ? 'border-amber-300 dark:border-amber-800/80 bg-amber-50/80 dark:bg-amber-950/40 text-amber-900 dark:text-amber-200 font-semibold'
+                              : 'border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300'
+                          }`}
+                          title="Restore default quote settings (only small letters, no punctuation, all categories)"
+                        >
+                          <RotateCcw className="w-3 h-3 transition-transform duration-300 group-hover:-rotate-90 group-active:rotate-180" />
+                          <span>default</span>
+                          {!isDefaultSettings && (
+                            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse ml-0.5" />
+                          )}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
 
                 {/* Category Filter */}
                 <div className="space-y-1">

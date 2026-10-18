@@ -19,7 +19,7 @@ const googleProvider = new GoogleAuthProvider();
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(() => Boolean(auth && typeof onAuthStateChanged === 'function'));
   const [isSyncing, setIsSyncing] = useState(false);
   const [lastSyncedAt, setLastSyncedAt] = useState<Date | null>(null);
 
@@ -76,12 +76,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setLoading(false);
           }
         );
-      } else {
-        setLoading(false);
       }
     } catch (err) {
       console.warn('Auth setup warning:', err);
-      setLoading(false);
+      queueMicrotask(() => setLoading(false));
     }
 
     return () => {

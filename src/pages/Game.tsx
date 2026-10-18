@@ -26,6 +26,7 @@ export default function Game() {
   const [maxUnlockedLevel] = useLocalStorage<number>('typingGameLevel', 1);
   const [currentLevel, setCurrentLevel] = useLocalStorage<number>('typlix_active_level', 1);
   const [timedDuration, setTimedDuration] = useLocalStorage<number>('typlix_timed_duration', 30);
+  const [hasCapitals, setHasCapitals] = useLocalStorage<boolean>('typlix_capitals', false);
   const [hasPunctuation, setHasPunctuation] = useLocalStorage<boolean>('typlix_punctuation', false);
   const [hasNumbers, setHasNumbers] = useLocalStorage<boolean>('typlix_numbers', false);
   const [dictionary, setDictionary] = useLocalStorage<DictionaryType>('typlix_dictionary', 'english-1k');
@@ -118,15 +119,20 @@ export default function Game() {
     quoteDifficulty,
     codeLanguage,
     codeDifficulty,
+    capitals: hasCapitals,
     punctuation: hasPunctuation,
     numbers: hasNumbers,
     dictionary,
   });
 
-  // Derived quote info from target text
+  // Derived quote info from target text (matches exact or normalized text)
   const currentQuoteInfo = useMemo(() => {
     if (mode === 'quotes' && targetText) {
-      const match = QUOTES.find((q) => q.text === targetText);
+      const cleanTarget = targetText.toLowerCase().replace(/[^a-z0-9]/g, '');
+      const match = QUOTES.find((q) => {
+        const cleanQuote = q.text.toLowerCase().replace(/[^a-z0-9]/g, '');
+        return cleanQuote === cleanTarget || q.text === targetText;
+      });
       if (match) return { author: match.author, source: match.source };
     }
     return { author: '', source: '' };
@@ -262,6 +268,65 @@ export default function Game() {
     setIsCustomModalOpen(true);
   }, []);
 
+  const handleRestoreDefaults = useCallback(() => {
+    if (mode === 'timed') {
+      setHasCapitals(false);
+      setHasPunctuation(false);
+      setHasNumbers(false);
+      setDictionary('english-1k');
+      setTimedDuration(30);
+      resetGame();
+    } else if (mode === 'quotes') {
+      setHasCapitals(false);
+      setHasPunctuation(false);
+      setQuoteCategory(null);
+      setQuoteDifficulty(null);
+      resetGame();
+    } else if (mode === 'lesson') {
+      resetGame();
+    }
+  }, [
+    mode,
+    setHasCapitals,
+    setHasPunctuation,
+    setHasNumbers,
+    setDictionary,
+    setTimedDuration,
+    setQuoteCategory,
+    setQuoteDifficulty,
+    resetGame,
+  ]);
+
+  const isDefaultSettings = useMemo(() => {
+    if (mode === 'timed') {
+      return (
+        !hasCapitals &&
+        !hasPunctuation &&
+        !hasNumbers &&
+        dictionary === 'english-1k' &&
+        timedDuration === 30
+      );
+    }
+    if (mode === 'quotes') {
+      return (
+        !hasCapitals &&
+        !hasPunctuation &&
+        quoteCategory === null &&
+        quoteDifficulty === null
+      );
+    }
+    return true;
+  }, [
+    mode,
+    hasCapitals,
+    hasPunctuation,
+    hasNumbers,
+    dictionary,
+    timedDuration,
+    quoteCategory,
+    quoteDifficulty,
+  ]);
+
   // Keyboard shortcut handlers for Enter and R when finished
   useEffect(() => {
     if (status !== 'passed' && status !== 'failed' && status !== 'finished') {
@@ -319,6 +384,12 @@ export default function Game() {
           handleSelectTimedDuration={handleSelectTimedDuration}
           dictionary={dictionary}
           handleDictionaryChange={handleDictionaryChange}
+          hasCapitals={hasCapitals}
+          onToggleCapitals={() => {
+            const next = !hasCapitals;
+            setHasCapitals(next);
+            resetGame();
+          }}
           hasPunctuation={hasPunctuation}
           onTogglePunctuation={() => {
             const next = !hasPunctuation;
@@ -343,6 +414,8 @@ export default function Game() {
           customText={customText}
           customTimeLimit={customTimeLimit}
           setIsCustomModalOpen={setIsCustomModalOpen}
+          onRestoreDefaults={handleRestoreDefaults}
+          isDefaultSettings={isDefaultSettings}
         />
       )}
 
@@ -396,6 +469,12 @@ export default function Game() {
               selectedDuration={timedDuration}
               onSelectDuration={handleSelectTimedDuration}
               onOpenCustomModal={handleOpenCustomModal}
+              capitals={hasCapitals}
+              onToggleCapitals={() => {
+                const next = !hasCapitals;
+                setHasCapitals(next);
+                resetGame();
+              }}
               punctuation={hasPunctuation}
               onTogglePunctuation={() => {
                 const next = !hasPunctuation;
@@ -410,6 +489,8 @@ export default function Game() {
               }}
               dictionary={dictionary}
               onSelectDictionary={handleDictionaryChange}
+              onRestoreDefaults={handleRestoreDefaults}
+              isDefaultSettings={isDefaultSettings}
               isMobile={isMobile}
             />
           </div>
@@ -527,6 +608,12 @@ export default function Game() {
                 handleDictionaryChange={(dict) => {
                   handleDictionaryChange(dict);
                 }}
+                hasCapitals={hasCapitals}
+                onToggleCapitals={() => {
+                  const next = !hasCapitals;
+                  setHasCapitals(next);
+                  resetGame();
+                }}
                 hasPunctuation={hasPunctuation}
                 onTogglePunctuation={() => {
                   const next = !hasPunctuation;
@@ -566,6 +653,11 @@ export default function Game() {
                   setIsCustomModalOpen(open);
                   setIsMobileDrawerOpen(false);
                 }}
+                onRestoreDefaults={() => {
+                  handleRestoreDefaults();
+                  setIsMobileDrawerOpen(false);
+                }}
+                isDefaultSettings={isDefaultSettings}
               />
             </div>
           </div>

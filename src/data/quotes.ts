@@ -364,3 +364,35 @@ export function getRandomQuote(
   return pool[Math.floor(Math.random() * pool.length)];
 }
 
+/**
+ * Formats quote text based on capitalization and punctuation preferences.
+ * By default: only small letters (lowercase) and without any punctuation (, . / ; : ' " etc.).
+ */
+export function formatQuoteText(
+  rawText: string,
+  options?: { capitals?: boolean; punctuation?: boolean }
+): string {
+  const { capitals = false, punctuation = false } = options || {};
+  let text = rawText;
+
+  // 1. Handle punctuation (default: OFF, remove all commas, dots, colons, quotes)
+  if (!punctuation) {
+    // Replace em-dashes and en-dashes with space
+    text = text.replace(/[—–]/g, ' ');
+    // Remove apostrophes in contractions so "don't" -> "dont", "it's" -> "its"
+    text = text.replace(/['’]/g, '');
+    // Remove all remaining punctuation marks
+    text = text.replace(/[,.;:?!"/\\()[\]{}…“”`~@#$%^&*_+=<>]/g, '');
+    // Clean up multiple spaces and trim
+    text = text.replace(/\s+/g, ' ').trim();
+  }
+
+  // 2. Handle capitalization (default: OFF, all lowercase)
+  if (!capitals) {
+    text = text.toLowerCase();
+  }
+
+  return text;
+}
+
+

@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { Pencil, Quote, Code } from 'lucide-react';
+import { Pencil, Quote, Code, RotateCcw } from 'lucide-react';
 import type { GameMode } from '../../hooks/useTypingGame';
 import type { DictionaryType } from '../../data/words';
 
@@ -21,12 +21,16 @@ interface GameStatsProps {
   selectedDuration?: number;
   onSelectDuration?: (dur: number) => void;
   onOpenCustomModal?: () => void;
+  capitals?: boolean;
+  onToggleCapitals?: () => void;
   punctuation?: boolean;
   onTogglePunctuation?: () => void;
   numbers?: boolean;
   onToggleNumbers?: () => void;
   dictionary?: DictionaryType;
   onSelectDictionary?: (dict: DictionaryType) => void;
+  onRestoreDefaults?: () => void;
+  isDefaultSettings?: boolean;
   isMobile?: boolean;
 }
 
@@ -48,20 +52,24 @@ function GameStatsComponent({
   selectedDuration,
   onSelectDuration,
   onOpenCustomModal,
+  capitals = false,
+  onToggleCapitals,
   punctuation = false,
   onTogglePunctuation,
   numbers = false,
   onToggleNumbers,
   dictionary = 'english-1k',
   onSelectDictionary,
-  isMobile = false,
+  onRestoreDefaults,
+  isDefaultSettings = true,
+  isMobile: _isMobile = false,
 }: GameStatsProps) {
   const isLesson = mode === 'lesson';
 
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center justify-between items-start gap-1.5 sm:gap-3 py-1 px-0.5 text-xs sm:text-sm select-none w-full">
-      {/* ─── LEFT: Level Number + Name OR Timed Mode (with Punctuation & Numbers) OR Custom ─── */}
-      <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 shrink-0">
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between items-start gap-2 sm:gap-3 py-1 px-0.5 text-xs sm:text-sm select-none w-full">
+      {/* ─── LEFT: Level Number + Name OR Timed Mode (with Punctuation & Numbers) OR Quotes OR Custom ─── */}
+      <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 max-w-full overflow-hidden">
         {isLesson ? (
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             {onPrevLevel && (
@@ -105,46 +113,90 @@ function GameStatsComponent({
             )}
           </div>
         ) : mode === 'timed' ? (
-          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 shrink-0">
-            {/* Punctuation & Numbers Toggles (Monkeytype style) - hidden on mobile outside, accessible in Controls */}
-            {!isMobile && (
-              <div className="hidden md:inline-flex items-center border border-neutral-200 dark:border-neutral-700 rounded-lg overflow-hidden bg-neutral-100/60 dark:bg-neutral-800/60 p-0.5 shrink-0">
+          <div className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar py-0.5 max-w-full shrink-0">
+            {/* Group 1: Modifiers (Capitals, Punctuation, Numbers) */}
+            <div className="inline-flex items-center border border-neutral-200/90 dark:border-neutral-700/80 rounded-lg bg-neutral-100/70 dark:bg-neutral-800/60 p-0.5 shrink-0 shadow-2xs backdrop-blur-xs">
+              {onToggleCapitals && (
                 <button
                   type="button"
-                  onClick={onTogglePunctuation}
-                  aria-pressed={punctuation}
-                  className={`px-2 py-0.5 text-[11px] font-mono rounded-md active:scale-95 transition-all cursor-pointer ${
-                    punctuation
+                  onClick={onToggleCapitals}
+                  aria-pressed={capitals}
+                  className={`px-2 py-0.5 text-[11px] font-mono rounded-md active:scale-95 transition-all cursor-pointer flex items-center gap-1 ${
+                    capitals
                       ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-bold shadow-2xs'
-                      : 'text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100'
+                      : 'text-neutral-600 hover:text-neutral-950 dark:text-neutral-400 dark:hover:text-neutral-100 hover:bg-neutral-200/50 dark:hover:bg-neutral-700/40'
                   }`}
-                  title="Toggle punctuation in speed test"
+                  title="Toggle capital letters (default: OFF)"
                 >
-                  @ punctuation
+                  <span className="font-bold">Aa</span>
+                  <span className="hidden sm:inline">capitals</span>
                 </button>
+              )}
+              <button
+                type="button"
+                onClick={onTogglePunctuation}
+                aria-pressed={punctuation}
+                className={`px-2 py-0.5 text-[11px] font-mono rounded-md active:scale-95 transition-all cursor-pointer flex items-center gap-1 ${
+                  punctuation
+                    ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-bold shadow-2xs'
+                    : 'text-neutral-600 hover:text-neutral-950 dark:text-neutral-400 dark:hover:text-neutral-100 hover:bg-neutral-200/50 dark:hover:bg-neutral-700/40'
+                }`}
+                title="Toggle punctuation (default: OFF)"
+              >
+                <span className="font-bold">@</span>
+                <span className="hidden sm:inline">punctuation</span>
+              </button>
+              <button
+                type="button"
+                onClick={onToggleNumbers}
+                aria-pressed={numbers}
+                className={`px-2 py-0.5 text-[11px] font-mono rounded-md active:scale-95 transition-all cursor-pointer flex items-center gap-1 ${
+                  numbers
+                    ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-bold shadow-2xs'
+                    : 'text-neutral-600 hover:text-neutral-950 dark:text-neutral-400 dark:hover:text-neutral-100 hover:bg-neutral-200/50 dark:hover:bg-neutral-700/40'
+                }`}
+                title="Toggle numbers (default: OFF)"
+              >
+                <span className="font-bold">#</span>
+                <span className="hidden sm:inline">numbers</span>
+              </button>
+              {onRestoreDefaults && (
                 <button
                   type="button"
-                  onClick={onToggleNumbers}
-                  aria-pressed={numbers}
-                  className={`px-2 py-0.5 text-[11px] font-mono rounded-md active:scale-95 transition-all cursor-pointer ${
-                    numbers
-                      ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-bold shadow-2xs'
-                      : 'text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100'
+                  onClick={onRestoreDefaults}
+                  aria-label="Restore default settings"
+                  className={`px-2 py-0.5 text-[11px] font-mono rounded-md active:scale-95 transition-all cursor-pointer flex items-center gap-1 group ${
+                    !isDefaultSettings
+                      ? 'text-amber-700 dark:text-amber-300 hover:bg-amber-100/60 dark:hover:bg-amber-900/40 font-semibold'
+                      : 'text-neutral-600 hover:text-neutral-950 dark:text-neutral-400 dark:hover:text-neutral-100 hover:bg-neutral-200/50 dark:hover:bg-neutral-700/40'
                   }`}
-                  title="Toggle numbers in speed test"
+                  title="Restore default settings (lowercase, no punctuation, 1k, 30s)"
                 >
-                  # numbers
+                  <RotateCcw className="w-3 h-3 transition-transform duration-300 group-hover:-rotate-90 group-active:rotate-180" aria-hidden="true" />
+                  <span>default</span>
+                  {!isDefaultSettings && (
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse ml-0.5" title="Settings modified from default" />
+                  )}
                 </button>
-              </div>
-            )}
+              )}
+            </div>
 
-            {/* Word Bank Dictionary Selector - hidden on mobile outside, accessible in Controls */}
-            {!isMobile && onSelectDictionary && (
-              <div className="hidden md:inline-flex items-center border border-neutral-200 dark:border-neutral-700 rounded-lg overflow-hidden bg-neutral-100/60 dark:bg-neutral-800/60 p-0.5 shrink-0" role="group" aria-label="Word dictionary selection">
+            {/* Group 2: Word Bank Dictionary Selector */}
+            {onSelectDictionary && (
+              <div
+                className="inline-flex items-center border border-neutral-200/90 dark:border-neutral-700/80 rounded-lg bg-neutral-100/70 dark:bg-neutral-800/60 p-0.5 shrink-0 shadow-2xs backdrop-blur-xs"
+                role="group"
+                aria-label="Word dictionary selection"
+              >
                 {(['english-1k', 'english-5k', 'english-200'] as const).map((dictId) => {
                   const isSelected = dictionary === dictId;
                   const label = dictId === 'english-1k' ? '1k' : dictId === 'english-5k' ? '5k' : '200';
-                  const title = dictId === 'english-1k' ? 'Standard 1,000 words' : dictId === 'english-5k' ? 'Extended 5,000 words' : 'Core 200 words';
+                  const title =
+                    dictId === 'english-1k'
+                      ? 'Standard 1,000 words (Default)'
+                      : dictId === 'english-5k'
+                      ? 'Extended 5,000 words'
+                      : 'Core 200 words';
                   return (
                     <button
                       key={dictId}
@@ -154,7 +206,7 @@ function GameStatsComponent({
                       className={`px-2 py-0.5 text-[11px] font-mono rounded-md active:scale-95 transition-all cursor-pointer ${
                         isSelected
                           ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-bold shadow-2xs'
-                          : 'text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100'
+                          : 'text-neutral-600 hover:text-neutral-950 dark:text-neutral-400 dark:hover:text-neutral-100 hover:bg-neutral-200/50 dark:hover:bg-neutral-700/40'
                       }`}
                       title={`Dictionary: ${title}`}
                     >
@@ -165,8 +217,8 @@ function GameStatsComponent({
               </div>
             )}
 
-            {/* Timed Durations */}
-            <div className="inline-flex items-center border border-neutral-200 dark:border-neutral-700 rounded-lg overflow-hidden bg-neutral-100/60 dark:bg-neutral-800/60 p-0.5 shrink-0">
+            {/* Group 3: Timed Durations */}
+            <div className="inline-flex items-center border border-neutral-200/90 dark:border-neutral-700/80 rounded-lg bg-neutral-100/70 dark:bg-neutral-800/60 p-0.5 shrink-0 shadow-2xs backdrop-blur-xs">
               {[15, 30, 60, 120].map((dur) => {
                 const isSelected = (selectedDuration || initialTime || 30) === dur;
                 return (
@@ -175,12 +227,12 @@ function GameStatsComponent({
                     type="button"
                     onClick={() => onSelectDuration?.(dur)}
                     aria-label={`${dur} seconds speed test duration`}
-                    className={`px-2.5 py-0.5 text-xs font-mono font-medium rounded-md active:scale-95 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white ${
+                    className={`px-2 sm:px-2.5 py-0.5 text-[11px] sm:text-xs font-mono font-medium rounded-md active:scale-95 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white ${
                       isSelected
-                        ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 shadow-2xs font-semibold'
-                        : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-200/60 dark:hover:bg-neutral-700/50'
+                        ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 shadow-2xs font-bold'
+                        : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-200/50 dark:hover:bg-neutral-700/40'
                     }`}
-                    title={`${dur}s speed test`}
+                    title={`${dur}s speed test ${dur === 30 ? '(Default)' : ''}`}
                   >
                     {dur}s
                   </button>
@@ -207,27 +259,80 @@ function GameStatsComponent({
               </button>
             )}
           </div>
+        ) : mode === 'quotes' ? (
+          <div className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar py-0.5 shrink-0 max-w-full">
+            <span className="text-xs text-neutral-600 dark:text-neutral-400 uppercase tracking-wider font-semibold flex items-center gap-1.5 shrink-0 pr-1">
+              <Quote className="w-3.5 h-3.5" aria-hidden="true" />
+              <span>Quotes</span>
+            </span>
+
+            {/* Outside toggles for Capitals and Punctuation in Quotes mode */}
+            <div className="inline-flex items-center border border-neutral-200/90 dark:border-neutral-700/80 rounded-lg bg-neutral-100/70 dark:bg-neutral-800/60 p-0.5 shrink-0 shadow-2xs backdrop-blur-xs">
+              {onToggleCapitals && (
+                <button
+                  type="button"
+                  onClick={onToggleCapitals}
+                  aria-pressed={capitals}
+                  className={`px-2 py-0.5 text-[11px] font-mono rounded-md active:scale-95 transition-all cursor-pointer flex items-center gap-1 ${
+                    capitals
+                      ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-bold shadow-2xs'
+                      : 'text-neutral-600 hover:text-neutral-950 dark:text-neutral-400 dark:hover:text-neutral-100 hover:bg-neutral-200/50 dark:hover:bg-neutral-700/40'
+                  }`}
+                  title="Toggle capital letters in quotes (default: OFF)"
+                >
+                  <span className="font-bold">Aa</span>
+                  <span className="hidden sm:inline">capitals</span>
+                </button>
+              )}
+              {onTogglePunctuation && (
+                <button
+                  type="button"
+                  onClick={onTogglePunctuation}
+                  aria-pressed={punctuation}
+                  className={`px-2 py-0.5 text-[11px] font-mono rounded-md active:scale-95 transition-all cursor-pointer flex items-center gap-1 ${
+                    punctuation
+                      ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-bold shadow-2xs'
+                      : 'text-neutral-600 hover:text-neutral-950 dark:text-neutral-400 dark:hover:text-neutral-100 hover:bg-neutral-200/50 dark:hover:bg-neutral-700/40'
+                  }`}
+                  title="Toggle punctuation in quotes (default: OFF)"
+                >
+                  <span className="font-bold">@</span>
+                  <span className="hidden sm:inline">punctuation</span>
+                </button>
+              )}
+              {onRestoreDefaults && (
+                <button
+                  type="button"
+                  onClick={onRestoreDefaults}
+                  aria-label="Restore default quote settings"
+                  className={`px-2 py-0.5 text-[11px] font-mono rounded-md active:scale-95 transition-all cursor-pointer flex items-center gap-1 group ${
+                    !isDefaultSettings
+                      ? 'text-amber-700 dark:text-amber-300 hover:bg-amber-100/60 dark:hover:bg-amber-900/40 font-semibold'
+                      : 'text-neutral-600 hover:text-neutral-950 dark:text-neutral-400 dark:hover:text-neutral-100 hover:bg-neutral-200/50 dark:hover:bg-neutral-700/40'
+                  }`}
+                  title="Restore default quote settings (only small letters, no punctuation, all categories)"
+                >
+                  <RotateCcw className="w-3 h-3 transition-transform duration-300 group-hover:-rotate-90 group-active:rotate-180" aria-hidden="true" />
+                  <span>default</span>
+                  {!isDefaultSettings && (
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse ml-0.5" title="Settings modified from default" />
+                  )}
+                </button>
+              )}
+            </div>
+          </div>
         ) : (
           <div className="flex items-center gap-1.5 shrink-0">
             <span className="text-xs text-neutral-600 dark:text-neutral-400 uppercase tracking-wider font-semibold flex items-center gap-1.5">
-              {mode === 'quotes' ? (
-                <>
-                  <Quote className="w-3.5 h-3.5" aria-hidden="true" />
-                  <span>Quotes</span>
-                </>
-              ) : (
-                <>
-                  <Code className="w-3.5 h-3.5" aria-hidden="true" />
-                  <span>Code</span>
-                </>
-              )}
+              <Code className="w-3.5 h-3.5" aria-hidden="true" />
+              <span>Code</span>
             </span>
           </div>
         )}
       </div>
 
       {/* ─── LIVE METRICS: TIME, WPM, ACC, COMBO ─── */}
-      <div className="flex items-center gap-2.5 sm:gap-4 md:gap-5 shrink-0 justify-start sm:ml-auto font-mono text-xs sm:text-sm">
+      <div className="flex items-center gap-2.5 sm:gap-4 md:gap-5 shrink-0 justify-between sm:justify-end w-full sm:w-auto font-mono text-xs sm:text-sm border-t border-neutral-100 dark:border-neutral-800/60 sm:border-t-0 pt-1.5 sm:pt-0 mt-0.5 sm:mt-0">
         {/* Time */}
         <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
           <span className="text-[10px] sm:text-xs text-neutral-500 uppercase tracking-wider font-semibold">

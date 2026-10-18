@@ -460,7 +460,7 @@ function TypingAreaComponent({
       window.removeEventListener('pointerdown', handlePointerDown, true);
       document.removeEventListener('visibilitychange', handleVisibility);
     };
-  }, [status, updateCapsLockState]);
+  }, [status, updateCapsLockState, isMobile]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     updateCapsLockState(e);

@@ -125,7 +125,7 @@ export default function StudentReportModal({
   );
 
   const reportId = useMemo(() => {
-    const raw = user?.uid ? user.uid.substring(0, 6) : Date.now().toString(36).substring(2, 8);
+    const raw = user?.uid ? user.uid.substring(0, 6) : 'GUEST1';
     return `TYP-${raw.toUpperCase()}`;
   }, [user]);
 

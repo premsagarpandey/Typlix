@@ -54,6 +54,7 @@ export const PRESET_CUSTOM_TEXTS: CustomPreset[] = [
 ];
 
 export interface TimedWordsOptions {
+  capitals?: boolean;
   punctuation?: boolean;
   numbers?: boolean;
   dictionary?: DictionaryType;
@@ -96,10 +97,10 @@ const MAX_RECENT_BUFFER = 45;
 /**
  * Generates continuous random words for timed typing tests from the selected dictionary
  * (English 1k default, English 5k, or English 200) with anti-repetition protection,
- * optional punctuation & numbers.
+ * optional capitals, punctuation & numbers. Default: only small letters and zero punctuation.
  */
 export function generateTimedWords(wordCount: number = 60, options?: TimedWordsOptions): string {
-  const { punctuation = false, numbers = false, dictionary = 'english-1k' } = options || {};
+  const { capitals = false, punctuation = false, numbers = false, dictionary = 'english-1k' } = options || {};
   const wordPool = DICTIONARIES[dictionary] || ENGLISH_1K;
   const poolLength = wordPool.length;
 
@@ -142,12 +143,12 @@ export function generateTimedWords(wordCount: number = 60, options?: TimedWordsO
       }
     }
 
-    if (punctuation) {
-      // Capitalize first word of a sentence
-      if (currentSentenceIndex === 0) {
-        word = word.charAt(0).toUpperCase() + word.slice(1);
-      }
+    // Capitalize first word of sentence if capitals is enabled (default is false -> all small letters)
+    if (capitals && currentSentenceIndex === 0 && word.length > 0) {
+      word = word.charAt(0).toUpperCase() + word.slice(1);
+    }
 
+    if (punctuation) {
       // End of sentence punctuation
       if (currentSentenceIndex === sentenceLength - 1 || i === wordCount - 1) {
         const rand = Math.random();
@@ -159,6 +160,13 @@ export function generateTimedWords(wordCount: number = 60, options?: TimedWordsO
         // Mid-sentence comma
         word = word + ',';
         currentSentenceIndex++;
+      } else {
+        currentSentenceIndex++;
+      }
+    } else {
+      if (currentSentenceIndex >= sentenceLength - 1) {
+        currentSentenceIndex = 0;
+        sentenceLength = Math.floor(Math.random() * 5) + 5;
       } else {
         currentSentenceIndex++;
       }

@@ -29,6 +29,7 @@ const DANGEROUS_PROTOCOLS_REGEX = /(javascript|vbscript|data\s*:\s*text\/html)\s
 const HTML_TAG_REGEX = /<[^>]*>?/gm;
 
 // Non-printable control characters (excluding standard whitespace)
+// eslint-disable-next-line no-control-regex
 const CONTROL_CHARS_REGEX = /[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g;
 
 /**

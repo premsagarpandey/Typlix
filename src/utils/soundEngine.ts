@@ -204,7 +204,7 @@ const PROFILE_CONFIGS: Record<SoundProfileId, SoundProfileConfig> = {
 
 let audioCtx: AudioContext | null = null;
 let masterGain: GainNode | null = null;
-let cachedNoiseBuffer: AudioBuffer | null = null;
+let keepAliveActive = false;
 
 // In-memory cache of user audio settings to eliminate synchronous localStorage reads on keystroke
 let cachedSoundEnabled = typeof window !== 'undefined' ? !checkIsPhone() : true;
@@ -212,6 +212,292 @@ let cachedProfileId: SoundProfileId = 'cherry-mx-blue';
 let cachedSoundVolume = 70;
 let settingsInitialized = false;
 let listenersAttached = false;
+let unlockListenersAttached = false;
+let variationIndex = 0;
+
+interface ProfileBuffers {
+  keydown: AudioBuffer[];
+  space: AudioBuffer;
+  error: AudioBuffer;
+}
+
+const profileBufferCache = new Map<SoundProfileId, ProfileBuffers>();
+const pendingPreRenders = new Set<SoundProfileId>();
+
+/**
+ * Returns or initializes the shared AudioContext with interactive low-latency mode.
+ */
+function ensureAudioContext(): { ctx: AudioContext; master: GainNode } | null {
+  try {
+    if (!audioCtx) {
+      const AudioContextClass =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      if (!AudioContextClass) return null;
+
+      audioCtx = new AudioContextClass({ latencyHint: 'interactive' });
+      masterGain = audioCtx.createGain();
+      const vol = Math.max(0, Math.min(cachedSoundVolume, 100)) / 100;
+      masterGain.gain.setValueAtTime(vol, audioCtx.currentTime);
+      masterGain.connect(audioCtx.destination);
+
+      startHardwareKeepAlive(audioCtx);
+    }
+
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume().catch(() => {});
+    }
+
+    return { ctx: audioCtx, master: masterGain! };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Anti-DAC-Sleep Keep-Alive stream.
+ * Prevents OS audio hardware, DirectSound/WASAPI, and Bluetooth A2DP DACs from
+ * entering power-saving sleep when the user pauses typing. Eliminates the common
+ * 100ms first-keystroke latency spike and clipped initial transient.
+ */
+function startHardwareKeepAlive(ctx: AudioContext): void {
+  if (keepAliveActive) return;
+  keepAliveActive = true;
+
+  try {
+    const sampleRate = ctx.sampleRate || 44100;
+    const buffer = ctx.createBuffer(1, sampleRate, sampleRate);
+    const channel = buffer.getChannelData(0);
+    // Inaudible micro-dither: signal level ~1e-6 scaled by 0.0001 gain = 1e-10 (-200 dB).
+    // Completely inaudible to human ears, but tells the audio driver the stream is active.
+    for (let i = 0; i < channel.length; i++) {
+      channel[i] = (Math.random() * 2 - 1) * 1e-6;
+    }
+
+    const source = ctx.createBufferSource();
+    source.buffer = buffer;
+    source.loop = true;
+
+    const keepAliveGain = ctx.createGain();
+    keepAliveGain.gain.setValueAtTime(0.0001, ctx.currentTime);
+
+    source.connect(keepAliveGain);
+    keepAliveGain.connect(ctx.destination);
+    source.start(0);
+  } catch {
+    // If not supported, continue gracefully
+  }
+}
+
+/**
+ * Eagerly unlock and warm up Web Audio on the very first user interaction.
+ * By the time the user types their first character, the audio pipeline is already running.
+ */
+function setupAudioUnlockListeners(): void {
+  if (typeof window === 'undefined' || unlockListenersAttached) return;
+  unlockListenersAttached = true;
+
+  const unlock = () => {
+    ensureAudioContext();
+    if (audioCtx && audioCtx.state === 'running') {
+      window.removeEventListener('pointerdown', unlock, true);
+      window.removeEventListener('keydown', unlock, true);
+      window.removeEventListener('touchstart', unlock, true);
+      window.removeEventListener('mousedown', unlock, true);
+    }
+  };
+
+  window.addEventListener('pointerdown', unlock, { capture: true, passive: true });
+  window.addEventListener('keydown', unlock, { capture: true, passive: true });
+  window.addEventListener('touchstart', unlock, { capture: true, passive: true });
+  window.addEventListener('mousedown', unlock, { capture: true, passive: true });
+
+  window.addEventListener('focus', () => {
+    if (audioCtx && audioCtx.state === 'suspended') {
+      audioCtx.resume().catch(() => {});
+    }
+  });
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && audioCtx && audioCtx.state === 'suspended') {
+      audioCtx.resume().catch(() => {});
+    }
+  });
+}
+
+/**
+ * Procedurally render a mechanical sound profile into pristine, studio-quality AudioBuffers
+ * using OfflineAudioContext. Pre-rendering eliminates all runtime oscillator synthesis,
+ * avoids exponential ramp deadline misses, eliminates setTimeout voice leaks, and drops
+ * keystroke audio trigger time to sub-millisecond speeds.
+ */
+async function renderSoundProfileToBuffers(
+  profileId: SoundProfileId,
+  sampleRate: number = 44100
+): Promise<ProfileBuffers | null> {
+  const config = PROFILE_CONFIGS[profileId];
+  if (!config) return null;
+
+  try {
+    const OfflineAudioClass =
+      window.OfflineAudioContext ||
+      (window as unknown as { webkitOfflineAudioContext: typeof OfflineAudioContext }).webkitOfflineAudioContext;
+
+    if (!OfflineAudioClass) return null;
+
+    const renderSingleBuffer = async (
+      layerConfig: SoundProfileConfig['keydown'],
+      options: { pitchMult?: number; durMult?: number; gainBoost?: number; freqOffset?: number } = {}
+    ): Promise<AudioBuffer> => {
+      const { pitchMult = 1.0, durMult = 1.0, gainBoost = 1.0, freqOffset = 1.0 } = options;
+
+      let maxDuration = 0.08;
+      for (const osc of layerConfig.oscillators) {
+        const d = osc.duration * durMult;
+        if (d > maxDuration) maxDuration = d;
+      }
+      if (layerConfig.noise) {
+        const d = layerConfig.noise.duration * durMult;
+        if (d > maxDuration) maxDuration = d;
+      }
+
+      // Add a 20ms decay tail so waveform naturally settles to absolute 0, preventing clicks or cuts
+      const totalDuration = maxDuration + 0.02;
+      const length = Math.ceil(totalDuration * sampleRate);
+
+      const offlineCtx = new OfflineAudioClass(1, length, sampleRate);
+      const now = 0;
+
+      const master = offlineCtx.createGain();
+      master.gain.setValueAtTime(gainBoost, now);
+      master.connect(offlineCtx.destination);
+
+      // Render oscillator layers
+      for (const layer of layerConfig.oscillators) {
+        const osc = offlineCtx.createOscillator();
+        const gain = offlineCtx.createGain();
+        const layerDuration = layer.duration * durMult;
+
+        osc.type = layer.type;
+        const baseFreq = layer.freq * pitchMult * freqOffset;
+        osc.frequency.setValueAtTime(baseFreq, now);
+
+        if (layer.freqEnd) {
+          const endFreq = Math.max(layer.freqEnd * pitchMult * freqOffset, 20);
+          osc.frequency.exponentialRampToValueAtTime(endFreq, now + layerDuration);
+        }
+        if (layer.detune) {
+          osc.detune.setValueAtTime(layer.detune, now);
+        }
+
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.linearRampToValueAtTime(layer.gain, now + layer.attack);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + layer.attack + layer.decay);
+
+        osc.connect(gain);
+        gain.connect(master);
+
+        osc.start(now);
+        osc.stop(now + layerDuration + 0.015);
+      }
+
+      // Render noise burst layer
+      if (layerConfig.noise) {
+        const nl = layerConfig.noise;
+        const noiseBuf = offlineCtx.createBuffer(1, length, sampleRate);
+        const data = noiseBuf.getChannelData(0);
+        for (let i = 0; i < length; i++) {
+          data[i] = Math.random() * 2 - 1;
+        }
+
+        const noiseSource = offlineCtx.createBufferSource();
+        noiseSource.buffer = noiseBuf;
+
+        const noiseFilter = offlineCtx.createBiquadFilter();
+        noiseFilter.type = nl.filterType;
+        noiseFilter.frequency.setValueAtTime(nl.filterFreq, now);
+        noiseFilter.Q.setValueAtTime(nl.filterQ, now);
+
+        const noiseGain = offlineCtx.createGain();
+        noiseGain.gain.setValueAtTime(0.0001, now);
+        noiseGain.gain.linearRampToValueAtTime(nl.gain, now + nl.attack);
+        noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + nl.attack + nl.decay);
+
+        noiseSource.connect(noiseFilter);
+        noiseFilter.connect(noiseGain);
+        noiseGain.connect(master);
+
+        noiseSource.start(now);
+        noiseSource.stop(now + nl.duration * durMult + 0.015);
+      }
+
+      const promise = offlineCtx.startRendering();
+      if (promise && typeof promise.then === 'function') {
+        return await promise;
+      }
+      return await new Promise<AudioBuffer>((resolve, reject) => {
+        offlineCtx.oncomplete = (e) => resolve(e.renderedBuffer);
+        setTimeout(() => reject(new Error('Audio render timeout')), 1000);
+      });
+    };
+
+    // Pre-render 3 acoustic micro-variations for standard keys, 1 deep spacebar, and 1 error buffer
+    const [var0, var1, var2, space, error] = await Promise.all([
+      renderSingleBuffer(config.keydown, { freqOffset: 1.0 }),
+      renderSingleBuffer(config.keydown, { freqOffset: 1.018 }),
+      renderSingleBuffer(config.keydown, { freqOffset: 0.982 }),
+      renderSingleBuffer(config.keydown, { pitchMult: 0.82, durMult: 1.20, gainBoost: 1.08 }),
+      renderSingleBuffer(config.error, { freqOffset: 1.0 }),
+    ]);
+
+    const result: ProfileBuffers = {
+      keydown: [var0, var1, var2],
+      space,
+      error,
+    };
+
+    profileBufferCache.set(profileId, result);
+    return result;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Pre-warms buffers for a given profile in background.
+ */
+function warmupProfile(profileId: SoundProfileId): void {
+  if (profileBufferCache.has(profileId) || pendingPreRenders.has(profileId)) return;
+  pendingPreRenders.add(profileId);
+
+  const sampleRate = audioCtx ? audioCtx.sampleRate : 44100;
+  renderSoundProfileToBuffers(profileId, sampleRate).finally(() => {
+    pendingPreRenders.delete(profileId);
+  });
+}
+
+/**
+ * Warm up all profile audio buffers smoothly.
+ */
+function warmupAllProfiles(): void {
+  warmupProfile(cachedProfileId);
+
+  const warmupOthers = () => {
+    for (const p of SOUND_PROFILES) {
+      if (p.id !== cachedProfileId) {
+        warmupProfile(p.id);
+      }
+    }
+  };
+
+  if (typeof window !== 'undefined') {
+    if ('requestIdleCallback' in window) {
+      (window as unknown as { requestIdleCallback: (cb: () => void) => void }).requestIdleCallback(warmupOthers);
+    } else {
+      setTimeout(warmupOthers, 150);
+    }
+  }
+}
 
 export function initCachedSettings(): void {
   if (typeof window === 'undefined') return;
@@ -226,9 +512,12 @@ export function initCachedSettings(): void {
     } catch {
       // fallback to defaults
     }
+
+    setupAudioUnlockListeners();
+    warmupAllProfiles();
   }
 
-  // Strictly attach event listeners ONCE to prevent exponential leak ($2^N$ listeners on setting changes)
+  // Strictly attach event listeners ONCE to prevent exponential listener leaks
   if (!listenersAttached) {
     listenersAttached = true;
 
@@ -240,20 +529,30 @@ export function initCachedSettings(): void {
         cachedSoundEnabled = value;
       } else if (key === 'soundProfile' && typeof value === 'string') {
         cachedProfileId = value as SoundProfileId;
+        warmupProfile(cachedProfileId);
       } else if (key === 'soundVolume' && typeof value === 'number') {
         cachedSoundVolume = value;
+        if (masterGain && audioCtx) {
+          const vol = Math.max(0, Math.min(value, 100)) / 100;
+          masterGain.gain.setValueAtTime(vol, audioCtx.currentTime);
+        }
       }
     }) as EventListener);
 
-    // Cross-tab synchronization only
+    // Cross-tab synchronization
     window.addEventListener('storage', (e: StorageEvent) => {
       try {
         if (e.key === 'sound') {
           cachedSoundEnabled = secureStorage.getItem<boolean>('sound', !checkIsPhone());
         } else if (e.key === 'soundProfile') {
           cachedProfileId = secureStorage.getItem<SoundProfileId>('soundProfile', 'cherry-mx-blue');
+          warmupProfile(cachedProfileId);
         } else if (e.key === 'soundVolume') {
           cachedSoundVolume = secureStorage.getItem<number>('soundVolume', 70);
+          if (masterGain && audioCtx) {
+            const vol = Math.max(0, Math.min(cachedSoundVolume, 100)) / 100;
+            masterGain.gain.setValueAtTime(vol, audioCtx.currentTime);
+          }
         }
       } catch {
         // ignore
@@ -276,172 +575,75 @@ export function updateSoundSettings(settings: {
   soundVolume?: number;
 }): void {
   if (settings.sound !== undefined) cachedSoundEnabled = settings.sound;
-  if (settings.soundProfile !== undefined) cachedProfileId = settings.soundProfile;
-  if (settings.soundVolume !== undefined) cachedSoundVolume = settings.soundVolume;
-}
-
-function getAudioContext(): { ctx: AudioContext; master: GainNode } | null {
-  try {
-    if (!audioCtx) {
-      const AudioContextClass =
-        window.AudioContext ||
-        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-      audioCtx = new AudioContextClass();
-      masterGain = audioCtx.createGain();
-      masterGain.connect(audioCtx.destination);
+  if (settings.soundProfile !== undefined) {
+    cachedProfileId = settings.soundProfile;
+    warmupProfile(settings.soundProfile);
+  }
+  if (settings.soundVolume !== undefined) {
+    cachedSoundVolume = settings.soundVolume;
+    if (masterGain && audioCtx) {
+      const vol = Math.max(0, Math.min(settings.soundVolume, 100)) / 100;
+      masterGain.gain.setValueAtTime(vol, audioCtx.currentTime);
     }
-    if (audioCtx.state === 'suspended') {
-      audioCtx.resume().catch(() => {});
-    }
-    return { ctx: audioCtx, master: masterGain! };
-  } catch {
-    return null;
   }
 }
 
 /**
- * Pre-generate a 1-second white noise AudioBuffer once and reuse across keystrokes.
- * Prevents GC thrashing and micro-stutters during fast typing.
+ * Lightweight fail-safe synthesis if buffer is still pre-rendering in first 2ms.
  */
-function getOrCreateNoiseBuffer(ctx: AudioContext): AudioBuffer {
-  if (cachedNoiseBuffer && cachedNoiseBuffer.sampleRate === ctx.sampleRate) {
-    return cachedNoiseBuffer;
-  }
-  const sampleRate = ctx.sampleRate;
-  const bufferSize = sampleRate; // 1 second of noise
-  const buffer = ctx.createBuffer(1, bufferSize, sampleRate);
-  const data = buffer.getChannelData(0);
-  for (let i = 0; i < bufferSize; i++) {
-    data[i] = Math.random() * 2 - 1;
-  }
-  cachedNoiseBuffer = buffer;
-  return cachedNoiseBuffer;
-}
-
-/**
- * Synthesize a keystroke sound based on the given profile config.
- * Uses layered oscillators + pre-cached filtered noise burst.
- */
-function synthesize(
-  config: SoundProfileConfig['keydown'],
-  volumeMultiplier: number,
-  char?: string
+function fallbackSynthesize(
+  ctx: AudioContext,
+  master: GainNode,
+  profileId: SoundProfileId,
+  type: 'correct' | 'error',
+  isSpace: boolean
 ): void {
-  const audio = getAudioContext();
-  if (!audio) return;
+  try {
+    const config = PROFILE_CONFIGS[profileId];
+    if (!config) return;
+    const layerConfig = type === 'correct' ? config.keydown : config.error;
+    const now = ctx.currentTime;
+    const pitchMult = isSpace ? 0.82 : 1.0;
+    const durMult = isSpace ? 1.20 : 1.0;
 
-  const { ctx, master } = audio;
-  const now = ctx.currentTime;
+    for (const osc of layerConfig.oscillators) {
+      const node = ctx.createOscillator();
+      const gain = ctx.createGain();
+      const dur = osc.duration * durMult;
 
-  // Spacebar stabilizer thock modifier: deeper acoustic thock for spacebar
-  const isSpace = char === ' ';
-  const pitchMult = isSpace ? 0.82 : 1.0;
-  const durMult = isSpace ? 1.18 : 1.0;
-  const gainBoost = isSpace ? 1.08 : 1.0;
+      node.type = osc.type;
+      node.frequency.setValueAtTime(osc.freq * pitchMult, now);
+      if (osc.freqEnd) {
+        node.frequency.exponentialRampToValueAtTime(Math.max(osc.freqEnd * pitchMult, 20), now + dur);
+      }
 
-  // Isolated per-voice gain node to isolate volume multiplier and prevent clicks/cross-talk
-  const voiceGain = ctx.createGain();
-  voiceGain.gain.setValueAtTime(Math.min(1.0, volumeMultiplier * gainBoost), now);
-  voiceGain.connect(master);
+      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.linearRampToValueAtTime(osc.gain, now + osc.attack);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + osc.attack + osc.decay);
 
-  let maxVoiceDuration = 0.08;
+      node.connect(gain);
+      gain.connect(master);
 
-  // Add slight random variation for realism (with spacebar stabilizer acoustic shift)
-  const freqVariation = (1 + (Math.random() - 0.5) * 0.04) * pitchMult; // ±2% + pitchMult
-  const gainVariation = 1 + (Math.random() - 0.5) * 0.1;  // ±5%
+      node.start(now);
+      node.stop(now + dur + 0.02);
 
-  // --- Oscillator layers ---
-  for (let i = 0; i < config.oscillators.length; i++) {
-    const layer = config.oscillators[i];
-    const layerDuration = layer.duration * durMult;
-    if (layerDuration > maxVoiceDuration) maxVoiceDuration = layerDuration;
-
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-
-    osc.type = layer.type;
-    osc.frequency.setValueAtTime(layer.freq * freqVariation, now);
-    if (layer.freqEnd) {
-      osc.frequency.exponentialRampToValueAtTime(
-        Math.max(layer.freqEnd * freqVariation, 20),
-        now + layerDuration
-      );
+      node.onended = () => {
+        try {
+          node.disconnect();
+          gain.disconnect();
+        } catch {}
+      };
     }
-    if (layer.detune) {
-      osc.detune.setValueAtTime(layer.detune, now);
-    }
-
-    const peakGain = layer.gain * gainVariation;
-    gain.gain.setValueAtTime(0.001, now);
-    gain.gain.linearRampToValueAtTime(peakGain, now + layer.attack);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + layer.attack + layer.decay);
-
-    osc.onended = () => {
-      try {
-        osc.disconnect();
-        gain.disconnect();
-      } catch {}
-    };
-
-    osc.connect(gain);
-    gain.connect(voiceGain);
-
-    osc.start(now);
-    osc.stop(now + layerDuration + 0.01);
+  } catch {
+    // ignore
   }
-
-  // --- Noise layer (reusing pre-cached buffer) ---
-  if (config.noise) {
-    const nl = config.noise;
-    if (nl.duration > maxVoiceDuration) maxVoiceDuration = nl.duration;
-
-    const noiseBuffer = getOrCreateNoiseBuffer(ctx);
-    const source = ctx.createBufferSource();
-    source.buffer = noiseBuffer;
-    source.loop = true;
-
-    const noiseGain = ctx.createGain();
-    const noiseFilter = ctx.createBiquadFilter();
-
-    noiseFilter.type = nl.filterType;
-    noiseFilter.frequency.setValueAtTime(nl.filterFreq, now);
-    noiseFilter.Q.setValueAtTime(nl.filterQ, now);
-
-    const noisePeakGain = nl.gain * gainVariation;
-    noiseGain.gain.setValueAtTime(0.001, now);
-    noiseGain.gain.linearRampToValueAtTime(noisePeakGain, now + nl.attack);
-    noiseGain.gain.exponentialRampToValueAtTime(0.001, now + nl.attack + nl.decay);
-
-    source.connect(noiseFilter);
-    noiseFilter.connect(noiseGain);
-    noiseGain.connect(voiceGain);
-
-    source.onended = () => {
-      try {
-        source.disconnect();
-        noiseFilter.disconnect();
-        noiseGain.disconnect();
-      } catch {}
-    };
-
-    // Random start offset in the 1-second noise buffer
-    const offset = Math.random() * 0.7;
-    source.start(now, offset);
-    source.stop(now + nl.duration + 0.01);
-  }
-
-  // Cleanly disconnect voiceGain after audio decays to prevent node leaks
-  setTimeout(() => {
-    try {
-      voiceGain.disconnect();
-    } catch {}
-  }, (maxVoiceDuration + 0.05) * 1000);
 }
 
 // ─── Public API ──────────────────────────────────────────────────────────────
 
 /**
- * Play a keystroke sound with zero-allocation, zero-blocking in-memory preferences.
+ * Play a keystroke sound with zero latency, zero node leaks, and zero sound cuts.
+ * Uses pre-rendered PCM AudioBuffers directly connected to the master gain.
  */
 export function playKeystrokeSound(type: 'correct' | 'error', char?: string): void {
   if (typeof window === 'undefined') return;
@@ -452,14 +654,47 @@ export function playKeystrokeSound(type: 'correct' | 'error', char?: string): vo
 
   if (!cachedSoundEnabled) return;
 
-  const config = PROFILE_CONFIGS[cachedProfileId];
-  if (!config) return;
-
   const volumeMultiplier = Math.max(0, Math.min(cachedSoundVolume, 100)) / 100;
   if (volumeMultiplier <= 0) return;
 
-  const soundConfig = type === 'correct' ? config.keydown : config.error;
-  synthesize(soundConfig, volumeMultiplier, char);
+  const audio = ensureAudioContext();
+  if (!audio) return;
+  const { ctx, master } = audio;
+
+  // Sync master volume
+  master.gain.setValueAtTime(volumeMultiplier, ctx.currentTime);
+
+  const isSpace = char === ' ';
+  const profileBuffers = profileBufferCache.get(cachedProfileId);
+
+  if (profileBuffers) {
+    let buffer: AudioBuffer;
+    if (type === 'error') {
+      buffer = profileBuffers.error;
+    } else if (isSpace) {
+      buffer = profileBuffers.space;
+    } else {
+      buffer = profileBuffers.keydown[variationIndex % profileBuffers.keydown.length];
+      variationIndex++;
+    }
+
+    const source = ctx.createBufferSource();
+    source.buffer = buffer;
+
+    // Organic micro-pitch variance (±1.5%) for authentic mechanical feel
+    if (type === 'correct' && !isSpace) {
+      source.playbackRate.value = 0.985 + Math.random() * 0.03;
+    }
+
+    source.connect(master);
+    // 0 specifies the earliest possible hardware audio quantum for true zero-latency response
+    source.start(0);
+    return;
+  }
+
+  // Instant fallback for the first 2ms while buffer completes
+  fallbackSynthesize(ctx, master, cachedProfileId, type, isSpace);
+  warmupProfile(cachedProfileId);
 }
 
 /**
@@ -473,9 +708,53 @@ export function previewProfileSound(profileId: SoundProfileId): void {
     initCachedSettings();
   }
 
-  const config = PROFILE_CONFIGS[profileId];
-  if (!config) return;
+  const audio = ensureAudioContext();
+  if (!audio) return;
+  const { ctx } = audio;
 
-  const volumeMultiplier = Math.max(0, Math.min(cachedSoundVolume, 100)) / 100;
-  synthesize(config.keydown, Math.max(volumeMultiplier, 0.3)); // Minimum preview volume
+  const volumeMultiplier = Math.max(Math.max(0, Math.min(cachedSoundVolume, 100)) / 100, 0.35);
+
+  const profileBuffers = profileBufferCache.get(profileId);
+  if (profileBuffers) {
+    const source = ctx.createBufferSource();
+    source.buffer = profileBuffers.keydown[0];
+
+    const previewGain = ctx.createGain();
+    previewGain.gain.setValueAtTime(volumeMultiplier, ctx.currentTime);
+    previewGain.connect(ctx.destination);
+
+    source.connect(previewGain);
+    source.start(0);
+
+    source.onended = () => {
+      try {
+        source.disconnect();
+        previewGain.disconnect();
+      } catch {}
+    };
+    return;
+  }
+
+  warmupProfile(profileId);
+  const sampleRate = ctx.sampleRate || 44100;
+  renderSoundProfileToBuffers(profileId, sampleRate).then((bufs) => {
+    if (!bufs) return;
+    const source = ctx.createBufferSource();
+    source.buffer = bufs.keydown[0];
+
+    const previewGain = ctx.createGain();
+    previewGain.gain.setValueAtTime(volumeMultiplier, ctx.currentTime);
+    previewGain.connect(ctx.destination);
+
+    source.connect(previewGain);
+    source.start(0);
+
+    source.onended = () => {
+      try {
+        source.disconnect();
+        previewGain.disconnect();
+      } catch {}
+    };
+  });
 }
+

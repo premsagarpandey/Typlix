@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import ThemeToggle from '../components/common/ThemeToggle';
@@ -20,16 +20,17 @@ export default function Settings() {
   const [keyboardLayout, setKeyboardLayout] = useLocalStorage<KeyboardLayoutId>('keyboardLayout', 'qwerty');
   const { theme } = useTheme();
 
-  // High-performance smooth volume state: runs at 120 FPS without synchronous disk I/O
+  const [prevSoundVolume, setPrevSoundVolume] = useState(soundVolume);
   const [localVolume, setLocalVolume] = useState<number>(soundVolume);
   const volumeDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Mobile haptic vibration state
   const [hapticsActive, setHapticsActive] = useState<boolean>(() => isHapticsEnabled());
 
-  useEffect(() => {
+  if (prevSoundVolume !== soundVolume) {
+    setPrevSoundVolume(soundVolume);
     setLocalVolume(soundVolume);
-  }, [soundVolume]);
+  }
 
   const handleVolumeChange = useCallback((newVol: number) => {
     setLocalVolume(newVol);

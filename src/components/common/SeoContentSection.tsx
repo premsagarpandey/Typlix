@@ -23,8 +23,8 @@ interface FaqItem {
 
 const FAQS: FaqItem[] = [
   {
-    question: 'What is Typlix Typing (and why is it often searched as Typelix)?',
-    answer: 'Typlix Typing (also searched as Typelix Typing) is a modern, high-performance touch typing platform and typing speed test game. Built with minimalist aesthetics and real-time telemetry, Typlix Typing is engineered to train muscle memory and accelerate typing speeds up to 100+ Words Per Minute (WPM).'
+    question: 'What is Typlix Typing (and why is it often searched as Typix or Typelix)?',
+    answer: 'Typlix Typing (also frequently searched as Typix or Typelix) is a modern, high-performance touch typing platform and typing speed test game created by Prem Sagar Pandey. Built with minimalist aesthetics and real-time telemetry, Typlix Typing is engineered to train muscle memory and accelerate typing speeds up to 100+ Words Per Minute (WPM).'
   },
   {
     question: 'How does Typlix compare to Monkeytype or 10FastFingers?',

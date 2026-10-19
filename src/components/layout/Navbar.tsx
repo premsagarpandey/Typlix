@@ -74,12 +74,16 @@ export default function Navbar() {
       >
         <Link
           to="/"
-          className="flex items-center gap-2 group cursor-pointer rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-neutral-100"
+          className="flex items-center gap-2.5 group cursor-pointer rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-neutral-100"
           aria-label="Typlix Touch Typing Trainer Home"
         >
-          <div className="w-7 h-7 rounded-md bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-extrabold text-xs flex items-center justify-center font-mono shadow-xs group-hover:scale-105 transition-transform">
-            T
-          </div>
+          <img
+            src="/logo192.png"
+            alt="Typlix Logo"
+            width="28"
+            height="28"
+            className="w-7 h-7 rounded-lg object-contain shadow-2xs group-hover:scale-105 transition-transform shrink-0"
+          />
           <span className="text-base font-bold tracking-tight text-neutral-900 dark:text-neutral-100">
             Typlix
           </span>
@@ -246,9 +250,13 @@ export default function Navbar() {
                       className="w-full mt-2.5 flex items-center justify-between p-2.5 px-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-100/90 hover:bg-neutral-200/90 dark:bg-neutral-800/60 dark:hover:bg-neutral-800 text-neutral-900 dark:text-neutral-100 active:scale-[0.98] transition-all cursor-pointer group shadow-2xs"
                     >
                       <div className="flex items-center gap-2.5 min-w-0">
-                        <div className="w-7 h-7 rounded-md bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 flex items-center justify-center font-bold text-xs font-mono group-hover:scale-105 transition-transform shrink-0">
-                          T
-                        </div>
+                        <img
+                          src="/logo192.png"
+                          alt="Typlix App"
+                          width="28"
+                          height="28"
+                          className="w-7 h-7 rounded-lg object-contain shadow-2xs group-hover:scale-105 transition-transform shrink-0"
+                        />
                         <div className="text-left min-w-0">
                           <p className="font-semibold text-xs sm:text-sm text-neutral-900 dark:text-neutral-100 leading-tight truncate">Install Typlix App</p>
                           <p className="text-[10px] text-neutral-500 dark:text-neutral-400 leading-tight mt-0.5 truncate">Fullscreen &amp; offline mode</p>

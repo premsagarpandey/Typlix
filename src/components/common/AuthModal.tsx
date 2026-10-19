@@ -251,9 +251,13 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
             <div className="p-8">
               <div className="mb-8 text-center">
-                <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-extrabold text-xl flex items-center justify-center font-mono shadow-lg" aria-hidden="true">
-                  T
-                </div>
+                <img
+                  src="/logo192.png"
+                  alt="Typlix Logo"
+                  width="48"
+                  height="48"
+                  className="w-12 h-12 mx-auto mb-4 rounded-xl object-contain shadow-md"
+                />
                 <h2 id="auth-modal-title" className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white mb-2">
                   {isLoginMode ? 'Welcome back' : 'Create an account'}
                 </h2>

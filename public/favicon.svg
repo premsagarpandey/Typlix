@@ -1,18 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
-  <defs>
-    <linearGradient id="speed" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#0284c7" />
-      <stop offset="100%" stop-color="#2563eb" />
-    </linearGradient>
-  </defs>
-  <!-- Background rounded card -->
-  <rect width="48" height="48" rx="10" fill="#0f172a" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Clean white background card -->
+  <rect width="100" height="100" rx="20" fill="#ffffff" />
   
-  <!-- Speed lines on the left -->
-  <rect x="7" y="16" width="7" height="3" rx="1.5" fill="url(#speed)" />
-  <rect x="5" y="22" width="10" height="3" rx="1.5" fill="url(#speed)" />
-  <rect x="8" y="28" width="6" height="3" rx="1.5" fill="url(#speed)" />
+  <!-- Left speed bars (electric blue) -->
+  <rect x="29" y="34.5" width="8.5" height="2.8" rx="1.4" fill="#0066ff" />
+  <rect x="35" y="39.8" width="10" height="2.8" rx="1.4" fill="#0066ff" />
+  <rect x="30.5" y="45.5" width="10" height="2.8" rx="1.4" fill="#0066ff" />
   
-  <!-- Bold Stylized 'T' letterform -->
-  <path d="M18 14 H40 V20 H32 V36 H25 V20 H18 Z" fill="#ffffff" />
+  <!-- Stylized dynamic black 'T' -->
+  <path d="M42 29.5 C39 29.5 37 31.5 37 34 C37 34.5 37.3 35.5 38.5 35.5 L64 35.5 C66 35.5 67.5 34 67.5 32 C67.5 30.5 66 29.5 64 29.5 Z" fill="#090e17" />
+  <path d="M48.8 35.5 L44 55.5 C43.8 56.5 44.5 57.5 45.8 57.5 L51.2 57.5 C52.2 57.5 53 56.8 53.2 55.8 L56.2 35.5 Z" fill="#090e17" />
+  
+  <!-- Electric blue dot -->
+  <circle cx="56.5" cy="53.5" r="2.5" fill="#0066ff" />
+  
+  <!-- Typlix Wordmark -->
+  <text x="50" y="74" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-weight="700" font-size="14.5" letter-spacing="-0.2px">
+    <tspan fill="#090e17">Typ</tspan><tspan fill="#0066ff">l</tspan><tspan fill="#090e17">ix</tspan>
+  </text>
 </svg>

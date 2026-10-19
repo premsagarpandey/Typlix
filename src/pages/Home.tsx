@@ -134,9 +134,13 @@ export default function Home() {
             aria-label="Add Typlix to Home Screen for fullscreen distraction-free typing"
           >
             <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-8 h-8 rounded-md bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-extrabold text-xs flex items-center justify-center font-mono shrink-0 shadow-xs group-hover:scale-105 transition-transform">
-                T
-              </div>
+              <img
+                src="/logo192.png"
+                alt="Typlix"
+                width="32"
+                height="32"
+                className="w-8 h-8 rounded-lg object-contain shadow-2xs shrink-0 group-hover:scale-105 transition-transform"
+              />
               <div className="min-w-0 text-left">
                 <p className="font-semibold text-xs sm:text-sm text-neutral-900 dark:text-neutral-100 truncate">
                   Play in Fullscreen App

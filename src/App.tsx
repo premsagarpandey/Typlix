@@ -85,6 +85,13 @@ function AppLayout() {
           {!isMobile && (
             <div className="hidden sm:flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
               <div className="flex items-center gap-2 flex-wrap justify-center sm:justify-start">
+                <img
+                  src="/logo192.png"
+                  alt="Typlix"
+                  width="20"
+                  height="20"
+                  className="w-5 h-5 rounded-md object-contain shrink-0"
+                />
                 <span className="font-bold text-neutral-800 dark:text-neutral-200 text-sm">Typlix</span>
                 <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded bg-neutral-200/80 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-700">
                   Data Minimization

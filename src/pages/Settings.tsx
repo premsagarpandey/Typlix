@@ -172,9 +172,13 @@ export default function Settings() {
         {!isInstalled && (
           <div className="p-2.5 px-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-100/90 hover:bg-neutral-200/90 dark:bg-neutral-800/60 dark:hover:bg-neutral-800 flex items-center justify-between gap-2.5 sm:hidden shadow-2xs">
             <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-7 h-7 rounded-md bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-bold text-xs flex items-center justify-center font-mono shrink-0 shadow-xs">
-                T
-              </div>
+              <img
+                src="/logo192.png"
+                alt="Typlix"
+                width="28"
+                height="28"
+                className="w-7 h-7 rounded-lg object-contain shadow-2xs shrink-0"
+              />
               <div className="min-w-0 text-left">
                 <h3 className="text-xs sm:text-sm font-semibold text-neutral-900 dark:text-neutral-100 truncate leading-tight">Install Typlix App</h3>
                 <p className="text-[10px] text-neutral-500 dark:text-neutral-400 truncate mt-0.5 leading-tight">Add to phone home screen</p>

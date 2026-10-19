@@ -24,9 +24,13 @@ export default function MobileInstallBanner() {
           <div className="bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md border border-neutral-300/80 dark:border-neutral-750 rounded-2xl p-3 shadow-xl flex items-center justify-between gap-2.5">
             {/* Logo & Info */}
             <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-9 h-9 rounded-xl bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-extrabold text-xs flex items-center justify-center font-mono shrink-0 shadow-xs">
-                T
-              </div>
+              <img
+                src="/logo192.png"
+                alt="Typlix"
+                width="36"
+                height="36"
+                className="w-9 h-9 rounded-xl object-contain shadow-2xs shrink-0"
+              />
               <div className="min-w-0">
                 <div className="flex items-center gap-1.5">
                   <span className="font-bold text-xs text-neutral-900 dark:text-neutral-100 truncate">

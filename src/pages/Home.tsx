@@ -1,6 +1,6 @@
 import { useState, lazy, Suspense } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Keyboard, Timer, BarChart2, BookOpen, Quote, Code, Pencil, Download, ArrowRight } from 'lucide-react';
+import { Keyboard, Timer, BarChart2, BookOpen, Quote, Code, Pencil, Download } from 'lucide-react';
 import FingerPlacementTutorial from '../components/common/FingerPlacementTutorial';
 import SeoContentSection from '../components/common/SeoContentSection';
 import { useUserProgress } from '../hooks/useUserProgress';
@@ -118,26 +118,41 @@ export default function Home() {
           </Link>
         </div>
 
-        {/* Sleek Mobile Install App Button (Phone Only: sm:hidden) */}
+        {/* Native Mobile App Banner (< sm only) */}
         {!isInstalled && (
-          <button
-            type="button"
+          <div
             onClick={installApp}
-            className="w-full mt-0.5 px-3.5 py-2.5 bg-neutral-900 hover:bg-neutral-800 dark:bg-neutral-100 dark:hover:bg-neutral-200 active:scale-[0.98] transition-all duration-100 text-white dark:text-neutral-900 text-xs sm:text-sm font-semibold rounded-lg cursor-pointer shadow-xs flex items-center justify-between group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
-            aria-label="Install Typlix App for Phone"
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                installApp();
+              }
+            }}
+            className="w-full mt-1.5 p-2.5 px-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-100/90 hover:bg-neutral-200/90 dark:bg-neutral-900 dark:hover:bg-neutral-850 active:scale-[0.98] transition-all duration-100 flex items-center justify-between gap-2.5 cursor-pointer shadow-2xs group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+            aria-label="Add Typlix to Home Screen for fullscreen distraction-free typing"
           >
-            <div className="flex items-center gap-2 min-w-0">
-              <Download className="w-4 h-4 shrink-0 text-white dark:text-neutral-900 group-hover:scale-110 transition-transform" aria-hidden="true" />
-              <span className="truncate">Install Typlix App</span>
-              <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-white/20 dark:bg-black/15 text-white dark:text-neutral-900 shrink-0">
-                Free
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-8 h-8 rounded-md bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-extrabold text-xs flex items-center justify-center font-mono shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+                T
+              </div>
+              <div className="min-w-0 text-left">
+                <p className="font-semibold text-xs sm:text-sm text-neutral-900 dark:text-neutral-100 truncate">
+                  Play in Fullscreen App
+                </p>
+                <p className="text-[11px] text-neutral-500 dark:text-neutral-400 truncate mt-0.5">
+                  1-tap access · Zero browser distractions
+                </p>
+              </div>
+            </div>
+            <div className="shrink-0 pl-1">
+              <span className="px-2.5 py-1.5 text-xs font-semibold rounded-md bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 shadow-xs flex items-center gap-1 group-hover:opacity-90 transition-opacity">
+                <Download className="w-3.5 h-3.5" aria-hidden="true" />
+                <span>Get App</span>
               </span>
             </div>
-            <div className="flex items-center gap-1.5 text-[11px] font-normal text-neutral-300 dark:text-neutral-600 shrink-0 pl-2">
-              <span>Works Offline</span>
-              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
-            </div>
-          </button>
+          </div>
         )}
       </div>
 

@@ -243,16 +243,20 @@ export default function Navbar() {
                         setIsMobileMenuOpen(false);
                         installApp();
                       }}
-                      className="w-full mt-2.5 flex items-center justify-between px-4 py-3 rounded-lg text-sm font-semibold border border-neutral-300 dark:border-neutral-700 bg-neutral-100/80 hover:bg-neutral-200/80 dark:bg-neutral-800/60 dark:hover:bg-neutral-800 text-neutral-900 dark:text-neutral-100 active:scale-[0.98] transition-all cursor-pointer group shadow-2xs"
+                      className="w-full mt-2.5 flex items-center justify-between p-2.5 px-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-100/90 hover:bg-neutral-200/90 dark:bg-neutral-800/60 dark:hover:bg-neutral-800 text-neutral-900 dark:text-neutral-100 active:scale-[0.98] transition-all cursor-pointer group shadow-2xs"
                     >
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-6 h-6 rounded-md bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 flex items-center justify-center group-hover:scale-105 transition-transform">
-                          <Download className="w-3.5 h-3.5" aria-hidden="true" />
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <div className="w-7 h-7 rounded-md bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 flex items-center justify-center font-bold text-xs font-mono group-hover:scale-105 transition-transform shrink-0">
+                          T
                         </div>
-                        <span className="font-semibold text-neutral-900 dark:text-neutral-100">Download App</span>
+                        <div className="text-left min-w-0">
+                          <p className="font-semibold text-xs sm:text-sm text-neutral-900 dark:text-neutral-100 leading-tight truncate">Install Typlix App</p>
+                          <p className="text-[10px] text-neutral-500 dark:text-neutral-400 leading-tight mt-0.5 truncate">Fullscreen &amp; offline mode</p>
+                        </div>
                       </div>
-                      <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-neutral-200/90 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300">
-                        Free
+                      <span className="px-2.5 py-1 text-xs font-semibold rounded-md bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 shrink-0 flex items-center gap-1 group-hover:opacity-90 transition-opacity ml-2">
+                        <Download className="w-3 h-3" />
+                        <span>Get</span>
                       </span>
                     </button>
                   )}

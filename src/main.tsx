@@ -3,11 +3,11 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './App.tsx';
 
-// Register Service Worker for PWA installability & offline caching
+// Silent, production-grade Service Worker registration for PWA installability & offline caching
 if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch((err) => {
-      console.debug('PWA ServiceWorker registration notice:', err);
+    navigator.serviceWorker.register('/sw.js').catch(() => {
+      // Intentionally silent: prevents DevTools console noise in privacy/incognito modes
     });
   });
 }
@@ -17,4 +17,3 @@ createRoot(document.getElementById('root')!).render(
     <App />
   </StrictMode>,
 );
-

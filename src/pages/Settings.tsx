@@ -170,23 +170,23 @@ export default function Settings() {
       <div className="border border-neutral-200 dark:border-neutral-800 rounded-lg p-4 sm:p-6 space-y-6 bg-neutral-50/50 dark:bg-neutral-900/20">
         {/* Mobile Install App Card (Phone only) */}
         {!isInstalled && (
-          <div className="p-3.5 rounded-xl border border-neutral-300/80 dark:border-neutral-750 bg-gradient-to-r from-neutral-100 to-neutral-200/50 dark:from-neutral-900 dark:to-neutral-800/80 flex items-center justify-between gap-3 sm:hidden shadow-2xs">
+          <div className="p-2.5 px-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-100/90 hover:bg-neutral-200/90 dark:bg-neutral-800/60 dark:hover:bg-neutral-800 flex items-center justify-between gap-2.5 sm:hidden shadow-2xs">
             <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-8 h-8 rounded-lg bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-bold text-xs flex items-center justify-center font-mono shrink-0 shadow-xs">
+              <div className="w-7 h-7 rounded-md bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-bold text-xs flex items-center justify-center font-mono shrink-0 shadow-xs">
                 T
               </div>
-              <div className="min-w-0">
-                <h3 className="text-xs font-bold text-neutral-900 dark:text-neutral-100 truncate">Install Typlix App</h3>
-                <p className="text-[11px] text-neutral-600 dark:text-neutral-400 truncate">Add to phone home screen</p>
+              <div className="min-w-0 text-left">
+                <h3 className="text-xs sm:text-sm font-semibold text-neutral-900 dark:text-neutral-100 truncate leading-tight">Install Typlix App</h3>
+                <p className="text-[10px] text-neutral-500 dark:text-neutral-400 truncate mt-0.5 leading-tight">Add to phone home screen</p>
               </div>
             </div>
             <button
               type="button"
               onClick={installApp}
-              className="px-3 py-1.5 text-xs font-bold rounded-lg bg-neutral-900 hover:bg-neutral-800 dark:bg-neutral-100 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 shadow-xs active:scale-95 transition-all shrink-0 cursor-pointer flex items-center gap-1"
+              className="px-2.5 py-1 text-xs font-semibold rounded-md bg-neutral-900 hover:bg-neutral-800 dark:bg-neutral-100 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 shadow-xs active:scale-95 transition-all shrink-0 cursor-pointer flex items-center gap-1"
             >
-              <Download className="w-3.5 h-3.5" />
-              <span>Install</span>
+              <Download className="w-3 h-3" />
+              <span>Get</span>
             </button>
           </div>
         )}

@@ -15,7 +15,7 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(PRECACHE_ASSETS).catch(() => {
-        // Precache error non-fatal
+        // Precache errors are non-fatal
       });
     })
   );
@@ -40,20 +40,29 @@ self.addEventListener('fetch', (event) => {
 
   const url = new URL(event.request.url);
 
-  // Only handle same-origin requests; ignore Firebase auth/firestore and third parties
+  // Only handle same-origin requests; ignore third-party & Firebase auth/API requests
   if (url.origin !== self.location.origin) return;
 
-  // Network first with cache fallback for HTML navigation
+  // Network first with cache fallback for HTML page navigation
   if (event.request.mode === 'navigate') {
     event.respondWith(
-      fetch(event.request).catch(() => {
-        return caches.match('/') || caches.match('/index.html');
+      fetch(event.request).catch(async () => {
+        const cachedUrl = await caches.match(event.request);
+        if (cachedUrl) return cachedUrl;
+        const cachedRoot = await caches.match('/');
+        if (cachedRoot) return cachedRoot;
+        const cachedIndex = await caches.match('/index.html');
+        if (cachedIndex) return cachedIndex;
+        return new Response('Network offline. Typlix cached assets unavailable.', {
+          status: 503,
+          headers: { 'Content-Type': 'text/plain; charset=utf-8' }
+        });
       })
     );
     return;
   }
 
-  // Stale-while-revalidate for static assets
+  // Stale-while-revalidate strategy for static assets
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       const fetchPromise = fetch(event.request)
@@ -66,7 +75,9 @@ self.addEventListener('fetch', (event) => {
           }
           return networkResponse;
         })
-        .catch(() => cachedResponse);
+        .catch(() => {
+          return cachedResponse || new Response(null, { status: 404, statusText: 'Not Found' });
+        });
 
       return cachedResponse || fetchPromise;
     })

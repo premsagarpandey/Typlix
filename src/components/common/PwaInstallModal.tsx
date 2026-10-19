@@ -5,11 +5,10 @@ import { usePwaInstall } from '../../hooks/usePwaInstall';
 export default function PwaInstallModal() {
   const { showGuideModal, setShowGuideModal, isIos } = usePwaInstall();
 
-  if (!showGuideModal) return null;
-
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4">
+      {showGuideModal && (
+        <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4">
         {/* Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -159,6 +158,7 @@ export default function PwaInstallModal() {
           </div>
         </motion.div>
       </div>
-    </AnimatePresence>
-  );
+    )}
+  </AnimatePresence>
+);
 }

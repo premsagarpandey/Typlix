@@ -9,6 +9,9 @@ import { openCookieConsentModal } from './utils/cookieConsent';
 import { initSecurityShield } from './utils/securityShield';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
+import { PwaInstallProvider } from './context/PwaInstallContext';
+import MobileInstallBanner from './components/common/MobileInstallBanner';
+import PwaInstallModal from './components/common/PwaInstallModal';
 import { useIsMobile } from './hooks/useIsMobile';
 import RouteSeo from './components/common/RouteSeo';
 import ScrollToTop from './components/common/ScrollToTop';
@@ -128,6 +131,8 @@ function AppLayout() {
           </div>
         </footer>
       )}
+      <MobileInstallBanner />
+      <PwaInstallModal />
       <GlobalToast />
       <CookieConsent />
     </div>
@@ -139,9 +144,11 @@ export default function App() {
     <ErrorBoundary>
       <AuthProvider>
         <ThemeProvider>
-          <Router>
-            <AppLayout />
-          </Router>
+          <PwaInstallProvider>
+            <Router>
+              <AppLayout />
+            </Router>
+          </PwaInstallProvider>
         </ThemeProvider>
       </AuthProvider>
     </ErrorBoundary>

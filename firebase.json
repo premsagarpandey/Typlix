@@ -126,7 +126,7 @@
         ]
       },
       {
-        "source": "/@(manifest.json|favicon.ico|favicon.svg|favicon*.png|apple-touch-icon.png|logo*.png)",
+        "source": "/@(manifest.json|favicon.ico|favicon.svg|favicon*.png|apple-touch-icon.png|logo*.png|sw.js)",
         "headers": [
           {
             "key": "Access-Control-Allow-Origin",
@@ -137,8 +137,12 @@
             "value": "cross-origin"
           },
           {
+            "key": "Service-Worker-Allowed",
+            "value": "/"
+          },
+          {
             "key": "Cache-Control",
-            "value": "public, max-age=3600, must-revalidate"
+            "value": "public, max-age=0, must-revalidate"
           }
         ]
       }

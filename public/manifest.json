@@ -1,8 +1,10 @@
 {
+  "id": "/",
   "name": "Typlix — Free Typing Game & Touch Typing Speed Test",
   "short_name": "Typlix",
   "description": "Minimalist online touch typing game and speed test. Practice 50 progressive lessons, code snippets, and timed tests to reach 100+ WPM.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#0a0a0a",
   "theme_color": "#0a0a0a",

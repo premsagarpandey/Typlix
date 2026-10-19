@@ -4,9 +4,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import ThemeToggle from '../common/ThemeToggle';
 import { useAuth } from '../../hooks/useAuth';
 import { useIsMobile } from '../../hooks/useIsMobile';
-import { LogIn, Menu, X, Home } from 'lucide-react';
+import { LogIn, Menu, X, Home, Download } from 'lucide-react';
 import AuthModal from '../common/AuthModal';
 import UserAvatar from '../common/UserAvatar';
+import { usePwaInstall } from '../../hooks/usePwaInstall';
 
 const NAV_LINKS = [
   { path: '/', label: 'Home' },
@@ -19,6 +20,7 @@ export default function Navbar() {
   const location = useLocation();
   const { user } = useAuth();
   const isMobile = useIsMobile();
+  const { isInstalled, installApp } = usePwaInstall();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
@@ -203,7 +205,7 @@ export default function Navbar() {
                   })}
                 </div>
 
-                {/* Auth in mobile menu */}
+                {/* Auth & Download App in mobile menu */}
                 <div className="pt-3 pb-1">
                   {user ? (
                     <Link
@@ -230,6 +232,28 @@ export default function Navbar() {
                     >
                       <LogIn className="w-4 h-4" aria-hidden="true" />
                       <span>Sign In</span>
+                    </button>
+                  )}
+
+                  {/* Download App Button below Sign In */}
+                  {!isInstalled && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        installApp();
+                      }}
+                      className="w-full mt-2.5 flex items-center justify-between px-4 py-3 rounded-lg text-sm font-semibold border border-neutral-300 dark:border-neutral-700 bg-neutral-100/80 hover:bg-neutral-200/80 dark:bg-neutral-800/60 dark:hover:bg-neutral-800 text-neutral-900 dark:text-neutral-100 active:scale-[0.98] transition-all cursor-pointer group shadow-2xs"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-6 h-6 rounded-md bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 flex items-center justify-center group-hover:scale-105 transition-transform">
+                          <Download className="w-3.5 h-3.5" aria-hidden="true" />
+                        </div>
+                        <span className="font-semibold text-neutral-900 dark:text-neutral-100">Download App</span>
+                      </div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-neutral-200/90 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300">
+                        Free
+                      </span>
                     </button>
                   )}
                 </div>

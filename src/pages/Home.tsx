@@ -1,10 +1,11 @@
 import { useState, lazy, Suspense } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Keyboard, Timer, BarChart2, BookOpen, Quote, Code, Pencil } from 'lucide-react';
+import { Keyboard, Timer, BarChart2, BookOpen, Quote, Code, Pencil, Download, ArrowRight } from 'lucide-react';
 import FingerPlacementTutorial from '../components/common/FingerPlacementTutorial';
 import SeoContentSection from '../components/common/SeoContentSection';
 import { useUserProgress } from '../hooks/useUserProgress';
 import { useIsMobile } from '../hooks/useIsMobile';
+import { usePwaInstall } from '../hooks/usePwaInstall';
 
 const FingerPlacementModal = lazy(() => import('../components/common/FingerPlacementModal'));
 
@@ -13,6 +14,7 @@ export default function Home() {
   const [showPlacementModal, setShowPlacementModal] = useState(false);
   const { level: currentLevel } = useUserProgress();
   const isMobile = useIsMobile();
+  const { isInstalled, installApp } = usePwaInstall();
 
   const handleStartLesson = () => {
     try {
@@ -115,6 +117,28 @@ export default function Home() {
             <span className="truncate">Custom</span>
           </Link>
         </div>
+
+        {/* Sleek Mobile Install App Button (Phone Only: sm:hidden) */}
+        {!isInstalled && (
+          <button
+            type="button"
+            onClick={installApp}
+            className="w-full mt-0.5 px-3.5 py-2.5 bg-neutral-900 hover:bg-neutral-800 dark:bg-neutral-100 dark:hover:bg-neutral-200 active:scale-[0.98] transition-all duration-100 text-white dark:text-neutral-900 text-xs sm:text-sm font-semibold rounded-lg cursor-pointer shadow-xs flex items-center justify-between group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+            aria-label="Install Typlix App for Phone"
+          >
+            <div className="flex items-center gap-2 min-w-0">
+              <Download className="w-4 h-4 shrink-0 text-white dark:text-neutral-900 group-hover:scale-110 transition-transform" aria-hidden="true" />
+              <span className="truncate">Install Typlix App</span>
+              <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-white/20 dark:bg-black/15 text-white dark:text-neutral-900 shrink-0">
+                Free
+              </span>
+            </div>
+            <div className="flex items-center gap-1.5 text-[11px] font-normal text-neutral-300 dark:text-neutral-600 shrink-0 pl-2">
+              <span>Works Offline</span>
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
+            </div>
+          </button>
+        )}
       </div>
 
       {/* ─── Desktop & Laptop View (>= sm): Symmetrical Monochromatic Layout ─── */}

@@ -160,8 +160,10 @@ export default function Game() {
       if (urlMode !== mode) {
         setMode(urlMode);
       }
+    } else if (isMobile && mode === 'lesson') {
+      setMode('quotes');
     }
-  }, [searchParams, mode, setMode]);
+  }, [searchParams, mode, setMode, isMobile]);
 
   // When active mode changes, reset game with appropriate text
   const prevModeRef = useRef(mode);

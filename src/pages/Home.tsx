@@ -50,11 +50,11 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center text-center max-w-2xl mx-auto pt-8 sm:pt-16 pb-4 sm:pb-6 animate-fade-in px-1 sm:px-0">
       <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-neutral-900 dark:text-neutral-100 mb-3 sm:mb-4 leading-tight">
-        {isInstalled ? 'Typlix Touch Typing' : 'Typlix Typing: Modern Typing Speed Test & Practice Game'}
+        {isInstalled ? 'Typlix Typing Game' : 'Typlix Typing: Modern Typing Speed Test & Practice Game'}
       </h1>
       <p className="text-neutral-600 dark:text-neutral-400 text-sm sm:text-lg mb-6 sm:mb-10 max-w-xl leading-relaxed px-1 sm:px-0">
         {isInstalled
-          ? 'Master 10-finger muscle memory with 50 progressive touch typing lessons, developer code syntax, and real-time accuracy benchmarks.'
+          ? 'Boost your typing speed with precision timed tests, practice famous literature quotes, and master developer code syntax.'
           : 'Welcome to Typlix Typing — accelerate your typing speed with 50 progressive touch typing lessons, developer code typing, and precision speed tests. Also searched as Typelix Typing — 100% free with real-time WPM metrics.'}
       </p>
 
@@ -63,40 +63,39 @@ export default function Home() {
         /* ─── APP-ONLY MOBILE ACTION CENTER: Large, Ergonomic, Monochromatic Touch Buttons ─── */
         <div className="flex flex-col gap-3.5 w-full max-w-sm mx-auto sm:hidden mb-8 sm:mb-16 px-1">
           {/* Minimalist Monochromatic App Status Pill */}
-          <div className="inline-flex items-center justify-between px-3.5 py-1.5 rounded-full bg-neutral-200/60 dark:bg-neutral-800/60 border border-neutral-300/70 dark:border-neutral-700/70 text-[11px] font-medium text-neutral-700 dark:text-neutral-300 shadow-2xs">
-            <span className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-neutral-900 dark:bg-neutral-100" />
-              <span>{isOnline ? 'Offline Ready Engine' : 'Offline Mode Active'}</span>
-            </span>
-            <span className="font-semibold text-neutral-900 dark:text-neutral-100">
-              Lesson {currentLevel}/50
-            </span>
+          <div className="inline-flex items-center gap-2 self-center px-3.5 py-1.5 rounded-full bg-neutral-200/60 dark:bg-neutral-800/60 border border-neutral-300/70 dark:border-neutral-700/70 text-[11px] font-medium text-neutral-700 dark:text-neutral-300 shadow-2xs">
+            <span className="w-2 h-2 rounded-full bg-neutral-900 dark:bg-neutral-100" />
+            <span>{isOnline ? 'Offline Ready · 100% Client-Side Engine' : 'Offline Mode Active · No Internet Required'}</span>
           </div>
 
-          {/* Primary Hero Card: Continue Lesson / Start Lesson 1 (Large Tap Target) */}
-          <button
-            type="button"
-            onClick={handleStartLesson}
-            aria-label={currentLevel > 1 ? `Continue typing practice at Lesson ${currentLevel}` : 'Start touch typing Lesson 1'}
+          {/* Primary Hero Card: Practice Quotes (Replaces Lesson for Mobile App) */}
+          <Link
+            to="/game?mode=quotes"
+            aria-label="Practice typing famous quotes"
+            onClick={() => {
+              try {
+                localStorage.setItem('typlix_game_mode', JSON.stringify('quotes'));
+              } catch {}
+            }}
             className="w-full p-4 sm:p-5 rounded-2xl bg-neutral-900 dark:bg-neutral-100 hover:bg-neutral-800 dark:hover:bg-neutral-200 active:scale-[0.98] transition-all duration-150 text-white dark:text-neutral-900 shadow-md cursor-pointer flex items-center justify-between gap-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white group"
           >
             <div className="flex items-center gap-3.5 min-w-0">
               <div className="w-12 h-12 rounded-xl bg-white/15 dark:bg-neutral-900/10 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                <BookOpen className="w-6 h-6 shrink-0" aria-hidden="true" />
+                <Quote className="w-6 h-6 shrink-0" aria-hidden="true" />
               </div>
               <div className="min-w-0">
-                <p className="text-base font-bold tracking-tight truncate leading-tight">
-                  {currentLevel > 1 ? `Continue Lesson ${currentLevel}` : 'Start Touch Typing — Lesson 1'}
+                <p className="text-base font-bold tracking-tight leading-tight">
+                  Practice Quotes
                 </p>
                 <p className="text-xs opacity-85 mt-1 font-medium truncate">
-                  10-Finger Muscle Memory · Finger Guides
+                  Literature, Wisdom &amp; Philosophy
                 </p>
               </div>
             </div>
             <div className="w-8 h-8 rounded-full bg-white/10 dark:bg-neutral-900/10 flex items-center justify-center shrink-0 group-hover:translate-x-0.5 group-active:translate-x-0.5 transition-transform">
               <ArrowRight className="w-4 h-4" aria-hidden="true" />
             </div>
-          </button>
+          </Link>
 
           {/* Secondary Hero Card: Timed Speed Test (Large Tap Target) */}
           <Link
@@ -118,7 +117,7 @@ export default function Home() {
                   Timed Speed Test
                 </p>
                 <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1 truncate">
-                  Benchmark live typing speed (WPM) &amp; accuracy
+                  Live WPM &amp; accuracy benchmark
                 </p>
               </div>
             </div>
@@ -127,8 +126,8 @@ export default function Home() {
             </div>
           </Link>
 
-          {/* Secondary Modes Grid: Code, Quotes, Custom (3 Large Thumb-Friendly App Tiles) */}
-          <div className="grid grid-cols-3 gap-2.5 w-full">
+          {/* Secondary Modes: Code & Custom Text (2 Balanced Large Tiles) */}
+          <div className="grid grid-cols-2 gap-2.5 w-full">
             <Link
               to="/game?mode=code"
               aria-label="Practice typing code snippets"
@@ -137,38 +136,19 @@ export default function Home() {
                   localStorage.setItem('typlix_game_mode', JSON.stringify('code'));
                 } catch {}
               }}
-              className="p-3 py-3.5 rounded-2xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900/90 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-50 dark:hover:bg-neutral-850 active:scale-[0.96] transition-all duration-150 flex flex-col items-center justify-center text-center gap-1.5 shadow-2xs cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white min-h-[84px]"
+              className="p-3.5 py-4 rounded-2xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900/90 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-50 dark:hover:bg-neutral-850 active:scale-[0.96] transition-all duration-150 flex items-center gap-3 shadow-2xs cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white min-h-[76px] text-left"
             >
-              <div className="w-10 h-10 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+              <div className="w-11 h-11 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                 <Code className="w-5 h-5 text-neutral-900 dark:text-neutral-100" aria-hidden="true" />
               </div>
-              <span className="text-xs sm:text-sm font-bold text-neutral-900 dark:text-neutral-100 tracking-tight leading-tight">
-                Code
-              </span>
-              <span className="text-[10px] text-neutral-500 dark:text-neutral-400 font-medium">
-                9 Languages
-              </span>
-            </Link>
-
-            <Link
-              to="/game?mode=quotes"
-              aria-label="Practice typing famous quotes"
-              onClick={() => {
-                try {
-                  localStorage.setItem('typlix_game_mode', JSON.stringify('quotes'));
-                } catch {}
-              }}
-              className="p-3 py-3.5 rounded-2xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900/90 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-50 dark:hover:bg-neutral-850 active:scale-[0.96] transition-all duration-150 flex flex-col items-center justify-center text-center gap-1.5 shadow-2xs cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white min-h-[84px]"
-            >
-              <div className="w-10 h-10 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                <Quote className="w-5 h-5 text-neutral-900 dark:text-neutral-100" aria-hidden="true" />
+              <div className="min-w-0">
+                <span className="block text-xs sm:text-sm font-bold text-neutral-900 dark:text-neutral-100 tracking-tight leading-tight">
+                  Code
+                </span>
+                <span className="block text-[11px] text-neutral-500 dark:text-neutral-400 font-medium truncate mt-0.5">
+                  9 Languages
+                </span>
               </div>
-              <span className="text-xs sm:text-sm font-bold text-neutral-900 dark:text-neutral-100 tracking-tight leading-tight">
-                Quotes
-              </span>
-              <span className="text-[10px] text-neutral-500 dark:text-neutral-400 font-medium">
-                Wisdom
-              </span>
             </Link>
 
             <Link
@@ -179,17 +159,19 @@ export default function Home() {
                   localStorage.setItem('typlix_game_mode', JSON.stringify('custom'));
                 } catch {}
               }}
-              className="p-3 py-3.5 rounded-2xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900/90 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-50 dark:hover:bg-neutral-850 active:scale-[0.96] transition-all duration-150 flex flex-col items-center justify-center text-center gap-1.5 shadow-2xs cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white min-h-[84px]"
+              className="p-3.5 py-4 rounded-2xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900/90 hover:border-neutral-400 dark:hover:border-neutral-500 hover:bg-neutral-50 dark:hover:bg-neutral-850 active:scale-[0.96] transition-all duration-150 flex items-center gap-3 shadow-2xs cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white min-h-[76px] text-left"
             >
-              <div className="w-10 h-10 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+              <div className="w-11 h-11 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                 <Pencil className="w-5 h-5 text-neutral-900 dark:text-neutral-100" aria-hidden="true" />
               </div>
-              <span className="text-xs sm:text-sm font-bold text-neutral-900 dark:text-neutral-100 tracking-tight leading-tight">
-                Custom
-              </span>
-              <span className="text-[10px] text-neutral-500 dark:text-neutral-400 font-medium">
-                Your Text
-              </span>
+              <div className="min-w-0">
+                <span className="block text-xs sm:text-sm font-bold text-neutral-900 dark:text-neutral-100 tracking-tight leading-tight">
+                  Custom
+                </span>
+                <span className="block text-[11px] text-neutral-500 dark:text-neutral-400 font-medium truncate mt-0.5">
+                  Your Text
+                </span>
+              </div>
             </Link>
           </div>
 
@@ -553,13 +535,7 @@ export default function Home() {
                 <ArrowRight className="w-3 h-3" />
               </Link>
             </div>
-            <div className="grid grid-cols-4 gap-2 text-center">
-              <div className="p-2 sm:p-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-950/60 border border-neutral-100 dark:border-neutral-800/60">
-                <span className="block text-[10px] text-neutral-500 uppercase font-semibold">Lesson</span>
-                <span className="text-sm sm:text-base font-extrabold text-neutral-900 dark:text-neutral-100">
-                  {currentLevel} <span className="text-[10px] font-normal text-neutral-400">/50</span>
-                </span>
-              </div>
+            <div className="grid grid-cols-3 gap-2.5 text-center">
               <div className="p-2 sm:p-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-950/60 border border-neutral-100 dark:border-neutral-800/60">
                 <span className="block text-[10px] text-neutral-500 uppercase font-semibold">Best WPM</span>
                 <span className="text-sm sm:text-base font-extrabold text-neutral-900 dark:text-neutral-100">
@@ -573,7 +549,7 @@ export default function Home() {
                 </span>
               </div>
               <div className="p-2 sm:p-2.5 rounded-xl bg-neutral-50 dark:bg-neutral-950/60 border border-neutral-100 dark:border-neutral-800/60">
-                <span className="block text-[10px] text-neutral-500 uppercase font-semibold">Tests</span>
+                <span className="block text-[10px] text-neutral-500 uppercase font-semibold">Total Tests</span>
                 <span className="text-sm sm:text-base font-extrabold text-neutral-900 dark:text-neutral-100">
                   {summary.totalTests}
                 </span>

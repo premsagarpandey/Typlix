@@ -93,7 +93,7 @@ export default function AboutDeveloper() {
               title="Copy Email"
               className="px-3 py-2.5 bg-neutral-800 dark:bg-neutral-200 hover:bg-neutral-700 dark:hover:bg-neutral-300 text-white dark:text-neutral-900 transition-colors border-l border-neutral-700 dark:border-neutral-300 cursor-pointer"
             >
-              {copiedEmail ? <Check className="w-4 h-4 text-emerald-400 dark:text-emerald-700" /> : <Copy className="w-4 h-4" />}
+              {copiedEmail ? <Check className="w-4 h-4 text-white dark:text-neutral-900" /> : <Copy className="w-4 h-4" />}
             </button>
           </div>
 
@@ -140,6 +140,16 @@ export default function AboutDeveloper() {
               Whether you are a <strong>student</strong> learning home row finger ergonomics, a candidate preparing for high-pressure <strong>government typing tests</strong> (SSC CGL, CHSL, RRB), or a <strong>software engineer</strong> typing code syntax in JavaScript and Python, Typlix is engineered to make muscle memory training feel natural, tactile, and rewarding.
             </p>
           </div>
+        </div>
+
+        {/* ── Official Identity & Disambiguation Statement ── */}
+        <div className="p-4 sm:p-5 rounded-2xl bg-neutral-100/50 dark:bg-neutral-900/30 border border-neutral-200/70 dark:border-neutral-800 text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+          <p className="font-semibold text-neutral-900 dark:text-neutral-100 mb-1">
+            Official Platform Identity &amp; Disambiguation:
+          </p>
+          <p>
+            <strong>Typlix Typing</strong> (hosted at <a href="https://typlix.web.app/" className="underline font-medium text-neutral-800 dark:text-neutral-200">https://typlix.web.app</a>) was created exclusively by <strong>Prem Sagar Pandey</strong> as a touch typing speed test, keyboard lesson game, and programmer code trainer. It is completely distinct from the open-source grammar checker tool <em>&quot;Typlx&quot;</em> (typlx.com) and is not <em>&quot;Typelit&quot;</em>.
+          </p>
         </div>
 
         {/* ── Engineering Highlights ── */}

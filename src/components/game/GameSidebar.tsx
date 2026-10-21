@@ -401,7 +401,7 @@ function GameSidebarComponent({
                           onClick={onRestoreDefaults}
                           className={`py-2 px-2 text-xs font-mono font-medium rounded-lg border transition-all cursor-pointer text-center flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white group ${
                             !isDefaultSettings
-                              ? 'border-amber-300 dark:border-amber-800/80 bg-amber-50/80 dark:bg-amber-950/40 text-amber-900 dark:text-amber-200 font-semibold'
+                              ? 'border-neutral-900 dark:border-neutral-100 bg-neutral-900/10 dark:bg-neutral-100/10 text-neutral-900 dark:text-neutral-100 font-semibold'
                               : 'border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300'
                           }`}
                           title="Restore default text settings (small letters, no punctuation, 1k, 30s)"
@@ -409,7 +409,7 @@ function GameSidebarComponent({
                           <RotateCcw className="w-3 h-3 transition-transform duration-300 group-hover:-rotate-90 group-active:rotate-180" />
                           <span>default</span>
                           {!isDefaultSettings && (
-                            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse ml-0.5" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-neutral-900 dark:bg-neutral-100 animate-pulse ml-0.5" />
                           )}
                         </button>
                       )}
@@ -563,9 +563,9 @@ function GameSidebarComponent({
                         <button
                           type="button"
                           onClick={onRestoreDefaults}
-                          className={`py-2 px-1 text-xs font-mono font-medium rounded-lg border transition-all cursor-pointer text-center flex items-center justify-center gap-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white group ${
+                          className={`py-2 px-1 text-xs font-mono font-medium rounded-lg border transition-all cursor-pointer text-center flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white group ${
                             !isDefaultSettings
-                              ? 'border-amber-300 dark:border-amber-800/80 bg-amber-50/80 dark:bg-amber-950/40 text-amber-900 dark:text-amber-200 font-semibold'
+                              ? 'border-neutral-900 dark:border-neutral-100 bg-neutral-900/10 dark:bg-neutral-100/10 text-neutral-900 dark:text-neutral-100 font-semibold'
                               : 'border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300'
                           }`}
                           title="Restore default quote settings (only small letters, no punctuation, all categories)"
@@ -573,7 +573,7 @@ function GameSidebarComponent({
                           <RotateCcw className="w-3 h-3 transition-transform duration-300 group-hover:-rotate-90 group-active:rotate-180" />
                           <span>default</span>
                           {!isDefaultSettings && (
-                            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse ml-0.5" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-neutral-900 dark:bg-neutral-100 animate-pulse ml-0.5" />
                           )}
                         </button>
                       )}

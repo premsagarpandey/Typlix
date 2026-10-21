@@ -79,42 +79,42 @@ function buildSmoothPath(
 // ─── Chart Colors ───────────────────────────────────────────────────
 const COLORS = {
   light: {
-    wpmStroke: '#059669',
-    wpmGradientTop: 'rgba(16, 185, 129, 0.35)',
-    wpmGradientBot: 'rgba(16, 185, 129, 0.02)',
-    accStroke: '#7c3aed',
-    accGradientTop: 'rgba(124, 58, 237, 0.22)',
-    accGradientBot: 'rgba(124, 58, 237, 0.01)',
+    wpmStroke: '#171717',
+    wpmGradientTop: 'rgba(23, 23, 23, 0.16)',
+    wpmGradientBot: 'rgba(23, 23, 23, 0.01)',
+    accStroke: '#737373',
+    accGradientTop: 'rgba(115, 115, 115, 0.12)',
+    accGradientBot: 'rgba(115, 115, 115, 0.01)',
     gridLine: '#e5e5e5',
     axisText: '#737373',
     dotFill: '#ffffff',
-    dotStroke: '#059669',
+    dotStroke: '#171717',
     accDotFill: '#ffffff',
-    accDotStroke: '#7c3aed',
-    tooltipBg: '#ffffff',
-    tooltipBorder: '#cbd5e1',
-    tooltipText: '#059669',
-    tooltipSubtext: '#64748b',
-    avgLine: '#2563eb',
+    accDotStroke: '#737373',
+    tooltipBg: '#171717',
+    tooltipBorder: '#404040',
+    tooltipText: '#ffffff',
+    tooltipSubtext: '#a3a3a3',
+    avgLine: '#525252',
   },
   dark: {
-    wpmStroke: '#10b981',
-    wpmGradientTop: 'rgba(16, 185, 129, 0.38)',
-    wpmGradientBot: 'rgba(16, 185, 129, 0.01)',
-    accStroke: '#a855f7',
-    accGradientTop: 'rgba(168, 85, 247, 0.28)',
-    accGradientBot: 'rgba(168, 85, 247, 0.01)',
+    wpmStroke: '#f5f5f5',
+    wpmGradientTop: 'rgba(245, 245, 245, 0.18)',
+    wpmGradientBot: 'rgba(245, 245, 245, 0.01)',
+    accStroke: '#a3a3a3',
+    accGradientTop: 'rgba(163, 163, 163, 0.12)',
+    accGradientBot: 'rgba(163, 163, 163, 0.01)',
     gridLine: '#262626',
     axisText: '#737373',
     dotFill: '#0a0a0a',
-    dotStroke: '#34d399',
+    dotStroke: '#f5f5f5',
     accDotFill: '#0a0a0a',
-    accDotStroke: '#c084fc',
-    tooltipBg: '#171717',
-    tooltipBorder: '#334155',
-    tooltipText: '#34d399',
-    tooltipSubtext: '#94a3b8',
-    avgLine: '#38bdf8',
+    accDotStroke: '#a3a3a3',
+    tooltipBg: '#0a0a0a',
+    tooltipBorder: '#262626',
+    tooltipText: '#f5f5f5',
+    tooltipSubtext: '#a3a3a3',
+    avgLine: '#737373',
   },
 };
 
@@ -526,10 +526,8 @@ export default function WpmProgressChart({ sessions, activeFilter, onFilterChang
             <span
               className={`inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[10px] font-semibold font-mono border ${
                 trendInfo.diff > 0
-                  ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/30'
-                  : trendInfo.diff < 0
-                  ? 'bg-rose-500/15 text-rose-700 dark:text-rose-400 border-rose-500/30'
-                  : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border-neutral-300 dark:border-neutral-700'
+                  ? 'bg-neutral-900/10 dark:bg-neutral-100/10 text-neutral-900 dark:text-neutral-100 border-neutral-300 dark:border-neutral-700'
+                  : 'bg-neutral-200/70 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border-neutral-300 dark:border-neutral-700'
               }`}
             >
               {trendInfo.diff > 0 ? '↑' : trendInfo.diff < 0 ? '↓' : '→'}
@@ -546,9 +544,9 @@ export default function WpmProgressChart({ sessions, activeFilter, onFilterChang
             aria-checked={showAccuracy}
             aria-label={showAccuracy ? 'Hide accuracy line on chart' : 'Show accuracy line on chart'}
             onClick={() => setShowAccuracy(!showAccuracy)}
-            className={`px-2.5 py-1 text-[10px] font-medium rounded-md border transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-purple-500 ${
+            className={`px-2.5 py-1 text-[10px] font-medium rounded-md border transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-900 dark:focus-visible:ring-white ${
               showAccuracy
-                ? 'border-purple-400 dark:border-purple-600 bg-purple-500/15 text-purple-700 dark:text-purple-300 font-semibold shadow-xs'
+                ? 'border-neutral-900 dark:border-neutral-100 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-semibold shadow-xs'
                 : 'border-neutral-300 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100'
             }`}
           >
@@ -585,11 +583,11 @@ export default function WpmProgressChart({ sessions, activeFilter, onFilterChang
       <div className="relative p-4 pt-2">
         {/* Axis labels */}
         <div className="flex items-center justify-between px-1 mb-1">
-          <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-600 dark:text-emerald-400 font-bold">
+          <span className="text-[10px] font-mono uppercase tracking-widest text-neutral-900 dark:text-neutral-100 font-bold">
             wpm
           </span>
           {showAccuracy && (
-            <span className="text-[10px] font-mono uppercase tracking-widest text-purple-600 dark:text-purple-400 font-bold">
+            <span className="text-[10px] font-mono uppercase tracking-widest text-neutral-500 font-bold">
               accuracy %
             </span>
           )}
@@ -642,7 +640,7 @@ export default function WpmProgressChart({ sessions, activeFilter, onFilterChang
                         {tooltip.session.accuracy}% acc
                       </span>
                       <span
-                        className="text-[10px] font-medium text-amber-600 dark:text-amber-400"
+                        className="text-[10px] font-medium text-neutral-400 dark:text-neutral-400"
                       >
                         {tooltip.session.maxCombo}x combo
                       </span>
@@ -671,7 +669,7 @@ export default function WpmProgressChart({ sessions, activeFilter, onFilterChang
               className="inline-block w-3.5 h-[3px] rounded-full shadow-xs"
               style={{ background: colors.wpmStroke }}
             />
-            <span className="text-[10px] font-semibold text-emerald-700 dark:text-emerald-400">
+            <span className="text-[10px] font-semibold text-neutral-900 dark:text-neutral-100">
               WPM (Speed)
             </span>
           </div>
@@ -681,7 +679,7 @@ export default function WpmProgressChart({ sessions, activeFilter, onFilterChang
                 className="inline-block w-3.5 h-[3px] rounded-full shadow-xs"
                 style={{ background: colors.accStroke }}
               />
-              <span className="text-[10px] font-semibold text-purple-700 dark:text-purple-400">
+              <span className="text-[10px] font-semibold text-neutral-600 dark:text-neutral-400">
                 Accuracy (%)
               </span>
             </div>
@@ -694,7 +692,7 @@ export default function WpmProgressChart({ sessions, activeFilter, onFilterChang
                 borderTop: `2px dashed ${colors.avgLine}`,
               }}
             />
-            <span className="text-[10px] font-semibold text-blue-700 dark:text-sky-400">
+            <span className="text-[10px] font-semibold text-neutral-500">
               Average
             </span>
           </div>

@@ -66,7 +66,7 @@ export default function PwaInstallModal() {
                   </div>
                   <div className="text-xs">
                     <p className="font-semibold text-neutral-900 dark:text-neutral-100 flex items-center gap-1.5">
-                      Tap the <Share className="w-3.5 h-3.5 inline text-blue-500" /> Share button
+                      Tap the <Share className="w-3.5 h-3.5 inline text-neutral-900 dark:text-neutral-100" /> Share button
                     </p>
                     <p className="text-neutral-600 dark:text-neutral-400 mt-0.5">
                       Located at the bottom bar of Safari browser.

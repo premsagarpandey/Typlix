@@ -34,7 +34,7 @@ export default function ThemeToggle({ variant = 'button', className = '' }: Them
           {isDark ? (
             <Moon className="w-2.5 h-2.5 text-neutral-900" strokeWidth={2} />
           ) : (
-            <Sun className="w-2.5 h-2.5 text-amber-500" strokeWidth={2} />
+            <Sun className="w-2.5 h-2.5 text-neutral-800" strokeWidth={2} />
           )}
         </motion.span>
       </button>
@@ -64,7 +64,7 @@ export default function ThemeToggle({ variant = 'button', className = '' }: Them
           className="flex items-center justify-center"
         >
           {isDark ? (
-            <Sun className="w-4 h-4 text-amber-400 group-hover:rotate-45 transition-transform duration-200" strokeWidth={2} aria-hidden="true" />
+            <Sun className="w-4 h-4 text-neutral-100 group-hover:rotate-45 transition-transform duration-200" strokeWidth={2} aria-hidden="true" />
           ) : (
             <Moon className="w-4 h-4 text-neutral-700 dark:text-neutral-300 group-hover:-rotate-12 transition-transform duration-200" strokeWidth={2} aria-hidden="true" />
           )}

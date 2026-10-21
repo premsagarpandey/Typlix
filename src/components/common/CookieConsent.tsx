@@ -21,6 +21,20 @@ export default function CookieConsent() {
   });
 
   useEffect(() => {
+    // In standalone app mode, auto-save default consent and never show banner
+    const isStandalone = typeof window !== 'undefined' && (
+      window.matchMedia('(display-mode: standalone)').matches ||
+      window.location.search.includes('source=pwa') ||
+      (window.navigator as unknown as { standalone?: boolean }).standalone === true
+    );
+
+    if (isStandalone) {
+      if (!getCookieConsent()) {
+        saveCookieConsent(getDefaultConsent());
+      }
+      return;
+    }
+
     // Check if consent has already been recorded
     const existing = getCookieConsent();
     if (!existing) {

@@ -167,7 +167,7 @@ function GameStatsComponent({
                   aria-label="Restore default settings"
                   className={`px-2 py-0.5 text-[11px] font-mono rounded-md active:scale-95 transition-all cursor-pointer flex items-center gap-1 group ${
                     !isDefaultSettings
-                      ? 'text-amber-700 dark:text-amber-300 hover:bg-amber-100/60 dark:hover:bg-amber-900/40 font-semibold'
+                      ? 'text-neutral-900 dark:text-neutral-100 bg-neutral-200/70 dark:bg-neutral-700/60 font-semibold'
                       : 'text-neutral-600 hover:text-neutral-950 dark:text-neutral-400 dark:hover:text-neutral-100 hover:bg-neutral-200/50 dark:hover:bg-neutral-700/40'
                   }`}
                   title="Restore default settings (lowercase, no punctuation, 1k, 30s)"
@@ -175,7 +175,7 @@ function GameStatsComponent({
                   <RotateCcw className="w-3 h-3 transition-transform duration-300 group-hover:-rotate-90 group-active:rotate-180" aria-hidden="true" />
                   <span>default</span>
                   {!isDefaultSettings && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse ml-0.5" title="Settings modified from default" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-neutral-900 dark:bg-neutral-100 animate-pulse ml-0.5" title="Settings modified from default" />
                   )}
                 </button>
               )}
@@ -307,7 +307,7 @@ function GameStatsComponent({
                   aria-label="Restore default quote settings"
                   className={`px-2 py-0.5 text-[11px] font-mono rounded-md active:scale-95 transition-all cursor-pointer flex items-center gap-1 group ${
                     !isDefaultSettings
-                      ? 'text-amber-700 dark:text-amber-300 hover:bg-amber-100/60 dark:hover:bg-amber-900/40 font-semibold'
+                      ? 'text-neutral-900 dark:text-neutral-100 bg-neutral-200/70 dark:bg-neutral-700/60 font-semibold'
                       : 'text-neutral-600 hover:text-neutral-950 dark:text-neutral-400 dark:hover:text-neutral-100 hover:bg-neutral-200/50 dark:hover:bg-neutral-700/40'
                   }`}
                   title="Restore default quote settings (only small letters, no punctuation, all categories)"
@@ -315,7 +315,7 @@ function GameStatsComponent({
                   <RotateCcw className="w-3 h-3 transition-transform duration-300 group-hover:-rotate-90 group-active:rotate-180" aria-hidden="true" />
                   <span>default</span>
                   {!isDefaultSettings && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse ml-0.5" title="Settings modified from default" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-neutral-900 dark:bg-neutral-100 animate-pulse ml-0.5" title="Settings modified from default" />
                   )}
                 </button>
               )}

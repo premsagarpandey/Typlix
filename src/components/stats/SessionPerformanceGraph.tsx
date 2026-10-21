@@ -126,8 +126,8 @@ function SessionPerformanceGraphComponent({ history }: SessionPerformanceGraphPr
         <span className="text-neutral-500 font-semibold uppercase tracking-wider">Test Velocity Timeline</span>
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1">
-            <span className="w-2.5 h-[2.5px] bg-emerald-500 rounded-full" />
-            <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Net WPM</span>
+            <span className="w-2.5 h-[2.5px] bg-neutral-900 dark:bg-neutral-100 rounded-full" />
+            <span className="text-neutral-900 dark:text-neutral-100 font-semibold">Net WPM</span>
           </span>
           <span className="flex items-center gap-1">
             <span className="w-2.5 h-[1.5px] bg-neutral-400 rounded-full" />
@@ -143,14 +143,14 @@ function SessionPerformanceGraphComponent({ history }: SessionPerformanceGraphPr
       <svg
         ref={svgRef}
         viewBox={`0 0 ${width} ${height}`}
-        className="w-full h-auto select-none overflow-visible"
+        className="w-full h-auto select-none overflow-visible text-neutral-900 dark:text-neutral-100"
         onMouseMove={handleMouseMove}
         onMouseLeave={() => setHoveredPoint(null)}
       >
         <defs>
           <linearGradient id="sessionWpmGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#10b981" stopOpacity="0.25" />
-            <stop offset="100%" stopColor="#10b981" stopOpacity="0.0" />
+            <stop offset="0%" stopColor="currentColor" stopOpacity="0.14" />
+            <stop offset="100%" stopColor="currentColor" stopOpacity="0.0" />
           </linearGradient>
         </defs>
 
@@ -204,7 +204,8 @@ function SessionPerformanceGraphComponent({ history }: SessionPerformanceGraphPr
         <path
           d={rawLine}
           fill="none"
-          stroke="#94a3b8"
+          stroke="currentColor"
+          className="text-neutral-400 dark:text-neutral-600"
           strokeWidth={1.5}
           strokeDasharray="4,4"
           strokeLinecap="round"
@@ -214,7 +215,7 @@ function SessionPerformanceGraphComponent({ history }: SessionPerformanceGraphPr
         <path
           d={netLine}
           fill="none"
-          stroke="#10b981"
+          stroke="currentColor"
           strokeWidth={2.2}
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -268,7 +269,7 @@ function SessionPerformanceGraphComponent({ history }: SessionPerformanceGraphPr
           }}
         >
           <span>{hoveredPoint.point.second}s</span>
-          <span className="text-emerald-400 dark:text-emerald-600 font-bold">{hoveredPoint.point.wpm} net</span>
+          <span className="font-bold underline decoration-neutral-500">{hoveredPoint.point.wpm} net</span>
           <span className="opacity-75">{hoveredPoint.point.rawWpm || hoveredPoint.point.wpm} raw</span>
           {hoveredPoint.point.errors > 0 && (
             <span className="text-red-400 dark:text-red-600 font-bold">✕{hoveredPoint.point.errors}</span>

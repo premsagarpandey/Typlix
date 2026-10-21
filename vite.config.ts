@@ -1,9 +1,54 @@
+import fs from 'fs';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
+const buildTime = Date.now();
+
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  define: {
+    __APP_BUILD_TIME__: JSON.stringify(buildTime),
+  },
+  plugins: [
+    react(),
+    {
+      name: 'pwa-versioning',
+      generateBundle(_, bundle) {
+        this.emitFile({
+          type: 'asset',
+          fileName: 'version.json',
+          source: JSON.stringify({
+            version: '2.2.0',
+            buildTime: buildTime,
+          }),
+        });
+
+        try {
+          const swContent = fs.readFileSync('public/sw.js', 'utf8');
+          // Extract all generated bundle asset paths (.js, .css, etc.)
+          const bundleAssets = Object.keys(bundle).map((fileName) => `/${fileName}`);
+
+          let updatedSw = swContent.replace(
+            /const SW_VERSION = '.*?';/,
+            `const SW_VERSION = '2.2.0-${buildTime}';`
+          );
+
+          updatedSw = updatedSw.replace(
+            /\/\* BUILD_INJECTED_ASSETS \*\/ \[\]/,
+            JSON.stringify(bundleAssets)
+          );
+
+          this.emitFile({
+            type: 'asset',
+            fileName: 'sw.js',
+            source: updatedSw,
+          });
+        } catch (err) {
+          console.warn('Could not inject buildTime/assets into sw.js:', err);
+        }
+      },
+    },
+  ],
   server: {
     host: true,
     port: 5173,

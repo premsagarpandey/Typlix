@@ -83,7 +83,7 @@ export default function ResultsModal({
           {/* Net WPM */}
           <div className="p-3 rounded-xl bg-neutral-100/70 dark:bg-neutral-800/60 border border-neutral-200 dark:border-neutral-700/60">
             <span className="text-[10px] text-neutral-500 uppercase tracking-wider font-semibold flex items-center justify-center gap-1">
-              <Zap className="w-3 h-3 text-emerald-500" />
+              <Zap className="w-3 h-3 text-neutral-900 dark:text-neutral-100" />
               <span>Net WPM</span>
             </span>
             <div className="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-neutral-100 font-mono mt-0.5">
@@ -97,7 +97,7 @@ export default function ResultsModal({
           {/* Accuracy */}
           <div className="p-3 rounded-xl bg-neutral-100/70 dark:bg-neutral-800/60 border border-neutral-200 dark:border-neutral-700/60">
             <span className="text-[10px] text-neutral-500 uppercase tracking-wider font-semibold flex items-center justify-center gap-1">
-              <Target className="w-3 h-3 text-purple-500" />
+              <Target className="w-3 h-3 text-neutral-900 dark:text-neutral-100" />
               <span>Accuracy</span>
             </span>
             <div className="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-neutral-100 font-mono mt-0.5">
@@ -111,7 +111,7 @@ export default function ResultsModal({
           {/* Raw WPM */}
           <div className="p-3 rounded-xl bg-neutral-100/70 dark:bg-neutral-800/60 border border-neutral-200 dark:border-neutral-700/60">
             <span className="text-[10px] text-neutral-500 uppercase tracking-wider font-semibold flex items-center justify-center gap-1">
-              <Gauge className="w-3 h-3 text-sky-500" />
+              <Gauge className="w-3 h-3 text-neutral-900 dark:text-neutral-100" />
               <span>Raw WPM</span>
             </span>
             <div className="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-neutral-100 font-mono mt-0.5">
@@ -123,7 +123,7 @@ export default function ResultsModal({
           {/* Consistency */}
           <div className="p-3 rounded-xl bg-neutral-100/70 dark:bg-neutral-800/60 border border-neutral-200 dark:border-neutral-700/60">
             <span className="text-[10px] text-neutral-500 uppercase tracking-wider font-semibold flex items-center justify-center gap-1">
-              <Activity className="w-3 h-3 text-amber-500" />
+              <Activity className="w-3 h-3 text-neutral-900 dark:text-neutral-100" />
               <span>Consistency</span>
             </span>
             <div className="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-neutral-100 font-mono mt-0.5">
@@ -143,7 +143,7 @@ export default function ResultsModal({
           <div className="my-3">
             {isPassed ? (
               <div className="p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800/80 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100 text-xs text-center font-medium flex items-center justify-center gap-1.5">
-                <Check className="w-4 h-4 shrink-0 text-emerald-500" aria-hidden="true" />
+                <Check className="w-4 h-4 shrink-0 text-neutral-900 dark:text-neutral-100" aria-hidden="true" />
                 <span>
                   <span className="font-semibold">Level {levelConfig.level} Cleared!</span>{' '}
                   {levelConfig.level < 50

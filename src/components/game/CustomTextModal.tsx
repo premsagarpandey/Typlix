@@ -164,12 +164,12 @@ export default function CustomTextModal({
             {text.length > 0 && (
               <div className="flex items-center gap-1 text-[11px]">
                 {safetyReport.isSafe ? (
-                  <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-medium">
+                  <span className="inline-flex items-center gap-1 text-neutral-900 dark:text-neutral-100 font-medium">
                     <CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" />
                     <span>Safe text</span>
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1 text-amber-600 dark:text-amber-400 font-medium" title="Unsafe HTML or control characters will be automatically neutralized">
+                  <span className="inline-flex items-center gap-1 text-neutral-600 dark:text-neutral-400 font-medium" title="Unsafe HTML or control characters will be automatically neutralized">
                     <AlertTriangle className="w-3.5 h-3.5" aria-hidden="true" />
                     <span>Auto-neutralized</span>
                   </span>

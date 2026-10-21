@@ -6,10 +6,50 @@ import type { BeforeInstallPromptEvent } from './PwaInstallContextCore';
 
 function checkIsStandalone(): boolean {
   if (typeof window === 'undefined') return false;
+  if (typeof document !== 'undefined' && document.documentElement.classList.contains('is-standalone-app')) {
+    return true;
+  }
   const isStandaloneMode = window.matchMedia('(display-mode: standalone)').matches;
+  const isMinimalUi = window.matchMedia('(display-mode: minimal-ui)').matches;
+  const isFullscreen = window.matchMedia('(display-mode: fullscreen)').matches;
+  const isWindowControlsOverlay = window.matchMedia('(display-mode: window-controls-overlay)').matches;
   const isIosStandalone = (window.navigator as unknown as { standalone?: boolean }).standalone === true;
-  const isAndroidStandalone = document.referrer.includes('android-app://');
-  return isStandaloneMode || isIosStandalone || isAndroidStandalone;
+  const isAndroidReferrer = typeof document !== 'undefined' && document.referrer.includes('android-app://');
+  const isAppUrlParam = window.location.search.includes('source=pwa') || window.location.search.includes('mode=app');
+  let inAppSession = false;
+  try {
+    inAppSession = sessionStorage.getItem('typlix_in_standalone_app') === 'true';
+  } catch {}
+
+  const isRealApp =
+    isStandaloneMode ||
+    isMinimalUi ||
+    isFullscreen ||
+    isWindowControlsOverlay ||
+    isIosStandalone ||
+    isAndroidReferrer ||
+    isAppUrlParam;
+
+  if (isRealApp) {
+    try {
+      sessionStorage.setItem('typlix_in_standalone_app', 'true');
+      document.documentElement.classList.add('is-standalone-app');
+    } catch {}
+    return true;
+  }
+
+  if (inAppSession) {
+    try {
+      document.documentElement.classList.add('is-standalone-app');
+    } catch {}
+    return true;
+  }
+
+  // Running in regular browser
+  try {
+    localStorage.removeItem('typlix_is_installed_app');
+  } catch {}
+  return false;
 }
 
 function checkIsIosDevice(): boolean {
@@ -32,7 +72,11 @@ export function PwaInstallProvider({ children }: { children: ReactNode }) {
     }
   });
 
-  // Track phone status on resize/orientation change
+  const [hasAppUpdate, setHasAppUpdate] = useState<boolean>(false);
+  const [waitingWorker, setWaitingWorker] = useState<ServiceWorker | null>(null);
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
+
+  // Track phone status and standalone state on resize/orientation change
   useEffect(() => {
     const handleCheck = () => {
       setIsPhone(checkIsPhone());
@@ -55,6 +99,9 @@ export function PwaInstallProvider({ children }: { children: ReactNode }) {
 
     const handleAppInstalled = () => {
       setIsInstalled(true);
+      try {
+        localStorage.setItem('typlix_is_installed_app', 'true');
+      } catch {}
       setDeferredPrompt(null);
       setShowGuideModal(false);
     };
@@ -68,6 +115,158 @@ export function PwaInstallProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
+  // Proactive check: asks Service Worker & fetches /version.json
+  const checkForAppUpdate = useCallback(async () => {
+    if (typeof navigator === 'undefined' || !navigator.onLine) return;
+
+    // 1. Proactively query ServiceWorker registration
+    if ('serviceWorker' in navigator) {
+      try {
+        const reg = await navigator.serviceWorker.getRegistration();
+        if (reg) {
+          await reg.update().catch(() => {});
+          if (reg.waiting) {
+            setWaitingWorker(reg.waiting);
+            if (checkIsStandalone()) {
+              setHasAppUpdate(true);
+            }
+          }
+        }
+      } catch {}
+    }
+
+    // 2. Fetch /version.json with cache-busting timestamp
+    try {
+      const res = await fetch(`/version.json?_t=${Date.now()}`, {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          Pragma: 'no-cache',
+        },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && typeof data.buildTime === 'number') {
+          const currentBuild = typeof __APP_BUILD_TIME__ !== 'undefined' ? __APP_BUILD_TIME__ : 0;
+          if (data.buildTime > currentBuild) {
+            console.log('[Typlix Update Engine] Update available:', data.version, data.buildTime, 'Current:', currentBuild);
+            if (checkIsStandalone()) {
+              setHasAppUpdate(true);
+            }
+          }
+        }
+      }
+    } catch {}
+  }, []);
+
+  // Lifecycle listeners for update checking (startup, network online, app focus/resume, and 30s interval)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    // Check on startup asynchronously
+    const timer = setTimeout(() => {
+      void checkForAppUpdate();
+    }, 150);
+
+    // Check when user turns on internet / reconnects
+    const handleOnline = () => {
+      void checkForAppUpdate();
+    };
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('focus', handleOnline);
+
+    // Check when app resumes from background
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        void checkForAppUpdate();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // Periodic check every 30 seconds while online
+    const interval = setInterval(() => {
+      void checkForAppUpdate();
+    }, 30000);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('focus', handleOnline);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      clearInterval(interval);
+    };
+  }, [checkForAppUpdate]);
+
+  // Listen to ServiceWorker lifecycle for new workers
+  useEffect(() => {
+    if (typeof window === 'undefined' || !('serviceWorker' in navigator)) return;
+
+    let cleanup: (() => void) | undefined;
+
+    navigator.serviceWorker.ready
+      .then((reg) => {
+        if (reg.waiting) {
+          setWaitingWorker(reg.waiting);
+          if (checkIsStandalone()) {
+            setHasAppUpdate(true);
+          }
+        }
+
+        const handleUpdateFound = () => {
+          const newWorker = reg.installing;
+          if (!newWorker) return;
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              setWaitingWorker(newWorker);
+              if (checkIsStandalone()) {
+                setHasAppUpdate(true);
+              }
+            }
+          });
+        };
+
+        reg.addEventListener('updatefound', handleUpdateFound);
+
+        cleanup = () => {
+          reg.removeEventListener('updatefound', handleUpdateFound);
+        };
+      })
+      .catch(() => {});
+
+    return () => {
+      if (cleanup) cleanup();
+    };
+  }, []);
+
+  const updateApp = useCallback(async () => {
+    setIsUpdating(true);
+    try {
+      if (waitingWorker) {
+        waitingWorker.postMessage({ type: 'SKIP_WAITING' });
+      } else if ('serviceWorker' in navigator) {
+        const reg = await navigator.serviceWorker.getRegistration();
+        if (reg?.waiting) {
+          reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+        }
+      }
+
+      if ('caches' in window) {
+        const cacheKeys = await caches.keys();
+        await Promise.all(cacheKeys.map((k) => caches.delete(k)));
+      }
+
+      setTimeout(() => {
+        window.location.href = window.location.origin + window.location.pathname + '?updated=' + Date.now();
+      }, 150);
+    } catch {
+      window.location.reload();
+    }
+  }, [waitingWorker]);
+
+  const dismissUpdatePrompt = useCallback(() => {
+    setHasAppUpdate(false);
+  }, []);
+
   const dismissBanner = useCallback(() => {
     setIsBannerDismissed(true);
     try {
@@ -76,17 +275,18 @@ export function PwaInstallProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const installApp = useCallback(async (): Promise<boolean> => {
-    // Check if on phone device or mobile viewport
     const isMobileViewport = typeof window !== 'undefined' && window.innerWidth < 768;
     if (!checkIsPhone() && !isMobileViewport) return false;
 
-    // If deferredPrompt is available (Chrome on Android)
     if (deferredPrompt) {
       try {
         await deferredPrompt.prompt();
         const choice = await deferredPrompt.userChoice;
         if (choice.outcome === 'accepted') {
           setIsInstalled(true);
+          try {
+            localStorage.setItem('typlix_is_installed_app', 'true');
+          } catch {}
           setDeferredPrompt(null);
           return true;
         }
@@ -98,7 +298,6 @@ export function PwaInstallProvider({ children }: { children: ReactNode }) {
       }
     }
 
-    // If prompt is not directly available (e.g., iOS Safari or prompt not fired yet)
     setShowGuideModal(true);
     return false;
   }, [deferredPrompt]);
@@ -115,8 +314,25 @@ export function PwaInstallProvider({ children }: { children: ReactNode }) {
       setShowGuideModal,
       isBannerDismissed,
       dismissBanner,
+      hasAppUpdate,
+      isUpdating,
+      updateApp,
+      dismissUpdatePrompt,
     }),
-    [isPhone, deferredPrompt, isInstalled, isIos, installApp, showGuideModal, isBannerDismissed, dismissBanner]
+    [
+      isPhone,
+      deferredPrompt,
+      isInstalled,
+      isIos,
+      installApp,
+      showGuideModal,
+      isBannerDismissed,
+      dismissBanner,
+      hasAppUpdate,
+      isUpdating,
+      updateApp,
+      dismissUpdatePrompt,
+    ]
   );
 
   return <PwaInstallContext.Provider value={value}>{children}</PwaInstallContext.Provider>;

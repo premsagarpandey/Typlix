@@ -9,13 +9,13 @@ import { KEYBOARD_LAYOUTS, type KeyboardLayoutId } from '../data/keyboardLayouts
 import { exportDataAsJSON, exportStatsAsCSV, importDataFromJSON } from '../utils/dataBackup';
 import { resetLevelProgress, clearStatsHistory } from '../services/cloudProgress';
 import { openCookieConsentModal, resetCookieConsent, isGlobalPrivacyControlActive } from '../utils/cookieConsent';
-import { ShieldCheck, EyeOff, Lock, Check, Download, Upload, FileSpreadsheet, Cookie, X, Play, Volume2 } from 'lucide-react';
+import { ShieldCheck, EyeOff, Lock, Check, Download, Upload, FileSpreadsheet, Cookie, X, Play, Volume2, RefreshCw } from 'lucide-react';
 import { checkIsPhone } from '../hooks/useIsMobile';
 import { isHapticsEnabled, setHapticsEnabled, triggerHaptic } from '../utils/haptics';
 import { usePwaInstall } from '../hooks/usePwaInstall';
 
 export default function Settings() {
-  const { isInstalled, installApp } = usePwaInstall();
+  const { isInstalled, installApp, hasAppUpdate, isUpdating, updateApp } = usePwaInstall();
   const [soundEnabled, setSoundEnabled] = useLocalStorage('sound', !checkIsPhone());
   const [soundProfile, setSoundProfile] = useLocalStorage<SoundProfileId>('soundProfile', 'cherry-mx-blue');
   const [soundVolume, setSoundVolume] = useLocalStorage<number>('soundVolume', 70);
@@ -181,7 +181,7 @@ export default function Settings() {
               />
               <div className="min-w-0 text-left">
                 <h3 className="text-xs sm:text-sm font-semibold text-neutral-900 dark:text-neutral-100 truncate leading-tight">Install Typlix App</h3>
-                <p className="text-[10px] text-neutral-500 dark:text-neutral-400 truncate mt-0.5 leading-tight">Add to phone home screen</p>
+                <p className="text-[10px] text-neutral-500 dark:text-neutral-400 truncate mt-0.5 leading-tight">Fast typing · Works offline</p>
               </div>
             </div>
             <button
@@ -191,6 +191,42 @@ export default function Settings() {
             >
               <Download className="w-3 h-3" />
               <span>Get</span>
+            </button>
+          </div>
+        )}
+
+        {/* In-App Update Banner in Settings */}
+        {isInstalled && hasAppUpdate && (
+          <div className="p-2.5 px-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-100/90 hover:bg-neutral-200/90 dark:bg-neutral-800/60 dark:hover:bg-neutral-800 flex items-center justify-between gap-2.5 transition-all shadow-2xs">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="relative shrink-0">
+                <img
+                  src="/logo192.png"
+                  alt="Typlix"
+                  width="28"
+                  height="28"
+                  className="w-7 h-7 rounded-lg object-contain shadow-2xs shrink-0"
+                />
+                <span className="absolute -top-1 -right-1 flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-neutral-900 dark:bg-neutral-100 opacity-60"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-neutral-900 dark:bg-neutral-100"></span>
+                </span>
+              </div>
+              <div className="min-w-0 text-left">
+                <div className="flex items-center gap-1.5">
+                  <h3 className="text-xs sm:text-sm font-semibold text-neutral-900 dark:text-neutral-100 truncate leading-tight">Update Typlix App</h3>
+                  <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-neutral-900/10 dark:bg-neutral-100/10 text-neutral-900 dark:text-neutral-100 border border-neutral-900/15 dark:border-neutral-100/15">New</span>
+                </div>
+                <p className="text-[10px] text-neutral-500 dark:text-neutral-400 truncate mt-0.5 leading-tight">New version available · Tap to update</p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={updateApp}
+              className="px-2.5 py-1 text-xs font-semibold rounded-md bg-neutral-900 hover:bg-neutral-800 dark:bg-neutral-100 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 shadow-xs active:scale-95 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
+            >
+              <RefreshCw className={`w-3 h-3 ${isUpdating ? 'animate-spin' : ''}`} />
+              <span>{isUpdating ? 'Updating...' : 'Update'}</span>
             </button>
           </div>
         )}
@@ -467,7 +503,7 @@ export default function Settings() {
             id="backup-file-input"
             ref={fileInputRef}
             onChange={handleFileChange}
-            accept=".json,application/json"
+            accept=".json,application/json,text/plain,text/json"
             className="hidden"
             aria-label="Upload Typlix JSON backup file"
           />
@@ -476,7 +512,7 @@ export default function Settings() {
             <button
               onClick={handleExportJSON}
               aria-label="Export all typing session records as JSON file"
-              className="flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium rounded-md border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+              className="flex items-center justify-center gap-1.5 px-3 py-2.5 min-h-[40px] text-xs font-medium rounded-md border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-600 transition-all active:scale-[0.98] cursor-pointer touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
             >
               <Download className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Export JSON</span>
@@ -485,7 +521,7 @@ export default function Settings() {
             <button
               onClick={handleExportCSV}
               aria-label="Export all typing session records as CSV spreadsheet"
-              className="flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium rounded-md border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+              className="flex items-center justify-center gap-1.5 px-3 py-2.5 min-h-[40px] text-xs font-medium rounded-md border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-600 transition-all active:scale-[0.98] cursor-pointer touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
             >
               <FileSpreadsheet className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Export CSV</span>
@@ -494,7 +530,7 @@ export default function Settings() {
             <button
               onClick={() => fileInputRef.current?.click()}
               aria-label="Import typing session records from a JSON backup file"
-              className="flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium rounded-md bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:opacity-90 transition-opacity cursor-pointer shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+              className="flex items-center justify-center gap-1.5 px-3 py-2.5 min-h-[40px] text-xs font-medium rounded-md bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:opacity-90 transition-all active:scale-[0.98] cursor-pointer shadow-xs touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
             >
               <Upload className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Import JSON</span>

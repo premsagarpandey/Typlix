@@ -20,6 +20,10 @@ export interface PwaInstallContextType {
   setShowGuideModal: (show: boolean) => void;
   isBannerDismissed: boolean;
   dismissBanner: () => void;
+  hasAppUpdate: boolean;
+  isUpdating: boolean;
+  updateApp: () => void;
+  dismissUpdatePrompt: () => void;
 }
 
 export const PwaInstallContext = createContext<PwaInstallContextType | null>(null);

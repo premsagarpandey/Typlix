@@ -2,13 +2,19 @@
   "id": "/",
   "name": "Typlix — Free Typing Game & Touch Typing Speed Test",
   "short_name": "Typlix",
-  "description": "Minimalist online touch typing game and speed test. Practice 50 progressive lessons, code snippets, and timed tests to reach 100+ WPM.",
-  "start_url": "/",
+  "description": "Minimalist online touch typing game and speed test platform. Practice 50 progressive lessons, developer code syntax in 9 languages, timed speed tests, mechanical audio, and analytics to reach 100+ WPM.",
+  "start_url": "/?source=pwa",
   "scope": "/",
   "display": "standalone",
+  "display_override": [
+    "window-controls-overlay",
+    "standalone",
+    "minimal-ui"
+  ],
   "background_color": "#0a0a0a",
   "theme_color": "#0a0a0a",
-  "orientation": "portrait-primary",
+  "orientation": "any",
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "/favicon-48x48.png",
@@ -47,11 +53,82 @@
       "purpose": "maskable"
     }
   ],
+  "shortcuts": [
+    {
+      "name": "50 Touch Typing Lessons",
+      "short_name": "Lessons",
+      "description": "Interactive 10-finger muscle memory lessons with finger placement guides",
+      "url": "/game?mode=lesson",
+      "icons": [
+        {
+          "src": "/logo192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Timed Speed Test (60s)",
+      "short_name": "Speed Test",
+      "description": "Benchmark your typing speed (WPM) and accuracy in real-time",
+      "url": "/game?mode=timed",
+      "icons": [
+        {
+          "src": "/logo192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Developer Code Mode",
+      "short_name": "Code Typing",
+      "description": "Practice typing real code syntax across 9 programming languages",
+      "url": "/game?mode=code",
+      "icons": [
+        {
+          "src": "/logo192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Typing Analytics & WPM",
+      "short_name": "Analytics",
+      "description": "Review typing velocity charts, accuracy breakdown, and telemetry",
+      "url": "/stats",
+      "icons": [
+        {
+          "src": "/logo192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/tutorial-image.jpg",
+      "sizes": "1280x720",
+      "type": "image/jpeg",
+      "form_factor": "wide",
+      "label": "Typlix Touch Typing Arena and 50 Lessons"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Typlix Official Typing Speed Game Platform"
+    }
+  ],
   "categories": [
     "education",
     "games",
     "productivity",
-    "utilities"
+    "utilities",
+    "developer"
   ],
   "lang": "en-US",
   "dir": "ltr"

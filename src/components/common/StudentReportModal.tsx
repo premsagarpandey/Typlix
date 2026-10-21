@@ -343,7 +343,7 @@ Verified on Typlix Touch Typing Platform (https://typlix.web.app)
               className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors cursor-pointer"
               title="Copy text summary"
             >
-              {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+              {copied ? <Check className="w-3.5 h-3.5 text-neutral-900 dark:text-neutral-100" /> : <Copy className="w-3.5 h-3.5" />}
               <span>{copied ? 'Copied!' : 'Copy'}</span>
             </button>
 
@@ -378,7 +378,7 @@ Verified on Typlix Touch Typing Platform (https://typlix.web.app)
               </div>
 
               <div className="sm:text-right text-xs">
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-neutral-900/10 dark:bg-neutral-100/10 text-neutral-900 dark:text-neutral-100 border border-neutral-900/15 dark:border-neutral-100/15">
                   <ShieldCheck className="w-3.5 h-3.5" />
                   Verified Training Log
                 </span>
@@ -566,7 +566,7 @@ Verified on Typlix Touch Typing Platform (https://typlix.web.app)
                             <span
                               className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${
                                 s.passed
-                                  ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'
+                                  ? 'bg-neutral-900/10 dark:bg-neutral-100/10 text-neutral-900 dark:text-neutral-100 font-semibold border border-neutral-900/15 dark:border-neutral-100/15'
                                   : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400'
                               }`}
                             >

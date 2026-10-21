@@ -27,7 +27,7 @@ export interface ImportResult {
 }
 
 /**
- * Downloads a string as a file in the browser
+ * Downloads a string as a file in the browser (100% compatible with desktop, mobile browsers, and PWAs)
  */
 function downloadFile(filename: string, content: string, contentType: string) {
   const blob = new Blob([content], { type: contentType });
@@ -35,10 +35,18 @@ function downloadFile(filename: string, content: string, contentType: string) {
   const a = document.createElement('a');
   a.href = url;
   a.download = filename;
+  a.style.display = 'none';
   document.body.appendChild(a);
   a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  
+  // Mobile browsers (iOS Safari, Android Chrome, and installed PWAs) process the download
+  // asynchronously. Delaying revocation ensures the OS download manager completes the transfer.
+  setTimeout(() => {
+    if (document.body.contains(a)) {
+      document.body.removeChild(a);
+    }
+    URL.revokeObjectURL(url);
+  }, 4000);
 }
 
 /**

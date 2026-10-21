@@ -828,7 +828,7 @@ function TypingAreaComponent({
 
       {/* Tab Quick Restart Notification Pill */}
       {tabRestartHint && (
-        <div className="mt-2 px-3 py-1 bg-amber-500/10 border border-amber-500/30 rounded-lg text-amber-700 dark:text-amber-400 text-xs font-medium flex items-center justify-center gap-1.5 animate-fade-in">
+        <div className="mt-2 px-3 py-1 bg-neutral-900/10 dark:bg-neutral-100/10 border border-neutral-300 dark:border-neutral-700 rounded-lg text-neutral-800 dark:text-neutral-200 text-xs font-medium flex items-center justify-center gap-1.5 animate-fade-in">
           <RotateCcw className="w-3.5 h-3.5 animate-spin" />
           <span>Press <strong>Enter</strong> to restart test now</span>
         </div>

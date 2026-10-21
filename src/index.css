@@ -418,4 +418,18 @@ html.light body {
   }
 }
 
+/* ═══════════════════ PWA App vs Website Display Isolation ═══════════════════ */
+/* Strictly suppress web-only SEO and marketing sections in standalone PWA app mode */
+@media all and (display-mode: standalone), (display-mode: minimal-ui), (display-mode: fullscreen), (display-mode: window-controls-overlay) {
+  .web-only-seo,
+  .web-only-marketing {
+    display: none !important;
+  }
+}
+
+html.is-standalone-app .web-only-seo,
+html.is-standalone-app .web-only-marketing {
+  display: none !important;
+}
+
 

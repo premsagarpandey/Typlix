@@ -126,7 +126,7 @@
         ]
       },
       {
-        "source": "/@(manifest.json|favicon.ico|favicon.svg|favicon*.png|apple-touch-icon.png|logo*.png|sw.js)",
+        "source": "/@(sw.js|version.json)",
         "headers": [
           {
             "key": "Access-Control-Allow-Origin",
@@ -139,6 +139,23 @@
           {
             "key": "Service-Worker-Allowed",
             "value": "/"
+          },
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, no-store, must-revalidate"
+          }
+        ]
+      },
+      {
+        "source": "/@(manifest.json|favicon.ico|favicon.svg|favicon*.png|apple-touch-icon.png|logo*.png)",
+        "headers": [
+          {
+            "key": "Access-Control-Allow-Origin",
+            "value": "*"
+          },
+          {
+            "key": "Cross-Origin-Resource-Policy",
+            "value": "cross-origin"
           },
           {
             "key": "Cache-Control",

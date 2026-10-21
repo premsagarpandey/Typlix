@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import ThemeToggle from '../common/ThemeToggle';
 import { useAuth } from '../../hooks/useAuth';
 import { useIsMobile } from '../../hooks/useIsMobile';
-import { LogIn, Menu, X, Home, Download } from 'lucide-react';
+import { LogIn, Menu, X, Home, Download, RefreshCw } from 'lucide-react';
 import AuthModal from '../common/AuthModal';
 import UserAvatar from '../common/UserAvatar';
 import { usePwaInstall } from '../../hooks/usePwaInstall';
@@ -14,13 +14,14 @@ const NAV_LINKS = [
   { path: '/game', label: 'Practice' },
   { path: '/stats', label: 'Stats' },
   { path: '/settings', label: 'Settings' },
+  { path: '/about', label: 'About' },
 ];
 
 export default function Navbar() {
   const location = useLocation();
   const { user } = useAuth();
   const isMobile = useIsMobile();
-  const { isInstalled, installApp } = usePwaInstall();
+  const { isInstalled, installApp, hasAppUpdate, isUpdating, updateApp } = usePwaInstall();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
@@ -259,12 +260,51 @@ export default function Navbar() {
                         />
                         <div className="text-left min-w-0">
                           <p className="font-semibold text-xs sm:text-sm text-neutral-900 dark:text-neutral-100 leading-tight truncate">Install Typlix App</p>
-                          <p className="text-[10px] text-neutral-500 dark:text-neutral-400 leading-tight mt-0.5 truncate">Fullscreen &amp; offline mode</p>
+                          <p className="text-[10px] text-neutral-500 dark:text-neutral-400 leading-tight mt-0.5 truncate">Fast typing · Works offline</p>
                         </div>
                       </div>
                       <span className="px-2.5 py-1 text-xs font-semibold rounded-md bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 shrink-0 flex items-center gap-1 group-hover:opacity-90 transition-opacity ml-2">
                         <Download className="w-3 h-3" />
                         <span>Get</span>
+                      </span>
+                    </button>
+                  )}
+
+                  {/* In-App Update Button below Sign In (Inside installed app when update is available) */}
+                  {isInstalled && hasAppUpdate && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        updateApp();
+                      }}
+                      className="w-full mt-2.5 flex items-center justify-between p-2.5 px-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-100/90 hover:bg-neutral-200/90 dark:bg-neutral-800/60 dark:hover:bg-neutral-800 text-neutral-900 dark:text-neutral-100 active:scale-[0.98] transition-all cursor-pointer group shadow-2xs"
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <div className="relative shrink-0">
+                          <img
+                            src="/logo192.png"
+                            alt="Typlix App"
+                            width="28"
+                            height="28"
+                            className="w-7 h-7 rounded-lg object-contain shadow-2xs group-hover:scale-105 transition-transform"
+                          />
+                          <span className="absolute -top-1 -right-1 flex h-2 w-2">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-neutral-900 dark:bg-neutral-100 opacity-60"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-neutral-900 dark:bg-neutral-100"></span>
+                          </span>
+                        </div>
+                        <div className="text-left min-w-0">
+                          <div className="flex items-center gap-1.5">
+                            <p className="font-semibold text-xs sm:text-sm text-neutral-900 dark:text-neutral-100 leading-tight truncate">Update Typlix App</p>
+                            <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-neutral-900/10 dark:bg-neutral-100/10 text-neutral-900 dark:text-neutral-100 border border-neutral-900/15 dark:border-neutral-100/15">New</span>
+                          </div>
+                          <p className="text-[10px] text-neutral-500 dark:text-neutral-400 leading-tight mt-0.5 truncate">Tap to get latest version</p>
+                        </div>
+                      </div>
+                      <span className="px-2.5 py-1 text-xs font-semibold rounded-md bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 shrink-0 flex items-center gap-1.5 group-hover:opacity-90 transition-opacity ml-2">
+                        <RefreshCw className={`w-3 h-3 ${isUpdating ? 'animate-spin' : ''}`} />
+                        <span>{isUpdating ? 'Updating...' : 'Update'}</span>
                       </span>
                     </button>
                   )}

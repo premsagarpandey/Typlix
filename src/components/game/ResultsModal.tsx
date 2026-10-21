@@ -3,6 +3,7 @@ import { Check, X, ArrowRight, Activity, Zap, Target, Gauge } from 'lucide-react
 import type { LevelConfig } from '../../data/levels';
 import type { GameStatus, GameMode, SessionHistoryPoint } from '../../hooks/useTypingGame';
 import SessionPerformanceGraph from '../stats/SessionPerformanceGraph';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 interface ResultsModalProps {
   wpm: number;
@@ -35,6 +36,7 @@ export default function ResultsModal({
   onRetry,
   onOpenCustomModal,
 }: ResultsModalProps) {
+  const isMobile = useIsMobile();
   const isLesson = mode === 'lesson';
   const isPassed = status === 'passed';
 
@@ -169,34 +171,38 @@ export default function ResultsModal({
           <button
             type="button"
             onClick={onRetry}
-            aria-label="Retry typing session (Shortcut: R)"
+            aria-label={isMobile ? 'Retry typing session' : 'Retry typing session (Shortcut: R)'}
             className={`${
               isLesson && !isPassed ? 'w-full' : 'flex-1'
-            } py-2.5 px-4 ${
+            } py-3 px-4 ${
               isLesson && !isPassed
                 ? 'bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:opacity-90'
-                : 'border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300'
-            } font-medium rounded-xl text-sm cursor-pointer flex items-center justify-center gap-2 transition-all shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white`}
+                : 'border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-800 dark:text-neutral-200'
+            } font-semibold rounded-xl text-sm cursor-pointer flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white`}
           >
             <span>{isLesson && !isPassed ? 'Try Again' : 'Retry'}</span>
-            <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 rounded">
-              R
-            </kbd>
+            {!isMobile && (
+              <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 rounded">
+                R
+              </kbd>
+            )}
           </button>
 
           {isLesson && isPassed && onNextLevel && (
             <button
               type="button"
               onClick={onNextLevel}
-              aria-label="Proceed to next level (Shortcut: Enter)"
-              className="flex-1 py-2.5 px-4 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 font-medium rounded-xl text-sm cursor-pointer flex items-center justify-center gap-2 transition-colors shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+              aria-label={isMobile ? 'Proceed to next level' : 'Proceed to next level (Shortcut: Enter)'}
+              className="flex-1 py-3 px-4 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 font-semibold rounded-xl text-sm cursor-pointer flex items-center justify-center gap-2 transition-colors active:scale-[0.98] shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
             >
               <span className="flex items-center gap-1.5">
                 Next Level <ArrowRight className="w-3.5 h-3.5" />
               </span>
-              <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-neutral-800 dark:bg-neutral-300 text-white dark:text-neutral-900 rounded">
-                ↵
-              </kbd>
+              {!isMobile && (
+                <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-neutral-800 dark:bg-neutral-300 text-white dark:text-neutral-900 rounded">
+                  ↵
+                </kbd>
+              )}
             </button>
           )}
 
@@ -205,7 +211,7 @@ export default function ResultsModal({
               type="button"
               onClick={onOpenCustomModal}
               aria-label="Open custom text editor"
-              className="flex-1 py-2.5 px-4 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-medium rounded-xl text-sm cursor-pointer hover:opacity-90 transition-opacity"
+              className="flex-1 py-3 px-4 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-semibold rounded-xl text-sm cursor-pointer active:scale-[0.98] hover:opacity-90 transition-opacity"
             >
               Edit Text
             </button>
@@ -215,20 +221,25 @@ export default function ResultsModal({
             <button
               type="button"
               onClick={onRetry}
-              aria-label="Proceed to next test (Shortcut: Enter)"
-              className="flex-1 py-2.5 px-4 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-medium rounded-xl text-sm cursor-pointer flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
+              aria-label={isMobile ? 'Proceed to next test' : 'Proceed to next test (Shortcut: Enter)'}
+              className="flex-1 py-3 px-4 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-semibold rounded-xl text-sm cursor-pointer flex items-center justify-center gap-2 active:scale-[0.98] hover:opacity-90 transition-opacity"
             >
               <span>{mode === 'quotes' ? 'Next Quote' : mode === 'code' ? 'Next Snippet' : 'Next Test'}</span>
-              <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-white/20 dark:bg-neutral-900/20 rounded">
-                ↵
-              </kbd>
+              {!isMobile && (
+                <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-white/20 dark:bg-neutral-900/20 rounded">
+                  ↵
+                </kbd>
+              )}
             </button>
           )}
         </div>
 
-        <div className="mt-2.5 pt-2 border-t border-neutral-200 dark:border-neutral-800 text-[11px] text-neutral-400">
-          <span>Press <kbd className="px-1 py-0.5 font-mono bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 rounded text-[10px]">Enter</kbd> or <kbd className="px-1 py-0.5 font-mono bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 rounded text-[10px]">R</kbd> to continue</span>
-        </div>
+        {/* Desktop Keyboard Shortcuts Hint (hidden on mobile) */}
+        {!isMobile && (
+          <div className="mt-2.5 pt-2 border-t border-neutral-200 dark:border-neutral-800 text-[11px] text-neutral-400">
+            <span>Press <kbd className="px-1 py-0.5 font-mono bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 rounded text-[10px]">Enter</kbd> or <kbd className="px-1 py-0.5 font-mono bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 rounded text-[10px]">R</kbd> to continue</span>
+          </div>
+        )}
       </div>
     </div>,
     document.body

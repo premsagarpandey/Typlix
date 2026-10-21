@@ -1,6 +1,7 @@
 import { Suspense, lazy, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, Link } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
+import AppBottomNav from './components/layout/AppBottomNav';
 import Home from './pages/Home';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import GlobalToast from './components/common/GlobalToast';
@@ -40,6 +41,7 @@ function AppLayout() {
   const isGamePage = location.pathname === '/game';
   const isMobile = useIsMobile();
   const { isInstalled } = usePwaInstall();
+  const showMobileBottomNav = isInstalled && isMobile && !isGamePage;
 
   useEffect(() => {
     return initSecurityShield();
@@ -61,7 +63,13 @@ function AppLayout() {
         id="main-content"
         tabIndex={-1}
         role="main"
-        className={`flex-1 w-full focus:outline-none ${isGamePage ? 'px-2 sm:px-4 py-1 sm:py-2 h-[calc(100dvh-48px)] overflow-hidden' : 'px-3 sm:px-6 md:px-8 py-3 sm:py-4'}`}
+        className={`flex-1 w-full focus:outline-none ${
+          isGamePage
+            ? 'px-2 sm:px-4 py-1 sm:py-2 h-[calc(100dvh-48px)] overflow-hidden'
+            : showMobileBottomNav
+            ? 'px-3 sm:px-6 md:px-8 py-3 sm:py-4 pb-[calc(5rem+env(safe-area-inset-bottom,0px))]'
+            : 'px-3 sm:px-6 md:px-8 py-3 sm:py-4'
+        }`}
       >
         <div key={location.pathname} className={`w-full animate-fade-in ${isGamePage ? 'h-full' : 'min-h-full'}`}>
           <Suspense fallback={<PageFallback />}>
@@ -81,29 +89,37 @@ function AppLayout() {
           </Suspense>
         </div>
       </main>
+
+      {/* Mobile App Native Bottom Navigation Bar */}
+      {showMobileBottomNav && <AppBottomNav />}
+
+      {/* Desktop App & Website Footers */}
       {!isGamePage && (
         isInstalled ? (
-          <footer className="w-full py-4 pb-[calc(1.25rem+env(safe-area-inset-bottom,0px))] text-center text-xs text-neutral-500 dark:text-neutral-400 border-t border-neutral-200/60 dark:border-neutral-800/60 max-w-2xl mx-auto px-4">
-            <div className="flex items-center justify-center gap-3 sm:gap-4 flex-wrap text-[11px]">
-              <Link to="/about" className="font-semibold text-neutral-900 dark:text-neutral-100 hover:underline">
-                About Developer
-              </Link>
-              <span>·</span>
-              <Link to="/game" className="hover:text-neutral-800 dark:hover:text-neutral-200">
-                Practice
-              </Link>
-              <span>·</span>
-              <Link to="/stats" className="hover:text-neutral-800 dark:hover:text-neutral-200">
-                Stats
-              </Link>
-              <span>·</span>
-              <Link to="/settings" className="hover:text-neutral-800 dark:hover:text-neutral-200">
-                Settings
-              </Link>
-              <span>·</span>
-              <span className="font-mono text-neutral-400 dark:text-neutral-500">Typlix v2.2</span>
-            </div>
-          </footer>
+          /* Desktop PWA App Footer (hidden on mobile app which uses Bottom Navigation) */
+          !isMobile && (
+            <footer className="w-full py-4 pb-[calc(1.25rem+env(safe-area-inset-bottom,0px))] text-center text-xs text-neutral-500 dark:text-neutral-400 border-t border-neutral-200/60 dark:border-neutral-800/60 max-w-2xl mx-auto px-4">
+              <div className="flex items-center justify-center gap-3 sm:gap-4 flex-wrap text-[11px]">
+                <Link to="/about" className="font-semibold text-neutral-900 dark:text-neutral-100 hover:underline">
+                  About Developer
+                </Link>
+                <span>·</span>
+                <Link to="/game" className="hover:text-neutral-800 dark:hover:text-neutral-200">
+                  Practice
+                </Link>
+                <span>·</span>
+                <Link to="/stats" className="hover:text-neutral-800 dark:hover:text-neutral-200">
+                  Stats
+                </Link>
+                <span>·</span>
+                <Link to="/settings" className="hover:text-neutral-800 dark:hover:text-neutral-200">
+                  Settings
+                </Link>
+                <span>·</span>
+                <span className="font-mono text-neutral-400 dark:text-neutral-500">Typlix v2.2</span>
+              </div>
+            </footer>
+          )
         ) : (
           <footer className={`w-full py-5 sm:py-6 pb-[calc(1.25rem+env(safe-area-inset-bottom,0px))] text-xs text-neutral-600 dark:text-neutral-400 border-t border-neutral-200 dark:border-neutral-800/80 max-w-4xl mx-auto px-3 sm:px-6 md:px-8 ${isMobile ? 'space-y-0' : 'space-y-4'}`}>
             {!isMobile && (

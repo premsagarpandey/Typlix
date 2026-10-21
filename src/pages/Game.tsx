@@ -574,7 +574,7 @@ export default function Game() {
             <div className="flex items-center justify-between pb-2 mb-2 border-b border-neutral-200 dark:border-neutral-800 shrink-0">
               <span className="text-xs font-bold uppercase tracking-wider text-neutral-900 dark:text-neutral-100 flex items-center gap-1.5">
                 <SlidersHorizontal className="w-3.5 h-3.5" />
-                <span>Options & Levels</span>
+                <span>Practice Options</span>
               </span>
               <button
                 type="button"

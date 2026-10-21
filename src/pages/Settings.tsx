@@ -10,11 +10,12 @@ import { exportDataAsJSON, exportStatsAsCSV, importDataFromJSON } from '../utils
 import { resetLevelProgress, clearStatsHistory } from '../services/cloudProgress';
 import { openCookieConsentModal, resetCookieConsent, isGlobalPrivacyControlActive } from '../utils/cookieConsent';
 import { ShieldCheck, EyeOff, Lock, Check, Download, Upload, FileSpreadsheet, Cookie, X, Play, Volume2, RefreshCw } from 'lucide-react';
-import { checkIsPhone } from '../hooks/useIsMobile';
+import { checkIsPhone, useIsMobile } from '../hooks/useIsMobile';
 import { isHapticsEnabled, setHapticsEnabled, triggerHaptic } from '../utils/haptics';
 import { usePwaInstall } from '../hooks/usePwaInstall';
 
 export default function Settings() {
+  const isMobile = useIsMobile();
   const { isInstalled, installApp, hasAppUpdate, isUpdating, updateApp } = usePwaInstall();
   const [soundEnabled, setSoundEnabled] = useLocalStorage('sound', !checkIsPhone());
   const [soundProfile, setSoundProfile] = useLocalStorage<SoundProfileId>('soundProfile', 'cherry-mx-blue');
@@ -242,59 +243,86 @@ export default function Settings() {
           <ThemeToggle variant="switch" />
         </div>
 
-        {/* Keyboard Layout Section */}
-        <div className="pt-4 border-t border-neutral-200 dark:border-neutral-800 space-y-3">
-          <div>
-            <h3 className="font-medium text-neutral-900 dark:text-neutral-100 text-sm">Keyboard Layout</h3>
-            <p className="text-xs text-neutral-600 dark:text-neutral-400">
-              Choose your typing layout for visual cues and finger placement
-            </p>
+        {/* Keyboard Layout / Mobile Architecture Section */}
+        {isInstalled && isMobile ? (
+          /* Mobile Phone App Status (No physical keyboard layouts on mobile) */
+          <div className="pt-4 border-t border-neutral-200 dark:border-neutral-800 space-y-2.5">
+            <div>
+              <h3 className="font-medium text-neutral-900 dark:text-neutral-100 text-sm">App Architecture</h3>
+              <p className="text-xs text-neutral-600 dark:text-neutral-400">
+                Native client-side engine running locally on this phone
+              </p>
+            </div>
+            <div className="p-3.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/60 shadow-2xs space-y-2 text-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-neutral-600 dark:text-neutral-400">Application</span>
+                <span className="font-semibold text-neutral-900 dark:text-neutral-100">Typlix Mobile v2.2</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-neutral-600 dark:text-neutral-400">Offline Engine</span>
+                <span className="font-semibold text-neutral-900 dark:text-neutral-100">100% Offline Ready</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-neutral-600 dark:text-neutral-400">Touch Keyboard</span>
+                <span className="font-semibold text-neutral-900 dark:text-neutral-100">Active (System IME)</span>
+              </div>
+            </div>
           </div>
+        ) : (
+          /* Physical Keyboard Layouts (Strictly for website visitors and desktop users) */
+          <div className="pt-4 border-t border-neutral-200 dark:border-neutral-800 space-y-3">
+            <div>
+              <h3 className="font-medium text-neutral-900 dark:text-neutral-100 text-sm">Keyboard Layout</h3>
+              <p className="text-xs text-neutral-600 dark:text-neutral-400">
+                Choose your typing layout for visual cues and finger placement
+              </p>
+            </div>
 
-          <div role="radiogroup" aria-label="Keyboard layout selection" className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-            {(Object.values(KEYBOARD_LAYOUTS) as typeof KEYBOARD_LAYOUTS[KeyboardLayoutId][]).map((layout) => {
-              const isSelected = keyboardLayout === layout.id;
-              return (
-                <div
-                  key={layout.id}
-                  onClick={() => setKeyboardLayout(layout.id)}
-                  role="radio"
-                  aria-checked={isSelected}
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      setKeyboardLayout(layout.id);
-                    }
-                  }}
-                  className={`p-3 rounded-lg border transition-all cursor-pointer flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white ${
-                    isSelected
-                      ? 'border-neutral-900 dark:border-neutral-100 bg-neutral-900/[0.04] dark:bg-neutral-100/[0.06] shadow-xs'
-                      : 'border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700 hover:bg-neutral-100/40 dark:hover:bg-neutral-900/40'
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="font-semibold text-sm text-neutral-900 dark:text-neutral-100">
-                      {layout.name}
-                    </span>
-                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-neutral-200/70 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400">
-                      {layout.shortDesc}
-                    </span>
+            <div role="radiogroup" aria-label="Keyboard layout selection" className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              {(Object.values(KEYBOARD_LAYOUTS) as typeof KEYBOARD_LAYOUTS[KeyboardLayoutId][]).map((layout) => {
+                const isSelected = keyboardLayout === layout.id;
+                return (
+                  <div
+                    key={layout.id}
+                    onClick={() => setKeyboardLayout(layout.id)}
+                    role="radio"
+                    aria-checked={isSelected}
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setKeyboardLayout(layout.id);
+                      }
+                    }}
+                    className={`p-3 rounded-lg border transition-all cursor-pointer flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white ${
+                      isSelected
+                        ? 'border-neutral-900 dark:border-neutral-100 bg-neutral-900/[0.04] dark:bg-neutral-100/[0.06] shadow-xs'
+                        : 'border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700 hover:bg-neutral-100/40 dark:hover:bg-neutral-900/40'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="font-semibold text-sm text-neutral-900 dark:text-neutral-100">
+                        {layout.name}
+                      </span>
+                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-neutral-200/70 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400">
+                        {layout.shortDesc}
+                      </span>
+                    </div>
+                    <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-snug mb-2">
+                      {layout.description}
+                    </p>
+                    <div className="text-[11px] font-mono text-neutral-500 dark:text-neutral-400 pt-1 border-t border-neutral-200/60 dark:border-neutral-800/60 flex items-center justify-between">
+                      <span>Home:</span>
+                      <span className="text-neutral-800 dark:text-neutral-200 font-medium">
+                        {layout.homeRowLeft.join('')} {layout.homeRowRight.join('')}
+                      </span>
+                    </div>
                   </div>
-                  <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-snug mb-2">
-                    {layout.description}
-                  </p>
-                  <div className="text-[11px] font-mono text-neutral-500 dark:text-neutral-400 pt-1 border-t border-neutral-200/60 dark:border-neutral-800/60 flex items-center justify-between">
-                    <span>Home:</span>
-                    <span className="text-neutral-800 dark:text-neutral-200 font-medium">
-                      {layout.homeRowLeft.join('')} {layout.homeRowRight.join('')}
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Audio Feedback Section */}
         <div className="pt-4 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between">

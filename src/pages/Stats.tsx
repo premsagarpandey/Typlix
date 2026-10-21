@@ -6,6 +6,8 @@ import { formatDuration } from '../utils/calculations';
 import WpmProgressChart, { type ChartFilter } from '../components/stats/WpmProgressChart';
 import { useUserProgress } from '../hooks/useUserProgress';
 import { useAuth } from '../hooks/useAuth';
+import { useIsMobile } from '../hooks/useIsMobile';
+import { usePwaInstall } from '../hooks/usePwaInstall';
 import StudentReportModal from '../components/common/StudentReportModal';
 import { X, FileSpreadsheet, Download, Code, Layers, BookOpen, Clock, ArrowRight, FileText } from 'lucide-react';
 
@@ -13,6 +15,9 @@ type StatsCategory = 'all' | 'general' | 'code';
 
 export default function Stats() {
   const { user } = useAuth();
+  const isMobile = useIsMobile();
+  const { isInstalled } = usePwaInstall();
+  const isMobileApp = isInstalled && isMobile;
   const [activeCategory, setActiveCategory] = useState<StatsCategory>('all');
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
@@ -226,7 +231,7 @@ export default function Stats() {
             />
           )}
           <BookOpen className="w-3.5 h-3.5 relative z-10" />
-          <span className="relative z-10">General Typing</span>
+          <span className="relative z-10">{isMobileApp ? 'Quotes & Timed' : 'General Typing'}</span>
           <span className="text-[11px] opacity-70 font-mono relative z-10">({generalCount})</span>
         </button>
 
@@ -283,7 +288,7 @@ export default function Stats() {
 
         <div className="p-4 bg-neutral-50 dark:bg-neutral-950">
           <div className="text-xs text-neutral-600 dark:text-neutral-400 font-medium flex items-center gap-1">
-            {activeCategory === 'general' ? (
+            {!isMobileApp && activeCategory === 'general' ? (
               'Lesson Level'
             ) : (
               <>
@@ -293,7 +298,7 @@ export default function Stats() {
             )}
           </div>
           <div className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mt-1 font-mono">
-            {activeCategory === 'general'
+            {!isMobileApp && activeCategory === 'general'
               ? currentLevel
               : formatDuration(categoryStats.totalTimeSeconds)}
           </div>
@@ -386,7 +391,9 @@ export default function Stats() {
               <>
                 <p className="font-medium">No sessions yet in this category.</p>
                 <p className="text-xs text-neutral-600 dark:text-neutral-400">
-                  Complete a typing test or lesson to start tracking progress.
+                  {isMobileApp
+                    ? 'Complete a typing test or quote to start tracking progress.'
+                    : 'Complete a typing test or lesson to start tracking progress.'}
                 </p>
               </>
             )}

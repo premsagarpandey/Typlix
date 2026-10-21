@@ -1,5 +1,5 @@
 // Typlix Production Offline PWA Service Worker
-const SW_VERSION = '2.2.0';
+const SW_VERSION = '2.2.1';
 const CACHE_NAME = `typlix-cache-${SW_VERSION}`;
 
 // Core static shell assets required for offline launch

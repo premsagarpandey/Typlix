@@ -2,18 +2,28 @@ import { useState, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useUserProgress } from '../hooks/useUserProgress';
+import { useIsMobile } from '../hooks/useIsMobile';
+import { usePwaInstall } from '../hooks/usePwaInstall';
 import { formatDuration } from '../utils/calculations';
-import { LogOut, User, Mail, Calendar, Shield, Activity, TrendingUp, Trophy, RefreshCw, CheckCircle2, X, Code, ArrowRight, FileText } from 'lucide-react';
+import { LogOut, User, Mail, Calendar, Shield, Activity, TrendingUp, Trophy, Clock, RefreshCw, CheckCircle2, X, Code, ArrowRight, FileText } from 'lucide-react';
 import UserAvatar from '../components/common/UserAvatar';
 import StudentReportModal from '../components/common/StudentReportModal';
 
 export default function Profile() {
   const { user, logout } = useAuth();
   const { level, stats, summary, isSyncing, lastSyncedAt, syncNow } = useUserProgress();
+  const isMobile = useIsMobile();
+  const { isInstalled } = usePwaInstall();
+  const isMobileApp = isInstalled && isMobile;
   const navigate = useNavigate();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [syncFeedback, setSyncFeedback] = useState<string | null>(null);
+
+  const totalPracticeSeconds = useMemo(
+    () => stats.reduce((acc, s) => acc + (s.durationSeconds || 60), 0),
+    [stats]
+  );
 
   // Coding specific metrics
   const codeStats = useMemo(() => {
@@ -189,10 +199,16 @@ export default function Profile() {
           </div>
 
           <div className="p-4 bg-neutral-50 dark:bg-neutral-950 flex flex-col items-center justify-center text-center">
-            <Trophy className="w-5 h-5 text-neutral-500 dark:text-neutral-400 mb-2" aria-hidden="true" />
-            <div className="text-xs text-neutral-600 dark:text-neutral-400 font-medium">Current Level</div>
+            {isMobileApp ? (
+              <Clock className="w-5 h-5 text-neutral-500 dark:text-neutral-400 mb-2" aria-hidden="true" />
+            ) : (
+              <Trophy className="w-5 h-5 text-neutral-500 dark:text-neutral-400 mb-2" aria-hidden="true" />
+            )}
+            <div className="text-xs text-neutral-600 dark:text-neutral-400 font-medium">
+              {isMobileApp ? 'Practice Time' : 'Current Level'}
+            </div>
             <div className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mt-0.5 font-mono">
-              {level}
+              {isMobileApp ? formatDuration(totalPracticeSeconds) : level}
             </div>
           </div>
         </div>

@@ -150,32 +150,90 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Mobile: Theme + Home (typing mode only) + Hamburger */}
-        <div className={`${isMobile ? 'flex' : 'flex md:hidden'} items-center gap-1 sm:gap-1.5`}>
-          <ThemeToggle />
-          {isTypingMode && (
-            <Link
-              to="/"
-              aria-label="Go to Home"
-              title="Home"
-              className="p-2 rounded-lg text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
-            >
-              <Home className="w-5 h-5" />
-            </Link>
+        {/* Mobile Top Bar Controls */}
+        <div className={`${isMobile ? 'flex' : 'flex md:hidden'} items-center gap-1.5`}>
+          {isInstalled ? (
+            /* ─── NATIVE INSTALLED PHONE APP HEADER: Sleek app actions, no website hamburger ─── */
+            <>
+              {isTypingMode && (
+                <Link
+                  to="/"
+                  aria-label="Exit to Home"
+                  title="Exit to Home"
+                  className="flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-850 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
+                >
+                  <Home className="w-3.5 h-3.5" />
+                  <span>Exit</span>
+                </Link>
+              )}
+
+              {hasAppUpdate && (
+                <button
+                  type="button"
+                  onClick={updateApp}
+                  aria-label="Update app to latest version"
+                  className="flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded-lg bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 shadow-2xs active:scale-95 transition-all cursor-pointer"
+                >
+                  <RefreshCw className={`w-3 h-3 ${isUpdating ? 'animate-spin' : ''}`} />
+                  <span>Update</span>
+                </button>
+              )}
+
+              <ThemeToggle />
+
+              {user ? (
+                <Link
+                  to="/profile"
+                  className="flex items-center p-0.5 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white active:scale-95 transition-transform"
+                  aria-label="View Profile"
+                >
+                  <UserAvatar
+                    photoURL={user.photoURL}
+                    name={user.displayName}
+                    email={user.email}
+                    size="sm"
+                  />
+                </Link>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setIsAuthModalOpen(true)}
+                  className="flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 active:scale-95 transition-all cursor-pointer shadow-2xs"
+                >
+                  <LogIn className="w-3.5 h-3.5" />
+                  <span>Sign In</span>
+                </button>
+              )}
+            </>
+          ) : (
+            /* ─── WEBSITE MOBILE HEADER: Retains Theme, Typing Home, and Hamburger Dropdown ─── */
+            <>
+              <ThemeToggle />
+              {isTypingMode && (
+                <Link
+                  to="/"
+                  aria-label="Go to Home"
+                  title="Home"
+                  className="p-2 rounded-lg text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+                >
+                  <Home className="w-5 h-5" />
+                </Link>
+              )}
+              <button
+                type="button"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+                aria-expanded={isMobileMenuOpen}
+                className="p-2 rounded-lg text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
+              >
+                {isMobileMenuOpen ? (
+                  <X className="w-5 h-5" />
+                ) : (
+                  <Menu className="w-5 h-5" />
+                )}
+              </button>
+            </>
           )}
-          <button
-            type="button"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
-            aria-expanded={isMobileMenuOpen}
-            className="p-2 rounded-lg text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
-          >
-            {isMobileMenuOpen ? (
-              <X className="w-5 h-5" />
-            ) : (
-              <Menu className="w-5 h-5" />
-            )}
-          </button>
         </div>
 
         {/* Mobile Dropdown Menu (Solid Opaque, Scrollable, No Transparency/Blur Bleed) */}

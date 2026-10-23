@@ -8,6 +8,7 @@ export interface AuthContextType {
   loginWithGoogleRedirect: () => Promise<void>;
   loginWithEmail: (e: string, p: string) => Promise<void>;
   signupWithEmail: (e: string, p: string) => Promise<void>;
+  sendPasswordReset: (email: string) => Promise<void>;
   logout: () => Promise<void>;
   isSyncing: boolean;
   lastSyncedAt: Date | null;

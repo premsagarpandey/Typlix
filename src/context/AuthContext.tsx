@@ -7,6 +7,7 @@ import {
   getRedirectResult,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
   signOut,
   onAuthStateChanged
 } from 'firebase/auth';
@@ -114,9 +115,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const sendPasswordReset = async (email: string) => {
+    await sendPasswordResetEmail(auth, email);
+  };
+
   const logout = async () => {
-    await signOut(auth);
-    clearLocalProgressOnLogout();
+    try {
+      await signOut(auth);
+    } finally {
+      setUser(null);
+      clearLocalProgressOnLogout();
+      try {
+        if (typeof sessionStorage !== 'undefined') {
+          sessionStorage.clear();
+        }
+      } catch {}
+    }
   };
 
   return (
@@ -128,6 +142,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         loginWithGoogleRedirect,
         loginWithEmail,
         signupWithEmail,
+        sendPasswordReset,
         logout,
         isSyncing,
         lastSyncedAt,

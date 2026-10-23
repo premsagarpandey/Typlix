@@ -187,7 +187,8 @@ export async function syncUserProgressWithCloud(currentUser: User): Promise<{
   level: number;
   totalTests: number;
 }> {
-  if (!currentUser) {
+  // Strict Security: Verify that currentUser exists and matches active authenticated session
+  if (!currentUser || !currentUser.uid || (auth.currentUser && auth.currentUser.uid !== currentUser.uid)) {
     const { level, summary } = getLocalProgress();
     return { success: false, level, totalTests: summary.totalTests };
   }
@@ -295,6 +296,9 @@ export function clearLocalProgressOnLogout(): void {
   secureStorage.removeItem('typlix_current_uid');
   secureStorage.setItem('typingGameLevel', 1);
   secureStorage.setItem('typlix_stats', []);
+  try {
+    sessionStorage.clear();
+  } catch {}
   notifyProgressUpdated({
     type: 'logged_out',
     typingGameLevel: 1,

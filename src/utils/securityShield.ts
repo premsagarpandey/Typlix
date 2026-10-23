@@ -59,6 +59,18 @@ export function initSecurityShield(): () => void {
         console.debug = noop;
         console.dir = noop;
         console.table = noop;
+
+        // Neutralize React DevTools global hook in production to prevent state injection
+        try {
+          const devTools = (window as unknown as Record<string, unknown>).__REACT_DEVTOOLS_GLOBAL_HOOK__;
+          if (typeof devTools === 'object' && devTools !== null) {
+            for (const key of Object.keys(devTools)) {
+              if (typeof (devTools as Record<string, unknown>)[key] === 'function') {
+                (devTools as Record<string, unknown>)[key] = noop;
+              }
+            }
+          }
+        } catch {}
       }
     } catch {
       // Silently ignore in restricted console environments
@@ -66,6 +78,22 @@ export function initSecurityShield(): () => void {
   };
 
   setupConsoleProtection();
+
+  // Prototype Pollution Guard: prevent __proto__ and constructor injection
+  try {
+    if (typeof Object.defineProperty === 'function') {
+      const protoDesc = Object.getOwnPropertyDescriptor(Object.prototype, '__proto__');
+      if (protoDesc && protoDesc.set) {
+        Object.defineProperty(Object.prototype, '__proto__', {
+          set() {
+            // Block prototype pollution silently
+            return false;
+          },
+          configurable: false,
+        });
+      }
+    }
+  } catch {}
 
   // 3. Disable Context Menu (Right Click) across the website
   const handleContextMenu = (e: MouseEvent) => {

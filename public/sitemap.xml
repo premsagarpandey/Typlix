@@ -3,7 +3,7 @@
   <!-- Core Landing Page -->
   <url>
     <loc>https://typlix.web.app/</loc>
-    <lastmod>2026-10-20</lastmod>
+    <lastmod>2026-10-24</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -11,7 +11,7 @@
   <!-- Interactive Typing Arena & Game -->
   <url>
     <loc>https://typlix.web.app/game</loc>
-    <lastmod>2026-10-20</lastmod>
+    <lastmod>2026-10-24</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.95</priority>
   </url>
@@ -19,7 +19,7 @@
   <!-- Typing Analytics & Telemetry -->
   <url>
     <loc>https://typlix.web.app/stats</loc>
-    <lastmod>2026-10-20</lastmod>
+    <lastmod>2026-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
@@ -27,7 +27,7 @@
   <!-- About Developer (Prem Sagar Pandey) E-E-A-T Authority -->
   <url>
     <loc>https://typlix.web.app/about</loc>
-    <lastmod>2026-10-20</lastmod>
+    <lastmod>2026-10-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -35,25 +35,25 @@
   <!-- Legal & Transparency Trust Pages -->
   <url>
     <loc>https://typlix.web.app/privacy</loc>
-    <lastmod>2026-10-20</lastmod>
+    <lastmod>2026-10-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://typlix.web.app/terms</loc>
-    <lastmod>2026-10-20</lastmod>
+    <lastmod>2026-10-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://typlix.web.app/cookies</loc>
-    <lastmod>2026-10-20</lastmod>
+    <lastmod>2026-10-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://typlix.web.app/refund</loc>
-    <lastmod>2026-10-20</lastmod>
+    <lastmod>2026-10-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>

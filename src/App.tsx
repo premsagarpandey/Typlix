@@ -47,8 +47,53 @@ function AppLayout() {
     return initSecurityShield();
   }, []);
 
+  // Prevent any mouse scroll, trackpad scroll, or body scroll on practice page
+  useEffect(() => {
+    if (!isGamePage) return;
+
+    const prevHtmlOverflow = document.documentElement.style.overflow;
+    const prevBodyOverflow = document.body.style.overflow;
+    const prevHtmlOverscroll = document.documentElement.style.overscrollBehavior;
+    const prevBodyOverscroll = document.body.style.overscrollBehavior;
+
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overscrollBehavior = 'none';
+    document.body.style.overscrollBehavior = 'none';
+
+    const handleWheel = (e: WheelEvent) => {
+      let el = e.target as HTMLElement | null;
+      while (el && el !== document.body && el !== document.documentElement) {
+        if (
+          el.scrollHeight > el.clientHeight &&
+          (getComputedStyle(el).overflowY === 'auto' || getComputedStyle(el).overflowY === 'scroll')
+        ) {
+          return;
+        }
+        el = el.parentElement;
+      }
+      e.preventDefault();
+    };
+
+    window.addEventListener('wheel', handleWheel, { passive: false });
+
+    return () => {
+      document.documentElement.style.overflow = prevHtmlOverflow;
+      document.body.style.overflow = prevBodyOverflow;
+      document.documentElement.style.overscrollBehavior = prevHtmlOverscroll;
+      document.body.style.overscrollBehavior = prevBodyOverscroll;
+      window.removeEventListener('wheel', handleWheel);
+    };
+  }, [isGamePage]);
+
   return (
-    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 flex flex-col transition-colors duration-200">
+    <div
+      className={`${
+        isGamePage
+          ? 'h-dvh max-h-dvh overflow-hidden select-none'
+          : 'min-h-screen'
+      } bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 flex flex-col transition-colors duration-200`}
+    >
       <ScrollToTop />
       <RouteSeo />
       {/* Accessible Skip to Content Link (WCAG 2.4.1) */}
@@ -63,15 +108,15 @@ function AppLayout() {
         id="main-content"
         tabIndex={-1}
         role="main"
-        className={`flex-1 w-full focus:outline-none ${
+        className={`w-full focus:outline-none ${
           isGamePage
-            ? 'px-2 sm:px-4 py-1 sm:py-2 h-[calc(100dvh-48px)] overflow-hidden'
+            ? 'flex-1 min-h-0 overflow-hidden px-2 sm:px-4 py-1 sm:py-1.5'
             : showMobileBottomNav
-            ? 'px-3 sm:px-6 md:px-8 py-3 sm:py-4 pb-[calc(5rem+env(safe-area-inset-bottom,0px))]'
-            : 'px-3 sm:px-6 md:px-8 py-3 sm:py-4'
+            ? 'flex-1 px-3 sm:px-6 md:px-8 py-3 sm:py-4 pb-[calc(5rem+env(safe-area-inset-bottom,0px))]'
+            : 'flex-1 px-3 sm:px-6 md:px-8 py-3 sm:py-4'
         }`}
       >
-        <div key={location.pathname} className={`w-full animate-fade-in ${isGamePage ? 'h-full' : 'min-h-full'}`}>
+        <div key={location.pathname} className={`w-full ${isGamePage ? 'h-full overflow-hidden' : 'min-h-full animate-fade-in'}`}>
           <Suspense fallback={<PageFallback />}>
             <Routes>
               <Route path="/" element={<Home />} />

@@ -369,7 +369,7 @@ export default function Game() {
   }, [targetText, typedText]);
 
   return (
-    <div className="w-full h-full max-h-[calc(100dvh-50px)] flex flex-col md:flex-row gap-2 sm:gap-3 items-stretch overflow-hidden">
+    <div className="w-full h-full flex flex-col md:flex-row gap-2 sm:gap-3 items-stretch overflow-hidden">
       {/* ═══════════════════ LEFT SIDEBAR ═══════════════════ */}
       {isSidebarOpen && (
         <GameSidebar
@@ -424,7 +424,7 @@ export default function Game() {
       )}
 
       {/* ═══════════════════ RIGHT MAIN AREA ═══════════════════ */}
-      <section className="flex-1 min-w-0 flex flex-col justify-between gap-2.5 h-full overflow-hidden">
+      <section className="flex-1 min-w-0 flex flex-col justify-between gap-1.5 sm:gap-2 h-full overflow-hidden">
         {/* Live Stats Bar + Sidebar Toggle */}
         <div className="shrink-0 flex items-center gap-1.5 sm:gap-2">
           {!isMobile && !isSidebarOpen && (
@@ -540,9 +540,9 @@ export default function Game() {
 
         {/* Virtual Keyboard (Strictly desktop/laptop only; hidden on mobile) */}
         {!isMobile && (
-          <div className="hidden sm:block w-full">
+          <div className="hidden sm:block w-full shrink-0 pb-5 sm:pb-7 md:pb-8">
             {showVirtualKeyboard ? (
-              <div className="shrink-0 mt-2 sm:mt-3 pb-1 sm:pb-2 animate-fade-in w-full">
+              <div className="shrink-0 animate-fade-in w-full">
                 <VirtualKeyboard
                   nextChar={nextChar}
                   mistakeKey={mistakeKey}
@@ -550,7 +550,7 @@ export default function Game() {
                 />
               </div>
             ) : (
-              <div className="shrink-0 flex items-center justify-center py-1">
+              <div className="shrink-0 flex items-center justify-center py-2">
                 <button
                   type="button"
                   onClick={() => setShowVirtualKeyboard(true)}

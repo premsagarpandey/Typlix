@@ -18,7 +18,7 @@ export default defineConfig({
           type: 'asset',
           fileName: 'version.json',
           source: JSON.stringify({
-            version: '2.2.0',
+            version: '2.3.0',
             buildTime: buildTime,
           }),
         });
@@ -30,7 +30,7 @@ export default defineConfig({
 
           let updatedSw = swContent.replace(
             /const SW_VERSION = '.*?';/,
-            `const SW_VERSION = '2.2.0-${buildTime}';`
+            `const SW_VERSION = '2.3.0-${buildTime}';`
           );
 
           updatedSw = updatedSw.replace(

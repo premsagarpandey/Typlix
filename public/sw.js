@@ -1,5 +1,5 @@
 // Typlix Production Offline PWA Service Worker
-const SW_VERSION = '2.2.1';
+const SW_VERSION = '2.3.0';
 const CACHE_NAME = `typlix-cache-${SW_VERSION}`;
 
 // Core static shell assets required for offline launch
@@ -119,7 +119,7 @@ self.addEventListener('fetch', (event) => {
       (async () => {
         try {
           // Fast-timeout race: If network takes > 2000ms (spotty mobile data), fall back immediately to cached shell
-          const fetchPromise = fetch(event.request);
+          const fetchPromise = fetch(event.request, { cache: 'no-cache' });
           const timeoutPromise = new Promise((_, reject) =>
             setTimeout(() => reject(new Error('Navigation network timeout')), 2000)
           );

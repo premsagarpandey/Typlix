@@ -126,6 +126,24 @@
         ]
       },
       {
+        "source": "/@(index.html|)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, no-store, must-revalidate"
+          }
+        ]
+      },
+      {
+        "source": "/index.html",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, no-store, must-revalidate"
+          }
+        ]
+      },
+      {
         "source": "/@(manifest.json|favicon.ico|favicon.svg|favicon*.png|apple-touch-icon.png|logo*.png)",
         "headers": [
           {

@@ -88,6 +88,15 @@ export function useTypingGame(
 
   const [typedText, setTypedText] = useState('');
   const [shakeTrigger, setShakeTrigger] = useState(0);
+  const [mistakeKey, setMistakeKey] = useState<string | null>(null);
+  const [mistakeTrigger, setMistakeTrigger] = useState(0);
+  const mistakeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (mistakeTimerRef.current) clearTimeout(mistakeTimerRef.current);
+    };
+  }, []);
 
   // Stats
   const [combo, setCombo] = useState(0);
@@ -307,9 +316,19 @@ export function useTypingGame(
         if (isCorrect) {
           playSound('correct', typedChar);
           triggerHaptic('correct');
+          if (mistakeTimerRef.current) clearTimeout(mistakeTimerRef.current);
+          setMistakeKey(null);
         } else {
           playSound('error', typedChar);
           triggerHaptic('error');
+          if (mistakeTimerRef.current) clearTimeout(mistakeTimerRef.current);
+          setMistakeKey(typedChar);
+          setMistakeTrigger((prev) => prev + 1);
+          setShakeTrigger((prev) => prev + 1);
+          setCombo(0);
+          mistakeTimerRef.current = setTimeout(() => {
+            setMistakeKey(null);
+          }, 240);
         }
 
         newTotalTyped = totalCharsTypedRef.current + addedChars;
@@ -324,10 +343,11 @@ export function useTypingGame(
             }
             return newCombo;
           });
-        } else {
-          setShakeTrigger((prev) => prev + 1);
-          setCombo(0);
         }
+      } else {
+        // Backspaced: instantly clear mistake key
+        if (mistakeTimerRef.current) clearTimeout(mistakeTimerRef.current);
+        setMistakeKey(null);
       }
 
       let currentCorrect = 0;
@@ -378,6 +398,9 @@ export function useTypingGame(
       correctCharsRef.current = 0;
       setTotalCharsTyped(0);
       totalCharsTypedRef.current = 0;
+      if (mistakeTimerRef.current) clearTimeout(mistakeTimerRef.current);
+      setMistakeKey(null);
+      setMistakeTrigger(0);
 
       let newTarget = '';
       if (mode === 'lesson') {
@@ -430,6 +453,8 @@ export function useTypingGame(
     consistency,
     history,
     shakeTrigger,
+    mistakeKey,
+    mistakeTrigger,
     handleInput,
     resetGame,
     setTargetText,

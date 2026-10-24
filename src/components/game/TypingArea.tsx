@@ -132,7 +132,22 @@ function TypingAreaComponent({
     onInputRef.current = onInput;
     onQuickRestartRef.current = onQuickRestart;
     isFocusReleasedRef.current = isFocusReleased;
+    if (inputRef.current && inputRef.current.value !== typedText) {
+      inputRef.current.value = typedText;
+    }
   }, [typedText, targetText, status, capsLockOn, autoFixCapsLock, onInput, onQuickRestart, isFocusReleased]);
+
+  // Ensure typing input is always immediately ready on game start / level change / retry
+  useEffect(() => {
+    if (status === 'idle' || status === 'playing') {
+      const timer = setTimeout(() => {
+        if (inputRef.current && !isFocusReleasedRef.current) {
+          inputRef.current.focus({ preventScroll: true });
+        }
+      }, 30);
+      return () => clearTimeout(timer);
+    }
+  }, [targetText, status]);
 
   // Container width & responsive font size for line computation
   const [containerWidth, setContainerWidth] = useState(0);
@@ -373,7 +388,14 @@ function TypingAreaComponent({
         e.preventDefault(); // Prevents Space from scrolling the page
         isFocusReleasedRef.current = false;
         setIsFocusReleased(false);
-        focusInput();
+        if (inputRef.current) {
+          if (document.activeElement !== inputRef.current) {
+            if (document.activeElement && 'blur' in document.activeElement) {
+              (document.activeElement as HTMLElement).blur();
+            }
+            inputRef.current.focus({ preventScroll: true });
+          }
+        }
 
         let charToType = e.key;
         const currentTyped = typedTextRef.current;
@@ -454,7 +476,8 @@ function TypingAreaComponent({
       window.removeEventListener('pointerdown', handlePointerDown, true);
       document.removeEventListener('visibilitychange', handleVisibility);
     };
-  }, [status, updateCapsLockState, isMobile]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [updateCapsLockState, isMobile]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     updateCapsLockState(e);

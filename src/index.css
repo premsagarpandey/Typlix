@@ -103,6 +103,153 @@ html.light body {
   will-change: transform;
 }
 
+/* ═══════════════════ Virtual Keyboard Feedback & Guiding Pulse (120 FPS) ═══════════════════ */
+
+/* 1. Wrong Key: Soft Tactile Jam + Micro Horizontal Denial Wiggle + Translucent Red Aura */
+@keyframes vkKeyErrorA {
+  0% {
+    transform: scale(0.95) translate3d(0, 1.5px, 0);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+  25% {
+    transform: scale(0.98) translate3d(-2px, 0, 0);
+    box-shadow: 0 0 0 2.5px rgba(239, 68, 68, 0.4), 0 0 8px rgba(239, 68, 68, 0.2);
+  }
+  50% {
+    transform: scale(1) translate3d(2px, 0, 0);
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.3), 0 0 6px rgba(239, 68, 68, 0.15);
+  }
+  75% {
+    transform: scale(1) translate3d(-1px, 0, 0);
+    box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.15), 0 0 3px rgba(239, 68, 68, 0.08);
+  }
+  100% {
+    transform: scale(1) translate3d(0, 0, 0);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+@keyframes vkKeyErrorB {
+  0% {
+    transform: scale(0.95) translate3d(0, 1.5px, 0);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+  25% {
+    transform: scale(0.98) translate3d(-2px, 0, 0);
+    box-shadow: 0 0 0 2.5px rgba(239, 68, 68, 0.4), 0 0 8px rgba(239, 68, 68, 0.2);
+  }
+  50% {
+    transform: scale(1) translate3d(2px, 0, 0);
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.3), 0 0 6px rgba(239, 68, 68, 0.15);
+  }
+  75% {
+    transform: scale(1) translate3d(-1px, 0, 0);
+    box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.15), 0 0 3px rgba(239, 68, 68, 0.08);
+  }
+  100% {
+    transform: scale(1) translate3d(0, 0, 0);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+.vk-key-error-a {
+  animation: vkKeyErrorA 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+  will-change: transform, box-shadow;
+  z-index: 25 !important;
+}
+
+.vk-key-error-b {
+  animation: vkKeyErrorB 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+  will-change: transform, box-shadow;
+  z-index: 25 !important;
+}
+
+/* 2. Target/Instruction Key: Subtle Lift & Magnetic Guiding Pulse */
+@keyframes vkTargetGuideA {
+  0% {
+    transform: scale(1.05) translate3d(0, 0, 0);
+  }
+  30% {
+    transform: scale(1.09) translate3d(0, -2px, 0);
+  }
+  65% {
+    transform: scale(1.03) translate3d(0, 0.5px, 0);
+  }
+  100% {
+    transform: scale(1.05) translate3d(0, 0, 0);
+  }
+}
+
+@keyframes vkTargetGuideB {
+  0% {
+    transform: scale(1.05) translate3d(0, 0, 0);
+  }
+  30% {
+    transform: scale(1.09) translate3d(0, -2px, 0);
+  }
+  65% {
+    transform: scale(1.03) translate3d(0, 0.5px, 0);
+  }
+  100% {
+    transform: scale(1.05) translate3d(0, 0, 0);
+  }
+}
+
+.vk-target-guide-a {
+  animation: vkTargetGuideA 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+  will-change: transform, box-shadow;
+  z-index: 30 !important;
+}
+
+.vk-target-guide-b {
+  animation: vkTargetGuideB 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+  will-change: transform, box-shadow;
+  z-index: 30 !important;
+}
+
+/* 3. Spacebar Target Guiding Pulse */
+@keyframes vkSpaceGuideA {
+  0% {
+    transform: scale(1.02) translate3d(0, 0, 0);
+  }
+  30% {
+    transform: scale(1.03) translate3d(0, -1.5px, 0);
+  }
+  65% {
+    transform: scale(1.01) translate3d(0, 0.3px, 0);
+  }
+  100% {
+    transform: scale(1.02) translate3d(0, 0, 0);
+  }
+}
+
+@keyframes vkSpaceGuideB {
+  0% {
+    transform: scale(1.02) translate3d(0, 0, 0);
+  }
+  30% {
+    transform: scale(1.03) translate3d(0, -1.5px, 0);
+  }
+  65% {
+    transform: scale(1.01) translate3d(0, 0.3px, 0);
+  }
+  100% {
+    transform: scale(1.02) translate3d(0, 0, 0);
+  }
+}
+
+.vk-space-guide-a {
+  animation: vkSpaceGuideA 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+  will-change: transform, box-shadow;
+  z-index: 30 !important;
+}
+
+.vk-space-guide-b {
+  animation: vkSpaceGuideB 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+  will-change: transform, box-shadow;
+  z-index: 30 !important;
+}
+
 /* Tactile micro-interaction button utility */
 .btn-spring {
   transition: opacity 0.12s ease, background-color 0.12s ease, transform 0.1s ease;

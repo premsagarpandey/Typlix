@@ -109,6 +109,8 @@ export default function Game() {
     consistency,
     history,
     shakeTrigger,
+    mistakeKey,
+    mistakeTrigger,
     handleInput,
     resetGame,
   } = useTypingGame(activeInitialTime, levelConfig, {
@@ -541,7 +543,11 @@ export default function Game() {
           <div className="hidden sm:block w-full">
             {showVirtualKeyboard ? (
               <div className="shrink-0 mt-2 sm:mt-3 pb-1 sm:pb-2 animate-fade-in w-full">
-                <VirtualKeyboard nextChar={nextChar} />
+                <VirtualKeyboard
+                  nextChar={nextChar}
+                  mistakeKey={mistakeKey}
+                  mistakeTrigger={mistakeTrigger}
+                />
               </div>
             ) : (
               <div className="shrink-0 flex items-center justify-center py-1">

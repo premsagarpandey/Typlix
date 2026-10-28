@@ -92,7 +92,6 @@ export default function RefundPolicy() {
           </p>
           <ul className="list-disc list-inside space-y-1 text-neutral-600 dark:text-neutral-400">
             <li>You may stop using Typlix at any time without fees, penalties, or formal cancellation procedures.</li>
-            <li>You can export all your session data anytime as JSON or CSV from <Link to="/settings" className="underline text-neutral-900 dark:text-neutral-100 font-medium">Settings</Link>.</li>
             <li>You can permanently erase your local statistics or wipe your account data with one click using the Danger Zone in Settings.</li>
           </ul>
         </section>

@@ -6,10 +6,9 @@ import { useTheme } from '../hooks/useTheme';
 import { SOUND_PROFILES, previewProfileSound, updateSoundSettings } from '../utils/soundEngine';
 import type { SoundProfileId } from '../utils/soundEngine';
 import { KEYBOARD_LAYOUTS, type KeyboardLayoutId } from '../data/keyboardLayouts';
-import { exportDataAsJSON, exportStatsAsCSV, importDataFromJSON } from '../utils/dataBackup';
 import { resetLevelProgress, clearStatsHistory } from '../services/cloudProgress';
 import { openCookieConsentModal, resetCookieConsent, isGlobalPrivacyControlActive } from '../utils/cookieConsent';
-import { ShieldCheck, EyeOff, Lock, Check, Download, Upload, FileSpreadsheet, Cookie, X, Play, Volume2, RefreshCw } from 'lucide-react';
+import { ShieldCheck, EyeOff, Lock, Check, Download, Cookie, X, Play, Volume2, RefreshCw } from 'lucide-react';
 import { checkIsPhone, useIsMobile } from '../hooks/useIsMobile';
 import { isHapticsEnabled, setHapticsEnabled, triggerHaptic } from '../utils/haptics';
 import { usePwaInstall } from '../hooks/usePwaInstall';
@@ -63,8 +62,6 @@ export default function Settings() {
   const [notice, setNotice] = useState<{ text: string; type: 'info' | 'success' | 'error' } | null>(null);
   const [previewingId, setPreviewingId] = useState<string | null>(null);
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
   const showNotice = (text: string, type: 'info' | 'success' | 'error' = 'info') => {
     setNotice({ text, type });
     setTimeout(() => setNotice(null), 4000);
@@ -100,48 +97,6 @@ export default function Settings() {
     setTimeout(() => setPreviewingId(null), 300);
   }, []);
 
-  const handleExportJSON = () => {
-    try {
-      exportDataAsJSON();
-      showNotice('Full backup exported successfully!', 'success');
-    } catch (e) {
-      showNotice(`Export failed: ${(e as Error).message}`, 'error');
-    }
-  };
-
-  const handleExportCSV = () => {
-    try {
-      exportStatsAsCSV();
-      showNotice('Session statistics exported as CSV!', 'success');
-    } catch (e) {
-      showNotice((e as Error).message, 'error');
-    }
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const content = event.target?.result as string;
-      if (content) {
-        const result = importDataFromJSON(content, 'overwrite');
-        if (result.success) {
-          showNotice(result.message, 'success');
-          setTimeout(() => window.location.reload(), 1000);
-        } else {
-          showNotice(result.message, 'error');
-        }
-      }
-    };
-    reader.onerror = () => {
-      showNotice('Failed to read file.', 'error');
-    };
-    reader.readAsText(file);
-
-    if (fileInputRef.current) fileInputRef.current.value = '';
-  };
 
   return (
     <div className="max-w-xl mx-auto py-8 space-y-6">
@@ -517,54 +472,6 @@ export default function Settings() {
           </button>
         </div>
 
-        {/* Data Backup & Export Section */}
-        <div className="pt-4 border-t border-neutral-200 dark:border-neutral-800 space-y-3">
-          <div>
-            <h3 className="font-medium text-neutral-900 dark:text-neutral-100 text-sm">Data Backup & Export</h3>
-            <p className="text-xs text-neutral-600 dark:text-neutral-400">
-              Transfer your progress across devices or export stats for analysis
-            </p>
-          </div>
-
-          <input
-            type="file"
-            id="backup-file-input"
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            accept=".json,application/json,text/plain,text/json"
-            className="hidden"
-            aria-label="Upload Typlix JSON backup file"
-          />
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-            <button
-              onClick={handleExportJSON}
-              aria-label="Export all typing session records as JSON file"
-              className="flex items-center justify-center gap-1.5 px-3 py-2.5 min-h-[40px] text-xs font-medium rounded-md border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-600 transition-all active:scale-[0.98] cursor-pointer touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
-            >
-              <Download className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>Export JSON</span>
-            </button>
-
-            <button
-              onClick={handleExportCSV}
-              aria-label="Export all typing session records as CSV spreadsheet"
-              className="flex items-center justify-center gap-1.5 px-3 py-2.5 min-h-[40px] text-xs font-medium rounded-md border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-600 transition-all active:scale-[0.98] cursor-pointer touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
-            >
-              <FileSpreadsheet className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>Export CSV</span>
-            </button>
-
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              aria-label="Import typing session records from a JSON backup file"
-              className="flex items-center justify-center gap-1.5 px-3 py-2.5 min-h-[40px] text-xs font-medium rounded-md bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:opacity-90 transition-all active:scale-[0.98] cursor-pointer shadow-xs touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
-            >
-              <Upload className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>Import JSON</span>
-            </button>
-          </div>
-        </div>
 
         {/* Danger Zone: Reset & Clear */}
         <div className="pt-4 border-t border-neutral-200 dark:border-neutral-800">

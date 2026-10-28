@@ -176,9 +176,9 @@ export default function PrivacyPolicy() {
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
             <div className="p-3 rounded-lg border border-neutral-200 dark:border-neutral-800">
-              <div className="font-semibold text-neutral-900 dark:text-neutral-100 mb-1">Right to Access & Portability</div>
+              <div className="font-semibold text-neutral-900 dark:text-neutral-100 mb-1">Right to Access & Review</div>
               <p className="text-xs text-neutral-600 dark:text-neutral-400">
-                You can download all your stored session statistics as a standard JSON or CSV file at any time from the <Link to="/settings" className="underline text-neutral-800 dark:text-neutral-200 font-medium">Settings</Link> page.
+                You can inspect all your stored session statistics, review your progress trajectory, and generate official student report cards at any time from the <Link to="/stats" className="underline text-neutral-800 dark:text-neutral-200 font-medium">Statistics</Link> page.
               </p>
             </div>
             <div className="p-3 rounded-lg border border-neutral-200 dark:border-neutral-800">

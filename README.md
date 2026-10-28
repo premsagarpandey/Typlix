@@ -32,7 +32,7 @@
 - **Strict Data Minimization**: Typlix collects **only necessary data** (WPM, accuracy, completed lesson progress, and audio settings).
 - **Zero Third-Party Tracking**: No marketing pixels, no cross-site profiling, and no data sales.
 - **Cookie Consent Architecture**: Granular controls for Strictly Necessary, Functional, and Analytics storage, fully reconfigurable anytime.
-- **Data Portability & Erasure**: Instant JSON/CSV export and one-click data purge ("Right to be Forgotten").
+- **Data Control & Erasure**: One-click local data purge ("Right to be Forgotten") and student report card export.
 - **Cloud Sync**: Secure, authenticated multi-device sync via Google Firebase Auth & Cloud Firestore.
 
 ---
@@ -68,7 +68,7 @@ typlix/
 │   ├── pages/               # Home, Game, Stats, Settings, Profile,
 │   │                        # PrivacyPolicy, TermsOfService, CookiesPolicy, RefundPolicy
 │   ├── services/            # Firestore cloud synchronization
-│   ├── utils/               # Sound engine, data backup, cookie consent state
+│   ├── utils/               # Sound engine, security shield, cookie consent state
 │   ├── App.tsx              # Root application router & layout
 │   ├── index.css            # Design tokens & Tailwind directives
 │   └── main.tsx             # Application bootstrap

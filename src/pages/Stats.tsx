@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { exportStatsAsCSV, exportDataAsJSON } from '../utils/dataBackup';
 import { formatDuration } from '../utils/calculations';
 import WpmProgressChart, { type ChartFilter } from '../components/stats/WpmProgressChart';
 import { useUserProgress } from '../hooks/useUserProgress';
@@ -9,7 +8,7 @@ import { useAuth } from '../hooks/useAuth';
 import { useIsMobile } from '../hooks/useIsMobile';
 import { usePwaInstall } from '../hooks/usePwaInstall';
 import StudentReportModal from '../components/common/StudentReportModal';
-import { X, FileSpreadsheet, Download, Code, Layers, BookOpen, Clock, ArrowRight, FileText } from 'lucide-react';
+import { X, Code, Layers, BookOpen, Clock, ArrowRight, FileText } from 'lucide-react';
 
 type StatsCategory = 'all' | 'general' | 'code';
 
@@ -102,27 +101,7 @@ export default function Stats() {
       .sort((a, b) => b.count - a.count);
   }, [sessions, activeCategory]);
 
-  const handleExportCSV = () => {
-    try {
-      exportStatsAsCSV();
-      setFeedback('Stats exported to CSV!');
-      setTimeout(() => setFeedback(null), 3000);
-    } catch (e) {
-      setFeedback((e as Error).message);
-      setTimeout(() => setFeedback(null), 3000);
-    }
-  };
 
-  const handleExportJSON = () => {
-    try {
-      exportDataAsJSON();
-      setFeedback('Full backup exported to JSON!');
-      setTimeout(() => setFeedback(null), 3000);
-    } catch (e) {
-      setFeedback((e as Error).message);
-      setTimeout(() => setFeedback(null), 3000);
-    }
-  };
 
   const chartFilterProp: ChartFilter | undefined =
     activeCategory === 'code' ? 'code' : activeCategory === 'all' ? 'all' : undefined;
@@ -147,24 +126,6 @@ export default function Stats() {
               >
                 <FileText className="w-3.5 h-3.5" />
                 Report Card
-              </button>
-              <button
-                onClick={handleExportCSV}
-                aria-label="Export recorded typing sessions as CSV spreadsheet"
-                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-md border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
-                title="Export session data as CSV"
-              >
-                <FileSpreadsheet className="w-3.5 h-3.5" aria-hidden="true" />
-                CSV Export
-              </button>
-              <button
-                onClick={handleExportJSON}
-                aria-label="Export complete typing progress backup as JSON file"
-                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-md border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white"
-                title="Export full JSON backup"
-              >
-                <Download className="w-3.5 h-3.5" aria-hidden="true" />
-                JSON Backup
               </button>
             </div>
           )}

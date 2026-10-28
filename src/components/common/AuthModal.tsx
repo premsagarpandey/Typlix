@@ -29,17 +29,23 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Check persistent lockout timer on mount and tick down
-    const initial = authDefense.getRemainingLockoutSeconds();
-    setLockoutRemaining(initial);
+    if (!isOpen) return;
 
-    if (initial <= 0) return;
+    const timer = setTimeout(() => {
+      const initial = authDefense.getRemainingLockoutSeconds();
+      setLockoutRemaining(initial);
+    }, 0);
+
     const interval = setInterval(() => {
       const rem = authDefense.getRemainingLockoutSeconds();
       setLockoutRemaining(rem);
       if (rem <= 0) clearInterval(interval);
     }, 1000);
-    return () => clearInterval(interval);
+
+    return () => {
+      clearTimeout(timer);
+      clearInterval(interval);
+    };
   }, [isOpen]);
 
   const handleClose = useCallback(() => {

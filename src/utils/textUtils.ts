@@ -19,14 +19,15 @@ export interface TextSafetyReport {
 
 const MAX_CUSTOM_TEXT_LENGTH = 10000;
 
-// Trojan Source Unicode BiDi override markers
-const BIDI_REGEX = /[\u202A-\u202E\u2066-\u2069\u200E\u200F]/g;
+// Test regexes (non-global to prevent state drift via RegExp.lastIndex across repeated tests)
+const HTML_TAG_TEST_REGEX = /<[^>]*>?/m;
+const BIDI_TEST_REGEX = /[\u202A-\u202E\u2066-\u2069\u200E\u200F]/;
+const DANGEROUS_PROTOCOLS_TEST_REGEX = /(javascript|vbscript|data\s*:\s*text\/html)\s*:/i;
 
-// Dangerous script execution protocols
-const DANGEROUS_PROTOCOLS_REGEX = /(javascript|vbscript|data\s*:\s*text\/html)\s*:/gi;
-
-// Unsafe HTML tags and script elements
-const HTML_TAG_REGEX = /<[^>]*>?/gm;
+// Sanitization replacement regexes (global to replace all occurrences)
+const BIDI_CLEAN_REGEX = /[\u202A-\u202E\u2066-\u2069\u200E\u200F]/g;
+const DANGEROUS_PROTOCOLS_CLEAN_REGEX = /(javascript|vbscript|data\s*:\s*text\/html)\s*:/gi;
+const HTML_TAG_CLEAN_REGEX = /<[^>]*>?/gm;
 
 // Non-printable control characters (excluding standard whitespace)
 // eslint-disable-next-line no-control-regex
@@ -34,6 +35,7 @@ const CONTROL_CHARS_REGEX = /[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g;
 
 /**
  * Validates whether raw input contains malicious code, BiDi attacks, or unescaped HTML.
+ * Uses stateless non-global regex patterns to prevent RegExp.lastIndex state drift.
  */
 export function validateTextSafety(raw: string): TextSafetyReport {
   if (!raw) {
@@ -46,9 +48,9 @@ export function validateTextSafety(raw: string): TextSafetyReport {
     };
   }
 
-  const hasHtmlTags = HTML_TAG_REGEX.test(raw);
-  const hasBidiOverrides = BIDI_REGEX.test(raw);
-  const hasSuspiciousProtocols = DANGEROUS_PROTOCOLS_REGEX.test(raw);
+  const hasHtmlTags = HTML_TAG_TEST_REGEX.test(raw);
+  const hasBidiOverrides = BIDI_TEST_REGEX.test(raw);
+  const hasSuspiciousProtocols = DANGEROUS_PROTOCOLS_TEST_REGEX.test(raw);
   const isSafe = !hasHtmlTags && !hasBidiOverrides && !hasSuspiciousProtocols;
 
   return {
@@ -71,11 +73,11 @@ export function sanitizeCustomText(raw: string): string {
     // 1. Length clamping to prevent memory freeze / DoS
     .slice(0, MAX_CUSTOM_TEXT_LENGTH)
     // 2. Strip HTML tags and script blocks
-    .replace(HTML_TAG_REGEX, ' ')
+    .replace(HTML_TAG_CLEAN_REGEX, ' ')
     // 3. Strip dangerous protocol markers
-    .replace(DANGEROUS_PROTOCOLS_REGEX, '')
+    .replace(DANGEROUS_PROTOCOLS_CLEAN_REGEX, '')
     // 4. Strip BiDi override characters (Trojan Source mitigation)
-    .replace(BIDI_REGEX, '')
+    .replace(BIDI_CLEAN_REGEX, '')
     // 5. Strip non-printable ASCII control characters
     .replace(CONTROL_CHARS_REGEX, '')
     // 6. Normalize line breaks & tabs to single spaces

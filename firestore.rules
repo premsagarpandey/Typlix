@@ -19,15 +19,26 @@ service cloud.firestore {
       // Only authenticated users can write/update their own document with strict validation
       allow create, update: if request.auth != null 
                    && request.auth.uid == userId
+                   // Restrict allowed fields to prevent arbitrary data injection
+                   && request.resource.data.keys().hasOnly([
+                     'uid', 'displayName', 'photoURL', 'typingGameLevel', 
+                     'bestWpm', 'avgAccuracy', 'totalTests', 'typlix_stats', 
+                     'createdAt', 'updatedAt', 'lastLoginAt'
+                   ])
                    && (!('uid' in request.resource.data) || request.resource.data.uid == userId)
-                   // Security & Privacy: Disallow storing personal email addresses in user documents
-                   && (!('email' in request.resource.data) || request.resource.data.email == null)
+                   // Security & Privacy: Restrict string bounds on user profile metadata
+                   && (!('displayName' in request.resource.data) || (request.resource.data.displayName is string && request.resource.data.displayName.size() <= 80))
+                   && (!('photoURL' in request.resource.data) || request.resource.data.photoURL == null || (request.resource.data.photoURL is string && request.resource.data.photoURL.size() <= 1000))
                    // Anti-Cheat: Validate WPM bounds (humanly possible typing speed: 0 to 350 WPM)
                    && (!('bestWpm' in request.resource.data) || (request.resource.data.bestWpm is number && request.resource.data.bestWpm >= 0 && request.resource.data.bestWpm <= 350))
                    // Anti-Cheat: Validate accuracy bounds (0% to 100%)
                    && (!('avgAccuracy' in request.resource.data) || (request.resource.data.avgAccuracy is number && request.resource.data.avgAccuracy >= 0 && request.resource.data.avgAccuracy <= 100))
+                   // Anti-Cheat: Validate test count bounds
+                   && (!('totalTests' in request.resource.data) || (request.resource.data.totalTests is number && request.resource.data.totalTests >= 0))
                    // Level bounds (1 to 50)
-                   && (!('typingGameLevel' in request.resource.data) || (request.resource.data.typingGameLevel is number && request.resource.data.typingGameLevel >= 1 && request.resource.data.typingGameLevel <= 50));
+                   && (!('typingGameLevel' in request.resource.data) || (request.resource.data.typingGameLevel is number && request.resource.data.typingGameLevel >= 1 && request.resource.data.typingGameLevel <= 50))
+                   // Storage bounds: Max 100 typing session records to prevent document bloat
+                   && (!('typlix_stats' in request.resource.data) || (request.resource.data.typlix_stats is list && request.resource.data.typlix_stats.size() <= 100));
     }
   }
 }

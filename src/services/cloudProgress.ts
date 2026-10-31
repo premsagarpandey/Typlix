@@ -1,4 +1,4 @@
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
 import type { User } from 'firebase/auth';
 import { db, auth } from '../lib/firebase';
 import { secureStorage, sanitizeSessionRecord, type TypingSessionRecord } from '../utils/secureStorage';
@@ -356,4 +356,19 @@ export async function clearStatsHistory(): Promise<void> {
     }
   }
 }
+
+/**
+ * Permanently deletes user account document from Firestore (GDPR Article 17 "Right to Erasure").
+ */
+export async function deleteUserCloudData(uid: string): Promise<void> {
+  if (!uid) return;
+  try {
+    const userRef = doc(db, 'users', uid);
+    await deleteDoc(userRef);
+  } catch (e) {
+    console.warn('Failed to delete user cloud document:', e);
+    throw e;
+  }
+}
+
 

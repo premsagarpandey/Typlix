@@ -5,18 +5,20 @@ import { useUserProgress } from '../hooks/useUserProgress';
 import { useIsMobile } from '../hooks/useIsMobile';
 import { usePwaInstall } from '../hooks/usePwaInstall';
 import { formatDuration } from '../utils/calculations';
-import { LogOut, User, Mail, Calendar, Shield, Activity, TrendingUp, Trophy, Clock, RefreshCw, CheckCircle2, X, Code, ArrowRight, FileText } from 'lucide-react';
+import { LogOut, User, Mail, Calendar, Shield, Activity, TrendingUp, Trophy, Clock, RefreshCw, CheckCircle2, X, Code, ArrowRight, FileText, Trash2 } from 'lucide-react';
 import UserAvatar from '../components/common/UserAvatar';
 import StudentReportModal from '../components/common/StudentReportModal';
 
 export default function Profile() {
-  const { user, logout } = useAuth();
+  const { user, logout, deleteAccount } = useAuth();
   const { level, stats, summary, isSyncing, lastSyncedAt, syncNow } = useUserProgress();
   const isMobile = useIsMobile();
   const { isInstalled } = usePwaInstall();
   const isMobileApp = isInstalled && isMobile;
   const navigate = useNavigate();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [syncFeedback, setSyncFeedback] = useState<string | null>(null);
 
@@ -74,6 +76,23 @@ export default function Profile() {
     } catch (error) {
       console.error('Logout failed', error);
       setIsLoggingOut(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    try {
+      setIsDeletingAccount(true);
+      await deleteAccount();
+      navigate('/');
+    } catch (err: unknown) {
+      const error = err as { code?: string; message?: string };
+      if (error?.code === 'auth/requires-recent-login') {
+        alert('For account security, please sign out and sign back in before deleting your account.');
+      } else {
+        alert('Could not delete account. Please try again or check network.');
+      }
+      setIsDeletingAccount(false);
+      setConfirmDelete(false);
     }
   };
 
@@ -311,6 +330,48 @@ export default function Profile() {
             <LogOut className="w-4 h-4" aria-hidden="true" />
             <span>{isLoggingOut ? 'Signing out...' : 'Sign Out'}</span>
           </button>
+        </div>
+
+        {/* GDPR Article 17: Right to Erasure / Account Deletion */}
+        <div className="p-4 rounded-lg border border-red-200 dark:border-red-900/50 bg-red-50/40 dark:bg-red-950/20 flex flex-col sm:flex-row items-center justify-between gap-4 mt-3">
+          <div className="text-center sm:text-left">
+            <div className="text-sm font-medium text-red-600 dark:text-red-400 flex items-center justify-center sm:justify-start gap-1.5">
+              <Trash2 className="w-4 h-4" aria-hidden="true" />
+              <span>Delete Account &amp; Data</span>
+            </div>
+            <div className="text-xs text-neutral-600 dark:text-neutral-400 mt-0.5">
+              Permanently delete your profile, stats, and cloud account (GDPR Right to Erasure).
+            </div>
+          </div>
+          {!confirmDelete ? (
+            <button
+              onClick={() => setConfirmDelete(true)}
+              aria-label="Request permanent deletion of your account and personal data"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium border border-red-300 dark:border-red-800 text-red-700 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600"
+            >
+              <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
+              <span>Delete Account</span>
+            </button>
+          ) : (
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleDeleteAccount}
+                disabled={isDeletingAccount}
+                aria-label="Confirm permanent account deletion"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-bold bg-red-600 hover:bg-red-700 text-white transition-colors cursor-pointer disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600"
+              >
+                <span>{isDeletingAccount ? 'Deleting...' : 'Confirm Delete'}</span>
+              </button>
+              <button
+                onClick={() => setConfirmDelete(false)}
+                disabled={isDeletingAccount}
+                aria-label="Cancel account deletion"
+                className="px-2.5 py-1.5 rounded-md text-xs font-medium border border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

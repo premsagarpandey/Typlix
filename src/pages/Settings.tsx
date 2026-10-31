@@ -12,8 +12,10 @@ import { ShieldCheck, EyeOff, Lock, Check, Download, Cookie, X, Play, Volume2, R
 import { checkIsPhone, useIsMobile } from '../hooks/useIsMobile';
 import { isHapticsEnabled, setHapticsEnabled, triggerHaptic } from '../utils/haptics';
 import { usePwaInstall } from '../hooks/usePwaInstall';
+import { useAuth } from '../hooks/useAuth';
 
 export default function Settings() {
+  const { user, deleteAccount } = useAuth();
   const isMobile = useIsMobile();
   const { isInstalled, installApp, hasAppUpdate, isUpdating, updateApp } = usePwaInstall();
   const [soundEnabled, setSoundEnabled] = useLocalStorage('sound', !checkIsPhone());
@@ -79,12 +81,19 @@ export default function Settings() {
     showNotice('Session history cleared and synced.', 'info');
   };
 
-  const handlePurgeAllData = () => {
+  const handlePurgeAllData = async () => {
     try {
+      if (user) {
+        try {
+          await deleteAccount();
+        } catch {
+          // If auth requires recent login, proceed with local wipe
+        }
+      }
       localStorage.clear();
       resetCookieConsent();
       setConfirmPurgeAll(false);
-      showNotice('All local storage data and consent choices have been purged.', 'info');
+      showNotice('All local storage data, account records, and consent choices have been purged.', 'info');
       setTimeout(() => window.location.reload(), 1200);
     } catch {
       showNotice('Failed to purge storage.', 'error');

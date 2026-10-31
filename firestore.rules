@@ -13,8 +13,8 @@ service cloud.firestore {
       // No other user, developer, or guest can read, scrape, or access another user's data.
       allow read: if request.auth != null && request.auth.uid == userId;
 
-      // Prevent document deletion via client SDK
-      allow delete: if false;
+      // GDPR Article 17 "Right to Erasure": Account owner can permanently delete their own document
+      allow delete: if request.auth != null && request.auth.uid == userId;
 
       // Only authenticated users can write/update their own document with strict validation
       allow create, update: if request.auth != null 

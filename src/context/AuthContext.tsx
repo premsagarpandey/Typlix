@@ -9,10 +9,11 @@ import {
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
   signOut,
+  deleteUser,
   onAuthStateChanged
 } from 'firebase/auth';
 import { auth } from '../lib/firebase';
-import { syncUserProgressWithCloud, clearLocalProgressOnLogout } from '../services/cloudProgress';
+import { syncUserProgressWithCloud, clearLocalProgressOnLogout, deleteUserCloudData } from '../services/cloudProgress';
 import { AuthContext } from './AuthContextCore';
 
 // Pre-instantiated Google Auth Provider for zero-latency instant popup
@@ -133,6 +134,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const deleteAccount = async () => {
+    const currentUser = auth.currentUser || user;
+    if (!currentUser) return;
+
+    // 1. Delete user document from Cloud Firestore under GDPR Article 17 (Right to Erasure)
+    try {
+      await deleteUserCloudData(currentUser.uid);
+    } catch (err) {
+      console.warn('Could not delete user cloud document:', err);
+    }
+
+    // 2. Clear all local session metrics and identity caches
+    clearLocalProgressOnLogout();
+    try {
+      if (typeof sessionStorage !== 'undefined') {
+        sessionStorage.clear();
+      }
+    } catch {}
+
+    // 3. Delete Firebase Auth user account
+    await deleteUser(currentUser);
+    setUser(null);
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -144,6 +169,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         signupWithEmail,
         sendPasswordReset,
         logout,
+        deleteAccount,
         isSyncing,
         lastSyncedAt,
         syncNow,

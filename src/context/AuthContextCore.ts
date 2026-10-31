@@ -10,6 +10,7 @@ export interface AuthContextType {
   signupWithEmail: (e: string, p: string) => Promise<void>;
   sendPasswordReset: (email: string) => Promise<void>;
   logout: () => Promise<void>;
+  deleteAccount: () => Promise<void>;
   isSyncing: boolean;
   lastSyncedAt: Date | null;
   syncNow: () => Promise<void>;

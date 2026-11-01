@@ -23,26 +23,8 @@
     <link rel="canonical" href="https://typlix.web.app/" />
     <link rel="manifest" href="/manifest.json" />
 
-    <!-- Instant Standalone App Detection (Zero-FOUC, No SEO Flash) -->
-    <script>
-      (function() {
-        try {
-          var isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
-            window.matchMedia('(display-mode: minimal-ui)').matches ||
-            window.matchMedia('(display-mode: fullscreen)').matches ||
-            window.matchMedia('(display-mode: window-controls-overlay)').matches ||
-            (window.navigator && window.navigator.standalone === true) ||
-            (document.referrer && document.referrer.indexOf('android-app://') !== -1) ||
-            window.location.search.indexOf('source=pwa') !== -1 ||
-            window.location.search.indexOf('mode=app') !== -1 ||
-            sessionStorage.getItem('typlix_in_standalone_app') === 'true';
-          if (isStandalone) {
-            document.documentElement.classList.add('is-standalone-app');
-            sessionStorage.setItem('typlix_in_standalone_app', 'true');
-          }
-        } catch(e) {}
-      })();
-    </script>
+    <!-- Instant Standalone App & Theme Detection (Zero-FOUC, Strict CSP compliant) -->
+    <script src="/init-app.js"></script>
 
     <!-- Favicon & Touch Icons (Google Search & Multi-device compliant) -->
     <link rel="icon" href="/favicon.ico" sizes="48x48" />
@@ -500,22 +482,6 @@
           }
         ]
       }
-    </script>
-    <script>
-      (function() {
-        try {
-          var t = localStorage.getItem('typlix_theme');
-          if (t === 'dark') {
-            document.documentElement.classList.add('dark');
-            document.documentElement.classList.remove('light');
-            document.documentElement.style.colorScheme = 'dark';
-          } else {
-            document.documentElement.classList.add('light');
-            document.documentElement.classList.remove('dark');
-            document.documentElement.style.colorScheme = 'light';
-          }
-        } catch (e) {}
-      })();
     </script>
     <link rel="preconnect" href="https://accounts.google.com" crossorigin />
     <link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossorigin />

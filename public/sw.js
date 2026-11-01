@@ -18,7 +18,8 @@ const STATIC_SHELL_ASSETS = [
   '/logo512.png',
   '/apple-touch-icon.png',
   '/tutorial-image.jpg',
-  '/logo.png'
+  '/logo.png',
+  '/init-app.js'
 ];
 
 // Injected during production build by vite.config.ts

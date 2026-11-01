@@ -1,6 +1,7 @@
 /**
  * Typlix Storage Utility
- * Type-safe, resilient, tamper-guarded localStorage helper for session records and user preferences.
+ * Type-safe, validated localStorage helper for session records and user preferences.
+ * Enforces strict boundary clamping and schema validation on untrusted client storage.
  */
 
 export interface TypingSessionRecord {
@@ -53,21 +54,6 @@ export function sanitizeSessionRecord(record: unknown): TypingSessionRecord | nu
   };
 }
 
-/**
- * Deterministic fast hashing helper for client-side tamper detection
- */
-function createIntegritySignature(key: string, serializedData: string): string {
-  let hash = 0x811c9dc5;
-  const combined = `typlix_sec_v2:${key}:${serializedData}`;
-  for (let i = 0; i < combined.length; i++) {
-    hash ^= combined.charCodeAt(i);
-    hash += (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24);
-  }
-  return (hash >>> 0).toString(36);
-}
-
-const SENSITIVE_STORAGE_KEYS = new Set(['typlix_current_uid', 'typingGameLevel', 'typlix_stats']);
-
 export const secureStorage = {
   getItem: <T>(key: string, defaultValue: T): T => {
     if (typeof window === 'undefined') return defaultValue;
@@ -78,34 +64,29 @@ export const secureStorage = {
       const parsed = JSON.parse(raw);
       let data = parsed;
 
-      // Anti-Tamper Check: If sensitive key was stored in envelope format, verify signature
+      // Backward Compatibility: Seamlessly unwrap legacy envelope format if present
       if (parsed && typeof parsed === 'object' && 'data' in parsed && 'sig' in parsed) {
-        const expectedSig = createIntegritySignature(key, JSON.stringify(parsed.data));
-        if (parsed.sig !== expectedSig) {
-          console.warn(`[Typlix Security Guard] Tampering detected in key "${key}". Discarding forged data.`);
-          localStorage.removeItem(key);
-          return defaultValue;
-        }
-        data = parsed.data;
+        data = (parsed as { data: unknown }).data;
       }
 
-      // Security validation for typlix_stats array
+      // Strict validation for typlix_stats array
       if (key === 'typlix_stats') {
         if (!Array.isArray(data)) return defaultValue;
         const sanitizedList = data
           .map(sanitizeSessionRecord)
-          .filter((s): s is TypingSessionRecord => s !== null);
+          .filter((s): s is TypingSessionRecord => s !== null)
+          .slice(-100);
         return sanitizedList as unknown as T;
       }
 
-      // Security validation for typingGameLevel
+      // Strict validation for typingGameLevel
       if (key === 'typingGameLevel') {
         if (typeof data !== 'number' || isNaN(data)) return defaultValue;
         const bounded = Math.max(1, Math.min(50, Math.round(data)));
         return bounded as unknown as T;
       }
 
-      // Security validation for typlix_current_uid
+      // Strict validation for typlix_current_uid
       if (key === 'typlix_current_uid') {
         if (typeof data !== 'string' || data.length > 128) return defaultValue;
         return data as unknown as T;
@@ -122,25 +103,19 @@ export const secureStorage = {
     try {
       let valueToStore: unknown = value;
 
-      // Validate before saving
+      // Validate & clamp before saving to local storage
       if (key === 'typlix_stats' && Array.isArray(value)) {
         valueToStore = value
           .map(sanitizeSessionRecord)
-          .filter((s): s is TypingSessionRecord => s !== null);
+          .filter((s): s is TypingSessionRecord => s !== null)
+          .slice(-100);
       } else if (key === 'typingGameLevel' && typeof value === 'number') {
         valueToStore = Math.max(1, Math.min(50, Math.round(value)));
       } else if (key === 'typlix_current_uid' && typeof value === 'string') {
         valueToStore = value.slice(0, 128);
       }
 
-      // Wrap sensitive credentials and game progress with tamper-detection integrity signature
-      if (SENSITIVE_STORAGE_KEYS.has(key)) {
-        const serializedData = JSON.stringify(valueToStore);
-        const sig = createIntegritySignature(key, serializedData);
-        localStorage.setItem(key, JSON.stringify({ data: valueToStore, sig }));
-      } else {
-        localStorage.setItem(key, JSON.stringify(valueToStore));
-      }
+      localStorage.setItem(key, JSON.stringify(valueToStore));
     } catch (e) {
       console.error(`Failed to save to localStorage for key: "${key}"`, e);
     }
@@ -166,8 +141,10 @@ export const secureStorage = {
 };
 
 /**
- * Typlix Persistent Brute-Force & Credential Stuffing Defense Guard
- * Enforces exponential cooldown across page refreshes and browser tabs.
+ * Typlix UI Submission Throttle
+ * Enforces exponential button cooldown on client UI to prevent accidental rapid re-submissions.
+ * Note: Genuine brute-force and credential stuffing defense is enforced by Firebase Auth backend
+ * via `auth/too-many-requests`.
  */
 const LOCKOUT_KEY = 'typlix_auth_lockout_ledger';
 
@@ -194,7 +171,7 @@ export const authDefense = {
   },
 
   /**
-   * Records a failed login attempt and calculates progressive cooldown.
+   * Records a failed sign-in attempt and calculates UI cooldown.
    * - 3 fails: 15s cooldown
    * - 5 fails: 60s cooldown
    * - 7 fails: 300s (5m) cooldown
@@ -212,7 +189,7 @@ export const authDefense = {
         } catch {}
       }
 
-      // Keep attempts within the last 15 minutes (900000 ms)
+      // Keep attempts within the last 15 minutes (900,000 ms)
       const validAttempts = [...(ledger.attempts || []).filter((t) => now - t < 900000), now];
       let lockoutSeconds = 0;
 
@@ -249,4 +226,3 @@ export const authDefense = {
     } catch {}
   },
 };
-

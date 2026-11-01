@@ -27,11 +27,13 @@ export default function Navbar() {
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const isTypingMode = location.pathname.startsWith('/game');
 
-  // Close mobile menu on route change
+  // Close mobile menu cleanly on route change if open
   const [prevPath, setPrevPath] = useState(location.pathname);
   if (location.pathname !== prevPath) {
     setPrevPath(location.pathname);
-    setIsMobileMenuOpen(false);
+    if (isMobileMenuOpen) {
+      setIsMobileMenuOpen(false);
+    }
   }
 
   // Prevent background scrolling when mobile menu is open

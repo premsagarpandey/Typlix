@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Check, X, ArrowRight, Activity, Zap, Target, Gauge } from 'lucide-react';
 import type { LevelConfig } from '../../data/levels';
@@ -63,6 +64,29 @@ export default function ResultsModal({
     if (mode === 'code') return 'Nice! Smooth typing improves syntax muscle memory.';
     return 'You finished typing the custom exercise.';
   };
+
+  // Keyboard navigation & quick shortcuts (Enter to proceed, R or Esc to retry)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const active = document.activeElement;
+      if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) return;
+
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        if (isLesson && isPassed && onNextLevel) {
+          onNextLevel();
+        } else {
+          onRetry();
+        }
+      } else if (e.key.toLowerCase() === 'r' || e.key === 'Escape') {
+        e.preventDefault();
+        onRetry();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isLesson, isPassed, onNextLevel, onRetry]);
 
   if (typeof document === 'undefined') return null;
 

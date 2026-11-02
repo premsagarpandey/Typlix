@@ -180,7 +180,7 @@ export default function Game() {
   const handleSelectTimedDuration = useCallback(
     (dur: number) => {
       setTimedDuration(dur);
-      resetGame();
+      resetGame(undefined, undefined, dur);
     },
     [setTimedDuration, resetGame]
   );
@@ -190,8 +190,9 @@ export default function Game() {
     (lvl: number) => {
       const latestUnlocked = secureStorage.getItem<number>('typingGameLevel', maxUnlockedLevel);
       const target = Math.min(Math.max(1, lvl), latestUnlocked);
+      const cfg = getLevelConfig(target);
       setCurrentLevel(target);
-      resetGame(getLevelConfig(target));
+      resetGame(cfg, undefined, cfg.timeLimit);
     },
     [maxUnlockedLevel, setCurrentLevel, resetGame]
   );
@@ -221,7 +222,7 @@ export default function Game() {
     (text: string, timeLimit: number) => {
       setCustomText(text);
       setCustomTimeLimit(timeLimit);
-      resetGame(undefined, text);
+      resetGame(undefined, text, timeLimit);
     },
     [setCustomText, setCustomTimeLimit, resetGame]
   );

@@ -174,17 +174,29 @@ export default function WpmProgressChart({ sessions, activeFilter, onFilterChang
     const data = filteredSessions;
     if (data.length === 0) return null;
 
-    const wpmValues = data.map((s) => s.wpm);
-    const accValues = data.map((s) => s.accuracy);
+    let minWpmVal = Infinity;
+    let maxWpmVal = -Infinity;
+    let totalWpm = 0;
+    for (let i = 0; i < data.length; i++) {
+      const v = data[i].wpm;
+      if (v < minWpmVal) minWpmVal = v;
+      if (v > maxWpmVal) maxWpmVal = v;
+      totalWpm += v;
+    }
+    const wpmMin = Math.max(0, (minWpmVal === Infinity ? 0 : minWpmVal) - 5);
+    const wpmMax = (maxWpmVal === -Infinity ? 50 : maxWpmVal) + 5;
 
-    const wpmMin = Math.max(0, Math.min(...wpmValues) - 5);
-    const wpmMax = Math.max(...wpmValues) + 5;
-    const accMin = Math.max(0, Math.min(...accValues) - 5);
-    const accMax = Math.min(100, Math.max(...accValues) + 5);
+    let minAccVal = Infinity;
+    let maxAccVal = -Infinity;
+    for (let i = 0; i < data.length; i++) {
+      const v = data[i].accuracy;
+      if (v < minAccVal) minAccVal = v;
+      if (v > maxAccVal) maxAccVal = v;
+    }
+    const accMin = Math.max(0, (minAccVal === Infinity ? 0 : minAccVal) - 5);
+    const accMax = Math.min(100, (maxAccVal === -Infinity ? 100 : maxAccVal) + 5);
 
-    const avgWpm = Math.round(
-      wpmValues.reduce((a, b) => a + b, 0) / wpmValues.length
-    );
+    const avgWpm = Math.round(totalWpm / data.length);
 
     return {
       data,

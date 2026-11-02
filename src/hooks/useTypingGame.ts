@@ -376,7 +376,7 @@ export function useTypingGame(
   );
 
   const resetGame = useCallback(
-    (newConfig?: LevelConfig, newCustomText?: string) => {
+    (newConfig?: LevelConfig, newCustomText?: string, newTime?: number) => {
       const mode = modeRef.current;
       const config = newConfig || levelConfigRef.current;
       setStatus('idle');
@@ -386,7 +386,12 @@ export function useTypingGame(
       lastRecordedSecondRef.current = 0;
       setHistory([]);
 
-      const nextTime = mode === 'lesson' && config ? config.timeLimit : actualInitialTimeRef.current;
+      const nextTime =
+        newTime !== undefined
+          ? newTime
+          : mode === 'lesson' && config
+          ? config.timeLimit
+          : actualInitialTimeRef.current;
       setTimeRemaining(nextTime);
       timeRemainingRef.current = nextTime;
       setTypedText('');
@@ -424,6 +429,14 @@ export function useTypingGame(
     },
     [customText, quoteCategory, quoteDifficulty, codeLanguage, codeDifficulty, capitals, punctuation, numbers, dictionary]
   );
+
+  // Live update timeRemaining when initialTime/duration changes before typing has started
+  useEffect(() => {
+    if (statusRef.current === 'idle' && typedTextRef.current === '') {
+      setTimeRemaining(actualInitialTime);
+      timeRemainingRef.current = actualInitialTime;
+    }
+  }, [actualInitialTime]);
 
   // Live update targetText when text modifier toggles change before typing has started
   useEffect(() => {

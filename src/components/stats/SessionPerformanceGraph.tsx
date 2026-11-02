@@ -46,8 +46,8 @@ function SessionPerformanceGraphComponent({ history }: SessionPerformanceGraphPr
       ? [{ ...history[0], second: 1 }]
       : history;
 
-    const maxWpm = Math.max(...pts.map((p) => Math.max(p.wpm, p.rawWpm || 0)), 10);
-    const maxSec = Math.max(...pts.map((p) => p.second), 1);
+    const maxWpm = pts.reduce((max, p) => Math.max(max, p.wpm, p.rawWpm || 0), 10);
+    const maxSec = pts.reduce((max, p) => Math.max(max, p.second), 1);
 
     const yMax = Math.ceil(maxWpm / 10) * 10 + 10;
     const yTicks = [0, Math.round(yMax / 2), yMax];
@@ -95,8 +95,10 @@ function SessionPerformanceGraphComponent({ history }: SessionPerformanceGraphPr
   const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
     if (!svgRef.current) return;
     const rect = svgRef.current.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left;
-    const clampedX = Math.max(pad.left, Math.min(pad.left + plotW, mouseX));
+    if (rect.width === 0) return;
+    const scaleX = width / rect.width;
+    const viewBoxX = (e.clientX - rect.left) * scaleX;
+    const clampedX = Math.max(pad.left, Math.min(pad.left + plotW, viewBoxX));
 
     // Find nearest point
     let nearest = pts[0];

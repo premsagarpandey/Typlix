@@ -40,7 +40,7 @@ export function calculateStatsSummary(sessions: TypingSessionRecord[]) {
     return { bestWpm: 0, avgAccuracy: 0, totalTests: 0, total: 0 };
   }
   const totalTests = sessions.length;
-  const bestWpm = Math.max(...sessions.map((s) => s.wpm || 0), 0);
+  const bestWpm = sessions.reduce((max, s) => Math.max(max, s.wpm || 0), 0);
   const avgAccuracy = Math.round(
     sessions.reduce((acc, s) => acc + (s.accuracy || 0), 0) / totalTests
   );

@@ -34,7 +34,7 @@ export default function Profile() {
     if (total === 0) {
       return { total: 0, bestWpm: 0, avgAccuracy: 0, totalSeconds: 0, languages: [] as string[] };
     }
-    const bestWpm = Math.max(...list.map((s) => s.wpm || 0), 0);
+    const bestWpm = list.reduce((max, s) => Math.max(max, s.wpm || 0), 0);
     const avgAccuracy = Math.round(list.reduce((acc, s) => acc + (s.accuracy || 0), 0) / total);
     const totalSeconds = list.reduce((acc, s) => acc + (s.durationSeconds || 60), 0);
 

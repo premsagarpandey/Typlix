@@ -53,7 +53,7 @@ export default function Stats() {
         totalTimeSeconds: 0,
       };
     }
-    const bestWpm = Math.max(...list.map((s) => s.wpm || 0), 0);
+    const bestWpm = list.reduce((max, s) => Math.max(max, s.wpm || 0), 0);
     const avgAccuracy = Math.round(
       list.reduce((acc, s) => acc + (s.accuracy || 0), 0) / total
     );

@@ -355,7 +355,8 @@ function TypingAreaComponent({
 
       // System shortcuts (Ctrl, Alt, Meta) - preserve AltGr characters
       if (!isAltGrChar && (e.ctrlKey || e.metaKey || e.altKey)) {
-        if (e.ctrlKey && e.key === 'Backspace') {
+        // Ctrl+Backspace (Windows/Linux) or Option/Alt+Backspace (Mac): delete previous word
+        if ((e.ctrlKey || e.altKey) && e.key === 'Backspace') {
           e.preventDefault();
           const currentTyped = typedTextRef.current;
           const trimmed = currentTyped.trimEnd();
@@ -365,7 +366,19 @@ function TypingAreaComponent({
           if (inputRef.current) {
             inputRef.current.value = nextVal;
           }
+          return;
         }
+
+        // Cmd+Backspace (Mac): clear current input
+        if (e.metaKey && e.key === 'Backspace') {
+          e.preventDefault();
+          onInputRef.current('');
+          if (inputRef.current) {
+            inputRef.current.value = '';
+          }
+          return;
+        }
+
         return;
       }
 
